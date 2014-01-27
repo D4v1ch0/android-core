@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="app_name">Rp3</string>
+    <string name="hint_user">Usuario</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="label_login">Ingresar</string>
+    <string name="label_cancel">Cancelar</string>
+    <string name="label_help">Ayuda</string>
+    <string name="test_message_confirmation">¿Está seguro?</string>
+    <string name="confirmation_positive">Sí</string>
+    <string name="confirmation_negative">No</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_discard">Buscar</string>
+    <string name="action_edit">Buscar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_new">Nuevo</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="message_no_search_result">No hay resultados&#8230;</string>
+    <string name="message_no_selected_item">Seleccione un elemento</string>
+    <string name="message_no_list_item">No hay elementos</string>
+    <string name="undo">Deshacer</string>
+    <string name="undo_all">Deshacer Todo</string>
+    <string name="item_deleted">Registro eliminado</string>
+    <string name="n_items_deleted">%1$s registros eliminados</string>
+
+</resources>

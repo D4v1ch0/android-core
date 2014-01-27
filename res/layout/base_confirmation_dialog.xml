@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/base_confirmation_dialog" >
+
+    <include layout="@layout/base_horizontal_line"/>
+    
+    <TextView
+        android:id="@+id/textView_dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"        
+        android:text="@string/test_message_confirmation"
+        android:textSize="@dimen/text_medium_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_negative_confirmation"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_size"
+            android:text="@string/confirmation_negative" />
+
+        <Button
+            android:id="@+id/button_positive_confirmation"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_size"
+            android:text="@string/confirmation_positive" />
+    </LinearLayout>
+
+</LinearLayout>

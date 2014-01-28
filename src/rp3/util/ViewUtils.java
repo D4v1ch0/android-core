@@ -1,14 +1,23 @@
 package rp3.util;
 
 import java.util.Date;
+import java.util.List;
 
+import rp3.core.R;
+
+import android.content.Context;
+import android.database.Cursor;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 public abstract class ViewUtils {
@@ -44,6 +53,27 @@ public abstract class ViewUtils {
 	public static final void setListViewAdapter(View rootView,int id, ListAdapter adapter)
 	{		
 		((ListView) rootView.findViewById(id)).setAdapter(adapter);
+	}
+	
+	public static final void setSpinnerAdapter(View rootView, int id, SpinnerAdapter adapter){
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setAdapter(adapter);		
+	}
+	
+	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id, String columnName, Cursor c) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setAdapter(new SimpleCursorAdapter(context,R.layout.base_rowlist_simple_spinner, c, 
+				new String[] { columnName }, new int[] { R.id.textView_content }, 0 ));
+	}
+	
+	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id,List<Object> objects) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setAdapter(new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
+	}
+	
+	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id,Object[] objects) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setAdapter(new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
 	}
 	
 	public static final void setListViewOnClickListener(View rootView,int id, AdapterView.OnItemClickListener l)

@@ -1,5 +1,7 @@
 package rp3.app;
 
+import java.util.List;
+
 import rp3.configuration.Configuration;
 import rp3.core.R;
 import rp3.data.Constants;
@@ -21,11 +23,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
 
 public class BaseActivity extends Activity implements DataBaseService,
 		LoaderCallbacks<Cursor> {
@@ -38,6 +42,7 @@ public class BaseActivity extends Activity implements DataBaseService,
 	private ProgressBar loadingView;
 	private View rootView;
 	private int currentDialogId;
+	private int menuResource;
 
 	public BaseActivity() {
 		this.context = this ;		
@@ -47,6 +52,11 @@ public class BaseActivity extends Activity implements DataBaseService,
 		return isRestoreInstance;
 	}
 
+	public void setContentView(int layoutResID, int menuResID){
+		setContentView(layoutResID);
+		menuResource = menuResID;
+	}
+	
 	public View getRootView() {
 		if (rootView == null)
 			rootView = getWindow().getDecorView();
@@ -85,18 +95,18 @@ public class BaseActivity extends Activity implements DataBaseService,
 		}
 	}
 	
-	public void setDataBaseParams(Class<? extends SQLiteOpenHelper> dataBase) {
+	public void setDataBaseParameters(Class<? extends SQLiteOpenHelper> dataBase) {
 		dataBaseClass = dataBase;
 	}
 
-	public void setDataBaseParams(Class<? extends SQLiteOpenHelper> dataBase,
+	public void setDataBaseParameters(Class<? extends SQLiteOpenHelper> dataBase,
 			int closeResourceOn) {
 		dataBaseClass = dataBase;
 		this.closeResourceOn = closeResourceOn;
 	}
 
 	@Override
-	public void setDataBaseParams(Context c,
+	public void setDataBaseParameters(Context c,
 			Class<? extends SQLiteOpenHelper> dataBase) {
 		dataBaseClass = dataBase;
 		context = c;
@@ -138,6 +148,12 @@ public class BaseActivity extends Activity implements DataBaseService,
 		Configuration.TryInitializeConfiguration(this.context);
 		if (savedInstanceState != null)
 			isRestoreInstance = true;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {		
+		if(menuResource!=0) getMenuInflater().inflate(menuResource, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -269,6 +285,22 @@ public class BaseActivity extends Activity implements DataBaseService,
 		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
 	}
 
+	public void setSpinnerAdapter(int id, SpinnerAdapter adapter){
+		ViewUtils.setSpinnerAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, columnName, c);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id,List<Object> objects) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, objects);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id,Object[] objects) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, objects);
+	}
+	
 	public void setListViewOnItemClickListener(int id,
 			AdapterView.OnItemClickListener l) {
 		ViewUtils.setListViewOnClickListener(getRootView(), id, l);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="action_group" />
+    <item type="id" name="action_edit" />
+    <item type="id" name="action_new" />
+    <item type="id" name="action_search" />
+    <item type="id" name="action_discard" />
+    <item type="id" name="action_accept" />
+    <item type="id" name="action_cancel" />    
+</resources>

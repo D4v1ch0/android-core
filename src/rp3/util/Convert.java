@@ -26,6 +26,10 @@ public class Convert {
 		return getStringArrayFromScalar(String.valueOf(value));
 	}
 	
+	public final static String[] getStringArrayFromScalar(boolean value){
+		return getStringArrayFromScalar(Format.getDataBaseBoolean(value));
+	}
+	
 	public final static Date getDateFromTicks(long ticks){
 		return new Date(ticks);
 	}

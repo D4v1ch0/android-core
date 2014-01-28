@@ -13,7 +13,7 @@ public interface DataBaseService {
 	
 	void closeDataBase();
 	
-	void setDataBaseParams(Context c,Class<? extends SQLiteOpenHelper> dataBase);		
+	void setDataBaseParameters(Context c,Class<? extends SQLiteOpenHelper> dataBase);		
 	void closeDataBaseResources();
 
 }

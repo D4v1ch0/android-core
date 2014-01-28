@@ -126,6 +126,11 @@ public class DataBase {
 				selection, selectionArgs, null, null,null);
 	}
 	
+	public Cursor query(String table, String[] columns, String selection, boolean selectionArg)
+	{
+		return query(table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
 	public Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, 
 			String having, String orderBy){
 		return getDb().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);

@@ -1,10 +1,9 @@
 package rp3.app;
 
+import java.util.List;
+
 import rp3.core.R;
-import rp3.data.Constants;
 import rp3.db.sqlite.DataBase;
-import rp3.db.sqlite.DataBaseService;
-import rp3.db.sqlite.DataBaseServiceHelper;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -15,7 +14,6 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +22,15 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
 
-public class BaseListFragment extends ListFragment implements DataBaseService, LoaderCallbacks<Cursor> {
+public class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 	
 	public BaseListFragment()	
 	{				
 	}
 	
-	private Class<? extends SQLiteOpenHelper> dataBaseClass;
 	private Context context;
-	private DataBase db;		
-	private int closeResourceOn = Constants.CLOSE_RESOURCES_ON_STOP;
 	private View rootView;
 	private View textEmptyView;
 	private Integer contentViewResource;
@@ -43,6 +39,10 @@ public class BaseListFragment extends ListFragment implements DataBaseService, L
 	public View getRootView(){
 		return rootView;
 	}	
+	
+	public Context getContext(){
+		return context;
+	}
 	
 	public void showDialogFragment(DialogFragment f, String tagName){
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -97,46 +97,10 @@ public class BaseListFragment extends ListFragment implements DataBaseService, L
 		this.textEmptyView = null;
 		this.loadingView = null;
 	}
-	
-	public void setDataBaseParams(Class<? extends SQLiteOpenHelper> dataBase){
-		dataBaseClass = dataBase;
-	}
-	
-	public void setDataBaseParams(Class<? extends SQLiteOpenHelper> dataBase, int closeResourceOn){
-		dataBaseClass = dataBase;
-		this.closeResourceOn = closeResourceOn;
-	}
-	
-	@Override
-	public void setDataBaseParams(Context c, Class<? extends SQLiteOpenHelper> dataBase) {	
-		dataBaseClass = dataBase;
-		context = c;
-	}
-		
-	public DataBase getDataBase(){
-		if(db == null)
-			db = DataBaseServiceHelper.getWritableDatabase(context,  dataBaseClass);
-		return db;
+			
+	public DataBase getDataBase(){		
+		return ((BaseActivity)getActivity()).getDataBase();
 	}	
-	
-	public void closeDataBase(){
-		db.close();
-		db = null;
-	}
-	
-	public void closeDataBaseResources(){
-		DataBaseServiceHelper.closeResources(this);
-	}	
-
-	@Override
-	public boolean IsActiveDataBase() {
-		return db != null;
-	}
-		
-	@Override
-	public Class<? extends SQLiteOpenHelper> getDataBaseClass() {
-		return dataBaseClass;
-	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -148,22 +112,6 @@ public class BaseListFragment extends ListFragment implements DataBaseService, L
 	public void onAttach(Activity activity) {	
 		super.onAttach(activity);
 		this.context = activity;		
-	}
-	
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		if(closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
-			closeDataBaseResources();
-	}
-	
-	@Override
-	public void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		if(closeResourceOn == Constants.CLOSE_RESOURCES_ON_STOP)
-			closeDataBaseResources();
 	}	
 	
 	@Override
@@ -226,6 +174,22 @@ public class BaseListFragment extends ListFragment implements DataBaseService, L
 	public void setListViewAdapter(int id, ListAdapter adapter)
 	{		
 		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setSpinnerAdapter(int id, SpinnerAdapter adapter){
+		ViewUtils.setSpinnerAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, columnName, c);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id,List<Object> objects) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, objects);
+	}
+	
+	public void setSpinnerSimpleAdapter(int id,Object[] objects) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, objects);
 	}
 	
 	public void setListViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){

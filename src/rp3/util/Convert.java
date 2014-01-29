@@ -34,6 +34,12 @@ public class Convert {
 		return new Date(ticks);
 	}
 	
+	public final static Long getTicksFromDate(Date date){
+		if(date!=null)
+			return date.getTime();
+		return null;
+	}
+	
 	public final static double getDouble(String value){
 		try{
 			return Double.parseDouble(value);
@@ -48,5 +54,44 @@ public class Convert {
 		}catch(NumberFormatException ex){
 			return 0;
 		}
+	}
+	
+	public final static long getLong(String value){
+		try{
+			return Long.parseLong(value);
+		}catch(NumberFormatException ex){
+			return 0;
+		}
+	}
+	
+	public final static double getDouble(Object value){
+		return getDouble(String.valueOf(value));
+	}
+	
+	public final static int getInt(Object value){
+		return getInt(String.valueOf(value));
+	}
+	
+	public final static long getLong(Object value){
+		return getLong(String.valueOf(value));
+	}
+	
+	public final static String getString(long value){
+		return String.valueOf(value);
+	}
+	
+	public final static String getString(int value){
+		return String.valueOf(value);
+	}
+	
+	public final static String getString(double value){
+		return String.valueOf(value);
+	}
+	
+	public final static String getString(Object value){
+		if(value!=null)
+			return value.toString();
+		else 
+			return null;		
 	}
 }

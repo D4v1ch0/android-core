@@ -9,9 +9,10 @@
 	<dimen name="action_bar_default_height">48dip</dimen>
 	<dimen name="action_bar_title_text_size">16dp</dimen>
 	<dimen name="action_bar_subtitle_text_size">14dp</dimen>
-	<dimen name="action_bar_subtitle_top_margin">-3dp</dimen>
-	<dimen name="action_bar_subtitle_bottom_margin">5dip</dimen>	
+	<dimen name="action_bar_subtitle_top_margin">-4dp</dimen>
+	<dimen name="action_bar_subtitle_bottom_margin">3dip</dimen>	
 	
+	<dimen name="text_input_size">18sp</dimen>
 	<dimen name="text_medium_size">16sp</dimen>
 	<dimen name="text_large_size">20sp</dimen>
 	<dimen name="text_small_size">13sp</dimen>

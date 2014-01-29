@@ -219,6 +219,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setSpinnerAdapter(getRootView(), id, adapter);
 	}
 	
+	public int getSpinnerSelectedIntID(int id){
+		return ViewUtils.getSpinnerSelectedIntID(getRootView(), id);
+	}
+	
+	public long getSpinnerSelectedLongID(int id){
+		return ViewUtils.getSpinnerSelectedLongID(getRootView(), id);
+	}
+	
 	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, columnName, c);
 	}

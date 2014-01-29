@@ -56,25 +56,48 @@ public abstract class ViewUtils {
 	}
 	
 	public static final void setSpinnerAdapter(View rootView, int id, SpinnerAdapter adapter){
+		final Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setAdapter(adapter);	
+		sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long id) {
+				sp.setTag(id);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {		
+				sp.setTag(null);
+			}
+		});
+	}
+	
+	public static final long getSpinnerSelectedLongID(View rootView, int id){
 		Spinner sp = (Spinner)rootView.findViewById(id);
-		sp.setAdapter(adapter);		
+		return Convert.getLong(sp.getTag());
+	}
+
+	public static final int getSpinnerSelectedIntID(View rootView, int id){
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		return Convert.getInt(sp.getTag());
 	}
 	
 	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id, String columnName, Cursor c) {
-		Spinner sp = (Spinner)rootView.findViewById(id);
-		sp.setAdapter(new SimpleCursorAdapter(context,R.layout.base_rowlist_simple_spinner, c, 
-				new String[] { columnName }, new int[] { R.id.textView_content }, 0 ));
+		setSpinnerAdapter(rootView, id, 
+				new SimpleCursorAdapter(context,R.layout.base_rowlist_simple_spinner, c, 
+						new String[] { columnName }, new int[] { R.id.textView_content }, 0 ));
 	}
 	
 	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id,List<Object> objects) {
-		Spinner sp = (Spinner)rootView.findViewById(id);
-		sp.setAdapter(new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
+		setSpinnerAdapter(rootView, id, 
+				new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
 	}
 	
 	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id,Object[] objects) {
-		Spinner sp = (Spinner)rootView.findViewById(id);
-		sp.setAdapter(new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
-	}
+		setSpinnerAdapter(rootView, id, 
+				new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
+	}	
+	
 	
 	public static final void setListViewOnClickListener(View rootView,int id, AdapterView.OnItemClickListener l)
 	{		

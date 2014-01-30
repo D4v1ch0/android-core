@@ -42,7 +42,7 @@ public class BaseActivity extends Activity implements DataBaseService,
 	private ProgressBar loadingView;
 	private View rootView;
 	private int currentDialogId;
-	private int menuResource;
+	private int menuResource; 
 
 	public BaseActivity() {
 		this.context = this ;		

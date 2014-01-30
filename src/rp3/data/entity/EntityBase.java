@@ -11,10 +11,7 @@ public abstract class EntityBase<T extends Object> {
 		
 	
 	public EntityBase(){		
-		tableName = getTableName();
 	}
-	
-	private static String tableName;
 	
 	private ContentValues contentValues;
 	
@@ -105,7 +102,7 @@ public abstract class EntityBase<T extends Object> {
 		return db.update(getTableName(), getValues(), getID()) != 0;
 	}	
 	
-	public static boolean delete(DataBase db,long id){
-		return db.delete(tableName, id) != 0;
+	public static <T> boolean delete(DataBase db, EntityBase<T> e){
+		return db.delete(e.getTableName(), e.getID() ) != 0;
 	}
 }

@@ -1,5 +1,7 @@
 package rp3.util;
 
+import java.util.Date;
+
 import android.database.Cursor;
 
 public class CursorUtils {
@@ -62,6 +64,11 @@ public class CursorUtils {
 	
 	public static float getFloat(Cursor c, String columnName){
 		return c.getFloat( c.getColumnIndex(columnName) );
+	}
+	
+	public static Date getDate(Cursor c, String columnName){
+		long time = c.getInt( c.getColumnIndex(columnName) );
+		return Convert.getDateFromTicks(time);
 	}
 	
 }

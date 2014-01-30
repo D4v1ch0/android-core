@@ -59,7 +59,9 @@ public final class Format {
 	public final static String getDefaultDateFormat(Date date)
 	{
 		java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
-		return dateFormat.format(date);
+		if(date !=null)
+			return dateFormat.format(date);
+		return "";
 	}
 	
 	

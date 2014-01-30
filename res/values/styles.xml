@@ -84,12 +84,34 @@
     	<item name="android:textSize">@dimen/text_small_size</item>     
     </style>
     
+    <style name="Widget.TextView.ReadOnly">
+        <item name="android:background">@drawable/bg_read_only</item>
+        <item name="android:padding">10dp</item>
+    </style>
+    
+    <style name="Widget.TextView.ReadOnly.Large">
+        <item name="android:textSize">@dimen/text_large_size</item>                     
+    </style>
+    
+    <style name="Widget.TextView.ReadOnly.Medium">
+        <item name="android:textSize">@dimen/text_medium_size</item>                     
+    </style>
+    
+    <style name="Widget.TextView.ReadOnly.Small">                
+    	<item name="android:textSize">@dimen/text_small_size</item>     
+    </style>
+    
     <style name="Widget.Spinner" parent="@android:style/Widget.Holo.Light.Spinner">
        	<item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>   
     </style>
     
-    <style name="activated" parent="AppTheme"/>
+    <style name="SimpleContentBox">
+       	<item name="android:padding">10dp</item>
+       	<item name="android:background">@drawable/bg_simple_border_box</item>
+    </style>
+    
+    <style name="Widget.ListView.Activated" parent="AppTheme"/>
      
     <style name="popup_fade_animation">
 		<item name="@android:windowEnterAnimation">@anim/popup_show</item>

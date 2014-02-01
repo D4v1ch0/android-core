@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import rp3.core.R;
+import rp3.data.Message;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -58,28 +59,28 @@ public abstract class ViewUtils {
 	public static final void setSpinnerAdapter(View rootView, int id, SpinnerAdapter adapter){
 		final Spinner sp = (Spinner)rootView.findViewById(id);
 		sp.setAdapter(adapter);	
-		sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long id) {
-				sp.setTag(id);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {		
-				sp.setTag(null);
-			}
-		});
+//		sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//			@Override
+//			public void onItemSelected(AdapterView<?> arg0, View arg1,
+//					int position, long id) {
+//				sp.setTag(id);
+//			}
+//
+//			@Override
+//			public void onNothingSelected(AdapterView<?> arg0) {		
+//				sp.setTag(null);
+//			}
+//		});
 	}
 	
 	public static final long getSpinnerSelectedLongID(View rootView, int id){
 		Spinner sp = (Spinner)rootView.findViewById(id);
-		return Convert.getLong(sp.getTag());
+		return Convert.getLong(sp.getSelectedItemId());
 	}
 
 	public static final int getSpinnerSelectedIntID(View rootView, int id){
 		Spinner sp = (Spinner)rootView.findViewById(id);
-		return Convert.getInt(sp.getTag());
+		return Convert.getInt(sp.getSelectedItemId());		
 	}
 	
 	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id, String columnName, Cursor c) {
@@ -124,4 +125,14 @@ public abstract class ViewUtils {
 		return rootView.findViewById(id).getVisibility();
 	}
 	
+	public static final void setViewError(View rootView, int id, String text){
+		setViewError(rootView, id, new Message(text));
+	}
+	
+	public static final void setViewError(View rootView, int id, Message m){				
+		View v = rootView.findViewById(id);
+		if(v instanceof TextView){
+			((TextView)v).setError(m.getText());
+		}
+	}
 }

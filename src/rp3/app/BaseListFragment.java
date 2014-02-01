@@ -3,6 +3,9 @@ package rp3.app;
 import java.util.List;
 
 import rp3.core.R;
+import rp3.data.Message;
+import rp3.data.MessageCollection;
+import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.util.ViewUtils;
 import android.app.Activity;
@@ -24,7 +27,8 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 
-public class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
+public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor>,
+	OnEntityCheckerListener<Object> {
 	
 	public BaseListFragment()	
 	{				
@@ -224,6 +228,14 @@ public class BaseListFragment extends ListFragment implements LoaderCallbacks<Cu
 		return ViewUtils.getViewVisibility(getRootView(), id);
 	}
 	
+	public void setViewError(int id, String text){
+		ViewUtils.setViewError(getRootView(),id,text);
+	}
+	
+	public void setViewError(int id, Message m){
+		ViewUtils.setViewError(getRootView(),id,m);
+	}
+	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {		
 		showDefaultLoading();
@@ -237,5 +249,17 @@ public class BaseListFragment extends ListFragment implements LoaderCallbacks<Cu
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
+	}
+	
+	@Override
+	public void onEntityValidationFailed(MessageCollection m, Object e) {	
+	}
+
+	@Override
+	public void onEntityItemValidationFailed(Message message, Object e) {
+	}
+
+	@Override
+	public void onEntityValidationSuccess(Object e) {
 	}
 }

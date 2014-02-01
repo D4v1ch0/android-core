@@ -2,120 +2,132 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->                
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:textViewStyle">@style/Widget.TextView</item>
         <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+    </style>
+
+    <style name="ActivityPopupTheme" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        
     </style>
 
     <style name="Widget">
         <item name="android:paddingRight">12dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>              
+        <item name="android:layout_height">wrap_content</item>
     </style>
-    
+
     <style name="Widget.EditText" parent="@android:style/Widget.Holo.Light.EditText">
         <item name="android:paddingTop">15dp</item>
-        <item name="android:paddingBottom">15dp</item>            
-        <item name="android:textSize">@dimen/text_input_size</item> 
-        <item name="android:layout_gravity">center_vertical</item>      
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:textSize">@dimen/text_input_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
-     
+
     <style name="Widget.TextView" parent="@android:style/Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/text_medium_size</item>  
-        <item name="android:layout_gravity">center_vertical</item>      
+        <item name="android:textSize">@dimen/text_medium_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
-    
+
     <style name="Widget.TextView.Large">
-        <item name="android:textSize">@dimen/text_large_size</item>        
+        <item name="android:textSize">@dimen/text_large_size</item>
     </style>
-    
+
     <style name="Widget.TextView.Medium">
-        <item name="android:textSize">@dimen/text_medium_size</item>        
+        <item name="android:textSize">@dimen/text_medium_size</item>
     </style>
-    
+
     <style name="Widget.TextView.Small">
-        <item name="android:textSize">@dimen/text_small_size</item>        
+        <item name="android:textSize">@dimen/text_small_size</item>
     </style>
-        
+
     <style name="Widget.TextView.Highlight">
-        <item name="android:textColor">@color/highlight_text</item>        
-    </style>    
-        
+        <item name="android:textColor">@color/highlight_text</item>
+    </style>
+
     <style name="Widget.TextView.Highlight.Large">
-        <item name="android:textSize">@dimen/text_large_size</item>                     
+        <item name="android:textSize">@dimen/text_large_size</item>
     </style>
-    
+
     <style name="Widget.TextView.Highlight.Medium">
-        <item name="android:textSize">@dimen/text_medium_size</item>                     
+        <item name="android:textSize">@dimen/text_medium_size</item>
     </style>
-    
-    <style name="Widget.TextView.Highlight.Small">                
-    	<item name="android:textSize">@dimen/text_small_size</item>     
+
+    <style name="Widget.TextView.Highlight.Small">
+        <item name="android:textSize">@dimen/text_small_size</item>
     </style>
-    
+
     <style name="Widget.TextView.SecondaryHighlight">
         <item name="android:textColor">@color/secondary_highlight_text</item>
     </style>
-    
+
     <style name="Widget.TextView.SecondaryHighlight.Large">
-        <item name="android:textSize">@dimen/text_large_size</item>                     
+        <item name="android:textSize">@dimen/text_large_size</item>
     </style>
-    
+
     <style name="Widget.TextView.SecondaryHighlight.Medium">
-        <item name="android:textSize">@dimen/text_medium_size</item>                     
+        <item name="android:textSize">@dimen/text_medium_size</item>
     </style>
-    
-    <style name="Widget.TextView.SecondaryHighlight.Small">                
-    	<item name="android:textSize">@dimen/text_small_size</item>     
+
+    <style name="Widget.TextView.SecondaryHighlight.Small">
+        <item name="android:textSize">@dimen/text_small_size</item>
     </style>
-    
+
     <style name="Widget.TextView.ReadOnly">
         <item name="android:background">@drawable/bg_read_only</item>
         <item name="android:padding">10dp</item>
     </style>
-    
+
     <style name="Widget.TextView.ReadOnly.Large">
-        <item name="android:textSize">@dimen/text_large_size</item>                     
+        <item name="android:textSize">@dimen/text_large_size</item>
     </style>
-    
+
     <style name="Widget.TextView.ReadOnly.Medium">
-        <item name="android:textSize">@dimen/text_medium_size</item>                     
+        <item name="android:textSize">@dimen/text_medium_size</item>
     </style>
-    
-    <style name="Widget.TextView.ReadOnly.Small">                
-    	<item name="android:textSize">@dimen/text_small_size</item>     
+
+    <style name="Widget.TextView.ReadOnly.Small">
+        <item name="android:textSize">@dimen/text_small_size</item>
     </style>
-    
+
     <style name="Widget.Spinner" parent="@android:style/Widget.Holo.Light.Spinner">
-       	<item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>  
-        <item name="android:layout_gravity">center_vertical</item> 
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
-    
+
     <style name="SimpleContentBox">
-       	<item name="android:padding">10dp</item>
-       	<item name="android:background">@drawable/bg_simple_border_box</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/bg_simple_border_box</item>
     </style>
-    
-    <style name="Widget.ListView.Activated" parent="AppTheme"/>
-     
+
+    <style name="Widget.ListView.Activated" parent="AppTheme" />
+
     <style name="popup_fade_animation">
-		<item name="@android:windowEnterAnimation">@anim/popup_show</item>
-		<item name="@android:windowExitAnimation">@anim/popup_hide</item>
-	</style>
-	
+        <item name="@android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="@android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+
 </resources>

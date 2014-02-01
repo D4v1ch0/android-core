@@ -5,6 +5,9 @@ import java.util.List;
 import rp3.configuration.Configuration;
 import rp3.core.R;
 import rp3.data.Constants;
+import rp3.data.Message;
+import rp3.data.MessageCollection;
+import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
@@ -32,7 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 
 public class BaseActivity extends Activity implements DataBaseService,
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>  {
 
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
 	protected Context context;
@@ -61,8 +64,8 @@ public class BaseActivity extends Activity implements DataBaseService,
 		if (rootView == null)
 			rootView = getWindow().getDecorView();
 		return rootView;
-	}
-
+	}	
+	
 	public void showDialogFragment(DialogFragment f, String tagName) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		Fragment prev = getFragmentManager().findFragmentByTag(tagName);
@@ -333,6 +336,14 @@ public class BaseActivity extends Activity implements DataBaseService,
 	public int getViewVisibility(int id) {
 		return ViewUtils.getViewVisibility(getRootView(), id);
 	}
+	
+	public void setViewError(int id, String text){
+		ViewUtils.setViewError(getRootView(),id,text);
+	}
+	
+	public void setViewError(int id, Message m){
+		ViewUtils.setViewError(getRootView(),id,m);
+	}
 
 	// public String getTextEditText(int id){
 	// return ViewUtils.getTextViewText(getRootView(), id);
@@ -359,5 +370,17 @@ public class BaseActivity extends Activity implements DataBaseService,
 			hideDialogConfirmation();
 		} else
 			super.onBackPressed();
+	}
+
+	@Override
+	public void onEntityValidationFailed(MessageCollection mc, Object e) {
+	}
+
+	@Override
+	public void onEntityItemValidationFailed(Message m, Object e) {
+	}
+
+	@Override
+	public void onEntityValidationSuccess(Object e) {
 	}
 }

@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import rp3.core.R;
+import rp3.data.Message;
+import rp3.data.MessageCollection;
+import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.util.ViewUtils;
 import android.app.Activity;
@@ -27,7 +30,7 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 
-public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor> {
+public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object> {
 		
 	public BaseFragment()	
 	{		
@@ -96,6 +99,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		this.context = activity;		
 	}	
 	
+//	private void setMenu(){
+//		Menu menu = null;
+//	    try {
+//	        Class<?> menuBuilderClass = Class.forName("com.android.internal.view.menu.MenuBuilder");
+//
+//	        Constructor<?> constructor = menuBuilderClass.getDeclaredConstructor(Context.class);
+//
+//	        menu = (Menu) constructor.newInstance(this.getContext());
+//
+//	    } catch (Exception e) {e.printStackTrace();}
+//	    
+//		this.getActivity().getMenuInflater().inflate(R.menu.activity_search, menu);
+//		
+//		getRootView()
+//	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -103,6 +122,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		if(contentViewResource!=null){
 			setRootView(inflater.inflate(contentViewResource, container, false));
 			onFragmentCreateView(getRootView(), savedInstanceState);								
+			
 			
 			return getRootView();
 		}
@@ -266,6 +286,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void setTextViewDateText(int id,Date date){
 		ViewUtils.setTextViewDefaultDateText(getRootView(), id, date);
 	}	
+	
+	public void setViewError(int id, String text){
+		ViewUtils.setViewError(getRootView(),id,text);
+	}
+	
+	public void setViewError(int id, Message m){
+		ViewUtils.setViewError(getRootView(),id,m);
+	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {		
@@ -278,6 +306,18 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
+	}
+
+	@Override
+	public void onEntityValidationFailed(MessageCollection mc, Object e) {		
+	}
+
+	@Override
+	public void onEntityItemValidationFailed(Message m, Object e) {
+	}
+
+	@Override
+	public void onEntityValidationSuccess(Object e) {
 	}
 	
 }

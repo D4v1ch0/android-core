@@ -9,15 +9,15 @@ import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.util.ViewUtils;
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.ListFragment;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +46,20 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 	
 	public Context getContext(){
 		return context;
+	}
+		
+	public <D> void excuteLoader(int id, Bundle args, LoaderCallbacks<D> callback){
+		Loader<Object> loader = this.getLoaderManager().getLoader(id); 
+		if(loader==null){
+			this.getLoaderManager().initLoader(id, args, callback);
+		}
+		else{
+			this.getLoaderManager().restartLoader(id, args, callback);
+		}
+	}
+	
+	public void setFragment(int id, Fragment fragment){
+		getChildFragmentManager().beginTransaction().replace(id, fragment).commit();		
 	}
 	
 	public void showDialogFragment(DialogFragment f, String tagName){

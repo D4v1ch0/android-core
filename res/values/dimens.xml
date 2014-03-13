@@ -13,8 +13,9 @@
 	<dimen name="action_bar_subtitle_bottom_margin">3dip</dimen>	
 	
 	<dimen name="text_input_size">18sp</dimen>
-	<dimen name="text_medium_size">16sp</dimen>
-	<dimen name="text_large_size">20sp</dimen>
-	<dimen name="text_small_size">13sp</dimen>
+	<dimen name="text_xsmall_size">12sp</dimen>
+	<dimen name="text_medium_size">18sp</dimen>
+	<dimen name="text_large_size">22sp</dimen>
+	<dimen name="text_small_size">14sp</dimen>
 	
 </resources>

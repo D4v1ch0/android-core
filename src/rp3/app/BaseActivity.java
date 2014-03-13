@@ -12,11 +12,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
 import rp3.util.ViewUtils;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.AlertDialog.Builder;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -25,6 +21,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.View;
@@ -34,7 +36,7 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 
-public class BaseActivity extends Activity implements DataBaseService,
+public class BaseActivity extends FragmentActivity implements DataBaseService,
 		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>  {
 
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
@@ -60,6 +62,18 @@ public class BaseActivity extends Activity implements DataBaseService,
 		menuResource = menuResID;
 	}
 	
+	public FragmentManager getCurrentFragmentManager(){
+		return getSupportFragmentManager();
+	}
+	
+	public LoaderManager getCurrentLoaderManager(){
+		return getSupportLoaderManager();
+	}
+	
+	public void setFragment(int id, Fragment fragment){
+		getCurrentFragmentManager().beginTransaction().replace(id, fragment).commit();		
+	}
+	
 	public View getRootView() {
 		if (rootView == null)
 			rootView = getWindow().getDecorView();
@@ -67,8 +81,8 @@ public class BaseActivity extends Activity implements DataBaseService,
 	}	
 	
 	public void showDialogFragment(DialogFragment f, String tagName) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(tagName);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(tagName);
 		if (prev != null) {
 			ft.remove(prev);
 		}

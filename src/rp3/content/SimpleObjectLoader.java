@@ -1,7 +1,7 @@
 package rp3.content;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 
 public abstract class SimpleObjectLoader<T> extends AsyncTaskLoader<T> {
 	

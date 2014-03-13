@@ -10,16 +10,7 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="android:editTextStyle">@style/Widget.EditText</item>
-        <item name="android:textViewStyle">@style/Widget.TextView</item>
-        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
-    </style>
+    </style>    
 
     <style name="ActivityPopupTheme" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:windowIsFloating">false</item>
@@ -37,18 +28,20 @@
         <item name="android:paddingLeft">12dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>        
     </style>
 
     <style name="Widget.EditText" parent="@android:style/Widget.Holo.Light.EditText">
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
-        <item name="android:textSize">@dimen/text_input_size</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_input_size</item> 
+        <item name="android:layout_gravity">center_vertical</item>       
     </style>
 
     <style name="Widget.TextView" parent="@android:style/Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/text_medium_size</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>        
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/default_text</item>
     </style>
 
     <style name="Widget.TextView.Large">
@@ -63,6 +56,10 @@
         <item name="android:textSize">@dimen/text_small_size</item>
     </style>
 
+    <style name="Widget.TextView.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall_size</item>
+    </style>
+    
     <style name="Widget.TextView.Highlight">
         <item name="android:textColor">@color/highlight_text</item>
     </style>
@@ -77,6 +74,10 @@
 
     <style name="Widget.TextView.Highlight.Small">
         <item name="android:textSize">@dimen/text_small_size</item>
+    </style>
+    
+    <style name="Widget.TextView.Highlight.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall_size</item>
     </style>
 
     <style name="Widget.TextView.SecondaryHighlight">
@@ -93,6 +94,10 @@
 
     <style name="Widget.TextView.SecondaryHighlight.Small">
         <item name="android:textSize">@dimen/text_small_size</item>
+    </style>
+    
+    <style name="Widget.TextView.SecondaryHighlight.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall_size</item>
     </style>
 
     <style name="Widget.TextView.ReadOnly">
@@ -111,11 +116,14 @@
     <style name="Widget.TextView.ReadOnly.Small">
         <item name="android:textSize">@dimen/text_small_size</item>
     </style>
+    
+    <style name="Widget.TextView.ReadOnly.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall_size</item>
+    </style>
 
     <style name="Widget.Spinner" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingBottom">0dp</item>        
     </style>
 
     <style name="SimpleContentBox">
@@ -130,4 +138,13 @@
         <item name="@android:windowExitAnimation">@anim/popup_hide</item>
     </style>
 
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:editTextStyle">@style/Widget.EditText</item>
+        <item name="android:textViewStyle">@style/Widget.TextView</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+    </style>
+    
 </resources>

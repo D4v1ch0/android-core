@@ -5,12 +5,14 @@
     <color name="button_face_ontouch">#C1C1C1</color>  
     <color name="button_face_pressed">#B7B7B7</color>  
     <color name="secondary_light_line">#D6D6D6</color>
-    <color name="light_line">#DCDCDC</color>    
+    <color name="light_line">#DCDCDC</color> 
+    <color name="divider">#aaa</color>    
     <color name="text_title">#D6D6D6</color>    
     <color name="secondary_highlight_text">#777777</color>
     <color name="secondary_highlight_text_low">#AAAAAA</color>    
     <color name="highlight_text_low">#79CCEB</color>
-    <color name="highlight_text">#0099CC</color>    
+    <color name="highlight_text">#0099CC</color>
+    <color name="default_text">#5E5E5E</color>        
     
     <color name="enhanced_btn_pressed">#ff33b5e5</color>
 	<color name="enhanced_btn_focused">#ff0099cc</color>

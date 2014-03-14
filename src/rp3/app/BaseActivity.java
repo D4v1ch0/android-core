@@ -48,7 +48,9 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private View rootView;
 	private int currentDialogId;
 	private int menuResource; 
-
+	private FragmentTransaction fragmentTransaction;
+	private boolean inFragmentTransaction;
+	
 	public BaseActivity() {
 		this.context = this ;		
 	}
@@ -71,7 +73,30 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 	
 	public void setFragment(int id, Fragment fragment){
-		getCurrentFragmentManager().beginTransaction().replace(id, fragment).commit();		
+		if(inFragmentTransaction){
+			fragmentTransaction.replace(id, fragment);
+		}
+		else{
+			getCurrentFragmentManager().beginTransaction().replace(id, fragment).commit();
+		}
+	}
+	
+	public void beginSetFragment(){
+		inFragmentTransaction = true;
+		fragmentTransaction = getCurrentFragmentManager().beginTransaction();
+	}
+	
+	public void endSetFragment(){
+		inFragmentTransaction = false;
+		fragmentTransaction.commit();
+		fragmentTransaction = null;
+	}
+	
+	public void setFragments(int[] ids, Fragment[] fragments){
+		FragmentTransaction ft = getCurrentFragmentManager().beginTransaction();
+		for(int i = 0; i < ids.length; i ++)
+			ft.replace(ids[i], fragments[0]);
+		ft.commit();
 	}
 	
 	public View getRootView() {
@@ -274,6 +299,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	public void onNegativeConfirmation(int id) {
 		hideDialogConfirmation();
+	}
+	
+	public void cancelAnimationTransition(){
+		this.overridePendingTransition(0, 0);
 	}
 
 	/* View Set Extensions */

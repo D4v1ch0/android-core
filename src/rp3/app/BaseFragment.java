@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -41,6 +43,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private Integer contentViewResource;
 	private ProgressBar loadingView;	
 	private int currentDialogId;
+	private int menuResource;
+	private FragmentTransaction fragmentTransaction;
+	private boolean inFragmentTransaction;
 	
 	public View getRootView(){
 		return rootView;
@@ -61,7 +66,30 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void setFragment(int id, Fragment fragment){
-		getChildFragmentManager().beginTransaction().replace(id, fragment).commit();		
+		if(inFragmentTransaction){
+			fragmentTransaction.replace(id, fragment);
+		}
+		else{
+			getChildFragmentManager().beginTransaction().replace(id, fragment).commit();
+		}
+	}
+	
+	public void beginSetFragment(){
+		inFragmentTransaction = true;
+		fragmentTransaction = getChildFragmentManager().beginTransaction();
+	}	
+	
+	public void endSetFragment(){
+		inFragmentTransaction = false;
+		fragmentTransaction.commit();
+		fragmentTransaction = null;
+	}
+	
+	public void setFragments(int[] ids, Fragment[] fragments){
+		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+		for(int i = 0; i < ids.length; i ++)
+			ft.replace(ids[i], fragments[0]);
+		ft.commit();
 	}
 	
 	private ProgressBar getLoadingView(){
@@ -88,6 +116,25 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		this.contentViewResource = resourceId;
 	}
 	
+	public void setContentView(int layoutResID, int menuResID){
+		setContentView(layoutResID);
+		menuResource = menuResID;
+	}
+	
+	public void finish(){		
+		this.getActivity().finish();
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(menuResource!=0) inflater.inflate(menuResource, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+		onAfterCreateOptionsMenu(menu);
+	}
+	
+	public void onAfterCreateOptionsMenu(Menu menu){		
+	}
+	
 	public void setRootView(View rootView){
 		this.rootView = rootView;
 	}
@@ -107,6 +154,13 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}	
 	
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+	
 	@Override
 	public void onAttach(Activity activity) {		
 		super.onAttach(activity);
@@ -216,6 +270,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void onNegativeConfirmation(int id){
 		hideDialogConfirmation();
+	}
+	
+	public void cancelAnimationTransition(){
+		this.getActivity().overridePendingTransition(0, 0);
 	}
 	
 	/*View Set Extensions*/

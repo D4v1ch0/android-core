@@ -105,7 +105,7 @@ public class XmlPull {
 			
 			while(eventType != XmlPullParser.END_DOCUMENT){				
 				
-				switch (eventType) {
+				switch (eventType) {					
 					case XmlPullParser.TEXT:
 						element = parser.getText();
 						break;

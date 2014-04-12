@@ -55,7 +55,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		return context;
 	}
 	
-	public <D> void excuteLoader(int id, Bundle args, LoaderCallbacks<D> callback){
+	public <D> void executeLoader(int id, Bundle args, LoaderCallbacks<D> callback){
 		Loader<Object> loader = this.getLoaderManager().getLoader(id); 
 		if(loader==null){
 			this.getLoaderManager().initLoader(id, args, callback);

@@ -73,6 +73,7 @@ public class NavListAdapter extends BaseAdapter {
         
     	NavItem item = getNavItem(position);
     	
+    	
     	if(!item.isCategory())
     	{
     		ViewHolder viewHolder;
@@ -131,7 +132,8 @@ public class NavListAdapter extends BaseAdapter {
             }
     		else
     			separatorViewHolder = (SeparatorViewHolder)convertView.getTag();
-    		    		    
+    		    		        		
+    		
     		separatorViewHolder.textView_title.setText(navItems.get(position).getTitle());
     	}
     	

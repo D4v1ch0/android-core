@@ -3,13 +3,18 @@ package rp3.app.nav;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 public class NavItem {
 	private String title;
 	private int id;
 	private boolean isCategory;
     private int icon;
+    private int resTitleId;
     private String count = "0";
     private ArrayList<NavItem> navItems;
+    private Context context;
     
     // boolean to set visiblity of the counter
     private boolean isCounterVisible = false;
@@ -28,7 +33,7 @@ public class NavItem {
         this.title = title;
         this.isCategory = isCategory;
         this.icon = icon;
-    }
+    }       
      
     public NavItem(int id,String title, int icon,boolean isCategory,boolean isCounterVisible, String count){
     	this.id = id;
@@ -38,8 +43,33 @@ public class NavItem {
         this.isCounterVisible = isCounterVisible;
         this.count = count;
     }
+    
+    public NavItem(int id,int resTitleId, int icon){
+    	this.setId(id);
+        this.setResTitleId(resTitleId);
+        this.icon = icon;
+    }
+    
+    public NavItem(int id,int resTitleId, int icon, boolean isCategory){
+    	this.setId(id);
+    	this.setResTitleId(resTitleId);
+        this.isCategory = isCategory;
+        this.icon = icon;
+    }
+     
+    public NavItem(int id,int resTitleId, int icon,boolean isCategory,boolean isCounterVisible, String count){
+    	this.id = id;
+    	this.isCategory = isCategory;
+        this.setResTitleId(resTitleId);
+        this.icon = icon;
+        this.isCounterVisible = isCounterVisible;
+        this.count = count;
+    }
      
     public String getTitle(){
+    	if(TextUtils.isEmpty(title) && context!=null ){
+    		setTitle( context.getText(getResTitleId()).toString() );
+    	}
         return this.title;
     }
      
@@ -102,5 +132,15 @@ public class NavItem {
 	public List<NavItem> getNavItems(){
 		if(navItems == null) navItems = new ArrayList<NavItem>();
 		return navItems;
+	}
+
+
+	public int getResTitleId() {
+		return resTitleId;
+	}
+
+
+	public void setResTitleId(int resTitleId) {
+		this.resTitleId = resTitleId;
 	}
 }

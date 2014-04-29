@@ -24,7 +24,7 @@ public class SearchActivity extends BaseActivity {
 	private String queryHint;
 	
 	public SearchActivity(){
-		Configuration.TryInitializeConfiguration(this);
+		Configuration.TryInitializeConfiguration(this, getDataBaseClass());
 	}
 	
 	@Override

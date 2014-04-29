@@ -9,12 +9,13 @@ import rp3.xml.XmlPull;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.database.sqlite.SQLiteOpenHelper;
 
 public final class Configuration {	
 	
 	private static DataBaseConfiguration dataBaseConfiguration;
 	private static AppConfiguration appConfiguration;
-	private static WebServiceConfiguration webServiceConfiguration;		
+	private static WebServiceConfiguration webServiceConfiguration;			
 	
 	private static boolean loaded;	
 	
@@ -22,13 +23,17 @@ public final class Configuration {
 		return loaded;
 	}
 	
-	public static void TryInitializeConfiguration(Context c){
+	public static void TryInitializeConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass){
 		if(!isLoaded())
 		{
-			initConfiguration(c);
+			initConfiguration(c, dbClass);
 		}
 	}	
 
+	public synchronized static AppConfiguration getAppConfiguration() {	
+		return appConfiguration;		
+	}
+	
 	public synchronized static DataBaseConfiguration getDataBaseConfiguration() {	
 		return dataBaseConfiguration;		
 	}
@@ -40,13 +45,14 @@ public final class Configuration {
 //    private static final Object dataBaseConfigurationLock = new Object();
 //    private static final Object webServiceConfigurationLock = new Object();
 //    
-	private static void initConfiguration(Context c) {	
-		synchronized (Configuration.class) {
-			appConfiguration = new AppConfiguration();
-		}		
+	private static void initConfiguration(Context c,Class<? extends SQLiteOpenHelper> dbClass) {					
 		
 		synchronized (Configuration.class) {
-			dataBaseConfiguration = new DataBaseConfiguration();	
+			appConfiguration = new AppConfiguration();
+		}
+		
+		synchronized (Configuration.class) {
+			dataBaseConfiguration = new DataBaseConfiguration(dbClass);	
 		}
 		
 		synchronized (Configuration.class) {

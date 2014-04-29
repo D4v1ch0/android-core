@@ -6,6 +6,7 @@ import java.util.List;
 import rp3.app.nav.NavItem;
 import rp3.app.nav.NavSetting;
 import rp3.core.R;
+import rp3.util.Screen;
 import rp3.widget.adapter.NavListAdapter;
 
 import android.annotation.SuppressLint;
@@ -14,6 +15,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +29,9 @@ import android.widget.ListView;
 public class NavActivity extends BaseActivity implements NavSetting {
 
 	private final static String STATE_CURRENTNAV = "currentNav";
+	private final static int NAV_MODE_DRAWER = 1;
+	private final static int NAV_MODE_SLIDING_PANE = 2;
+	 private static final int PARALLAX_SIZE = 30;
 	
 	private NavListAdapter navDrawerAdapter;
 	private ListView listViewDrawer;
@@ -35,16 +41,30 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	private int currentNavigationSelectionId = 0;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private DrawerLayout drawerLayout;
+	private SlidingPaneLayout slidingPane;
 	private ArrayList<MenuItem> currentVisibleActionsMenu = new ArrayList<MenuItem>();
 	private boolean isPaneFragmentLoaded = false;
+	private int navMode = NAV_MODE_DRAWER;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.base_activity_navigation_drawer);		
+		if(Screen.isMinLageLayoutSize(getApplicationContext())){
+			navMode = NAV_MODE_SLIDING_PANE;
+			setContentView(R.layout.base_activity_navigation_sliding_pane);
+			// SlidingPaneLayout customization
+			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);
+			slidingPane.setParallaxDistance(PARALLAX_SIZE);
+			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
+		}
+		else{
+			navMode = NAV_MODE_DRAWER;
+			setContentView(R.layout.base_activity_navigation_drawer);
+		}
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
@@ -103,17 +123,27 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 		listViewDrawer = (ListView) findViewById(R.id.listView_navigationDrawer);
 		navDrawerAdapter = new NavListAdapter(this, resultNavItems);
-		listViewDrawer.setAdapter(navDrawerAdapter);
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		listViewDrawer.setAdapter(navDrawerAdapter);		
 		
-		setDrawerToggle();
+		if(navMode == NAV_MODE_DRAWER){
+			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			setDrawerToggle();
+		}else{
+			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);	
+		}				
+		 		
 		
 		listViewDrawer.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long id) {
 				
-				drawerLayout.closeDrawer(Gravity.LEFT);
+				if(navMode == NAV_MODE_DRAWER){
+					drawerLayout.closeDrawer(Gravity.LEFT);
+				}else{
+					slidingPane.closePane();
+				}
+				
 				NavItem item = resultNavItems.get(position);
 				
 				//if(!NavActivity.this.navSettingCallback.equals(this)) onNavItemSelected(item);
@@ -138,27 +168,50 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	}
 	
 	private void setDrawerToggle() {
-		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-				R.drawable.ic_drawer, // nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for
-									// accessibility
-				R.string.app_name // nav drawer close - description for
-									// accessibility
-		) {
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(getTitle());
-				// calling onPrepareOptionsMenu() to show action bar icons
-				invalidateOptionsMenu();
-			}
+		if(navMode == NAV_MODE_DRAWER){
+			actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+					R.drawable.ic_drawer, // nav menu toggle icon
+					R.string.app_name, // nav drawer open - description for
+										// accessibility
+					R.string.app_name // nav drawer close - description for
+										// accessibility
+			) {
+				public void onDrawerClosed(View view) {
+					getActionBar().setTitle(getTitle());
+					// calling onPrepareOptionsMenu() to show action bar icons
+					invalidateOptionsMenu();
+				}
+	
+				public void onDrawerOpened(View drawerView) {
+					getActionBar().setTitle(getTitle());
+					// calling onPrepareOptionsMenu() to hide action bar icons
+					invalidateOptionsMenu();
+				}
+			};
+			drawerLayout.setDrawerListener(actionBarDrawerToggle);
+		}
+		else{
+			PanelSlideListener panelSlideListener = new  PanelSlideListener() {
+				
+				@Override
+				public void onPanelSlide(View arg0, float arg1) {
+					
+				}
+				
+				@Override
+				public void onPanelOpened(View arg0) {			
+					getActionBar().setTitle(getTitle());
+				}
+				
+				@Override
+				public void onPanelClosed(View arg0) {
+					getActionBar().setTitle(getTitle());
+				}
+			};
 
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(getTitle());
-				// calling onPrepareOptionsMenu() to hide action bar icons
-				invalidateOptionsMenu();
-			}
-		};
-		drawerLayout.setDrawerListener(actionBarDrawerToggle);
-	}
+			slidingPane.setPanelSlideListener(panelSlideListener);
+		}
+	}	
 
 	public void setNavigationSelection(int id) {
 		if(currentNavigationSelectionId!=id){
@@ -183,17 +236,40 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {		
 		// toggle nav drawer on selecting action bar app icon/title
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+		if(navMode ==  NAV_MODE_DRAWER){
+	        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+	            return true;
+	        }
+		}
+		else{
+			switch (item.getItemId()) {
+            case android.R.id.home:
+                if (slidingPane.isOpen()) {
+                	slidingPane.closePane();
+                } else {
+                	slidingPane.openPane();
+                }
+                return true;
         }
+		}
 		
 		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	public boolean isNavOpen(){
+		boolean drawerOpen = false;
+		if(navMode == NAV_MODE_DRAWER)
+			drawerOpen = drawerLayout.isDrawerOpen(listViewDrawer);
+		else
+			drawerOpen  =  slidingPane.isOpen();
+		return drawerOpen;
 	}
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// if nav drawer is opened, hide the action items
-		boolean drawerOpen = drawerLayout.isDrawerOpen(listViewDrawer);
+		boolean drawerOpen = isNavOpen();
+		
 		if (!drawerOpen) {
 			for (MenuItem item : currentVisibleActionsMenu)
 				item.setVisible(true);
@@ -220,14 +296,16 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-		actionBarDrawerToggle.syncState();
+		if(navMode == NAV_MODE_DRAWER)
+			actionBarDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
-		actionBarDrawerToggle.onConfigurationChanged(newConfig);
+		if(navMode == NAV_MODE_DRAWER)
+			actionBarDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override

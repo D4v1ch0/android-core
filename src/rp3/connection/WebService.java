@@ -24,6 +24,7 @@ import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -191,7 +192,7 @@ public class WebService {
 		return null;
 	}
 	
-	private void executeSoap(){		
+	private void executeSoap() throws HttpResponseException, IOException, XmlPullParserException{		
 		SoapObject request = new SoapObject(wsData.getNamespace(), wsMethod.getMethodId());                
         
 		 // Create envelope
@@ -221,18 +222,13 @@ public class WebService {
         // Create HTTP call object
         HttpTransportSE androidHttpTransport = new HttpTransportSE(wsData.getUrl());        
         
-        try {
-            // Invole web service
-            androidHttpTransport.call(wsMethod.getAction(), envelope);
-            // Get the response            
-            Object resultObject = envelope.getResponse();            
-            
-            respSoap = resultObject;                        
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Service SOAP","Error!", e);
-        }
+      
+        // Invole web service
+        androidHttpTransport.call(wsMethod.getAction(), envelope);
+        // Get the response            
+        Object resultObject = envelope.getResponse();            
+        
+        respSoap = resultObject;                                          
 	}
 	
 	private void executeRest(){		
@@ -280,7 +276,7 @@ public class WebService {
 		}		
 	}
 	
-	public void invokeWebService() {		
+	public void invokeWebService() throws HttpResponseException, IOException, XmlPullParserException {		
         if(wsData.getType().equalsIgnoreCase(TYPE_SOAP)){
         	executeSoap();
         }else if(wsData.getType().equalsIgnoreCase(TYPE_REST)){

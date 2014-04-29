@@ -2,11 +2,23 @@
 <resources>
     <color name="bg_inner_box">#ffffff</color>
     <color name="button_face">#D6D6D6</color>
+    <color name="bg_nav_drawer">#D6D6D6</color>
+    <color name="bg_nav_drawer_dark">#3A3A3C</color>
+    <color name="nav_item_text">#5E5E5E</color>
+    <color name="nav_item_divider">#aaa</color>   
+    
+    <color name="bg_selected_list_item">#0099CC</color>
+    <color name="bg_selected_nav_drawer_list_item">#0099CC</color>
+    
     <color name="button_face_ontouch">#C1C1C1</color>  
     <color name="button_face_pressed">#B7B7B7</color>  
     <color name="secondary_light_line">#D6D6D6</color>
     <color name="light_line">#DCDCDC</color> 
-    <color name="divider">#aaa</color>    
+    
+    <color name="divider">#aaa</color>
+    <color name="divider_dark">#454547</color>
+    
+              
     <color name="text_title">#D6D6D6</color>    
     <color name="secondary_highlight_text">#777777</color>
     <color name="secondary_highlight_text_low">#AAAAAA</color>    

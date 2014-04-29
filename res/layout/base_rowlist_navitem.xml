@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/activated">
+    style="@style/Widget.ListView.Activated.NavDrawer">
  
     <ImageView
         android:id="@+id/imageView_icon"
         android:layout_width="25dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="12dp"                
+        android:layout_marginLeft="12dp"                        
         android:contentDescription="@string/empty"
         android:src="@drawable/ic_action_headset"
         android:layout_centerVertical="true" />
@@ -21,6 +21,7 @@
         android:layout_height="48dp"
         android:layout_toRightOf="@id/imageView_icon"        
         android:gravity="center_vertical"
+        android:textColor="@color/nav_item_text"
         android:paddingRight="40dp"/>
      
     <TextView android:id="@+id/textView_counter"
@@ -35,5 +36,5 @@
 	    android:layout_alignParentBottom="true"
 	    android:layout_width="match_parent"
 	    android:layout_height="1px"
-	    android:background="@color/divider"/>    
+	    android:background="@color/nav_item_divider"/>    
 </RelativeLayout>

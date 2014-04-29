@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+ <item android:state_pressed="true" android:drawable="@color/bg_selected_nav_drawer_list_item" /> <!-- pressed -->
+ <item android:drawable="@android:color/transparent" /> <!-- pressed --> 
+</selector>

@@ -187,7 +187,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Configuration.TryInitializeConfiguration(this.context);
+		Configuration.TryInitializeConfiguration(this.context, getDataBaseClass());
 		if (savedInstanceState != null)
 			isRestoreInstance = true;
 	}

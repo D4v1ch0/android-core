@@ -3,6 +3,7 @@ package rp3.db.sqlite;
 import java.util.List;
 
 import rp3.configuration.Configuration;
+import rp3.data.models.Contract;
 import rp3.db.QueryDir;
 import rp3.xml.XmlPull;
 
@@ -54,6 +55,7 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 		XmlResourceParser parser = getContext().getResources().getXml(resourceId);
 
 		List<String> statements = XmlPull.getTextElements(parser, "statement");
+		statements.add(Contract.User.CREATE_TABLE);
 		
 		executeListStatements(db, statements);
 	}

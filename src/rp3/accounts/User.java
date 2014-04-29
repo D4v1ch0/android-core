@@ -33,6 +33,7 @@ public class User {
 	private boolean logged;	
 	
 	private static String accountType;
+	private static String authority;
 
 	private boolean current;
 	private Account account;
@@ -114,25 +115,44 @@ public class User {
 			initializeAuthenticatorParams(Session.getContext());
 		return accountType;
 	}
+	
+	public static String getAuthority() {
+		if (authority == null)
+			initializeAuthenticatorParams(Session.getContext());
+		return authority;
+	}		
 
 	private static void initializeAuthenticatorParams(Context c) {
-		int resourceId = c.getResources().getIdentifier("authenticator", "xml",
+		int resourceAuthId = c.getResources().getIdentifier("authenticator", "xml",
 				c.getApplicationContext().getPackageName());
-		XmlResourceParser parser = c.getResources().getXml(resourceId);
+		XmlResourceParser parserAuth = c.getResources().getXml(resourceAuthId);
 
+		int resourceSync = c.getResources().getIdentifier("syncadapter", "xml",
+				c.getApplicationContext().getPackageName());
+		XmlResourceParser parserSync = c.getResources().getXml(resourceSync);
+		
 		try {
-			parser.next();
-			parser.next();
+			parserAuth.next();
+			parserAuth.next();
 			
-			accountType = parser
+			accountType = parserAuth
 					.getAttributeValue(
 							"http://schemas.android.com/apk/res/android",
 							"accountType");
+			
+			parserSync.next();
+			parserSync.next();
+			
+			authority = parserSync
+					.getAttributeValue(
+							"http://schemas.android.com/apk/res/android",
+							"contentAuthority");
+			
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}			
 	}
 
 	// @Override

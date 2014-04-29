@@ -8,6 +8,7 @@ import rp3.data.Message;
 import rp3.data.MessageCollection;
 import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
+import rp3.sync.SyncUtils;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,6 +54,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public Context getContext(){
 		return context;
+	}
+	
+	public void requestSync(Bundle settingsBundle){
+		SyncUtils.requestSync(settingsBundle);
 	}
 	
 	public <D> void executeLoader(int id, Bundle args, LoaderCallbacks<D> callback){

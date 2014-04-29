@@ -13,23 +13,20 @@ public class DataBaseConfiguration {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_VERSION = "version";
 	private Class<? extends SQLiteOpenHelper> dbClass;
-	private Context context;
-	
-	public DataBaseConfiguration(Context c){
-		context = c;
-	}
+	private Context context;		
 	
 	public DataBase getDataBase(){
 		return DataBaseServiceHelper.getDataBaseInstance(
 				context,
-				rp3.configuration.Configuration.getDataBaseConfiguration().getDataBaseClass());
+				getDataBaseClass());
 	}
 	
-	public Class<? extends SQLiteOpenHelper> getDataBaseClass(){
+	public Class<? extends SQLiteOpenHelper> getDataBaseClass(){		
 		return dbClass;
 	}
 	
-	public DataBaseConfiguration(Class<? extends SQLiteOpenHelper> dbClass) {		
+	public DataBaseConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass) {		
+		this.context = c;
 		this.dbClass = dbClass; 
 	}
 

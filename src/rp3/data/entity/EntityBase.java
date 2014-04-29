@@ -300,4 +300,9 @@ public abstract class EntityBase<T> {
 	public boolean validate(){
 		return true;
 	}
+	
+	public static void deleteAll(DataBase db, String tableName){
+		db.delete(tableName, null);
+	}
+		
 }

@@ -18,12 +18,6 @@ public class StartActivity extends BaseActivity {
 				
 		setContentView(R.layout.activity_start);
 		
-	}
-	
-	@Override
-	protected void onStart() {		
-		super.onStart();
-		
 		Session.Start(this.getApplicationContext());
 		
 		if(Session.getUser().getAccount() == null){
@@ -38,7 +32,14 @@ public class StartActivity extends BaseActivity {
 				}			
 			}else
 				callLoginActivity();
-		}			
+		}
+	}
+	
+	@Override
+	protected void onStart() {		
+		super.onStart();
+		
+					
 	}
 	
 	private void callLoginActivity(){

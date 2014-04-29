@@ -45,6 +45,7 @@ public final class Configuration {
 //    private static final Object dataBaseConfigurationLock = new Object();
 //    private static final Object webServiceConfigurationLock = new Object();
 //    
+	
 	private static void initConfiguration(Context c,Class<? extends SQLiteOpenHelper> dbClass) {					
 		
 		synchronized (Configuration.class) {
@@ -52,7 +53,7 @@ public final class Configuration {
 		}
 		
 		synchronized (Configuration.class) {
-			dataBaseConfiguration = new DataBaseConfiguration(dbClass);	
+			dataBaseConfiguration = new DataBaseConfiguration(c,dbClass);	
 		}
 		
 		synchronized (Configuration.class) {

@@ -11,6 +11,7 @@ import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
+import rp3.sync.SyncUtils;
 import rp3.util.ViewUtils;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -51,10 +52,14 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;
 	
-	public BaseActivity() {
-		this.context = this ;		
+	public BaseActivity() {		
+		this.context = this;		
 	}
 
+	public void requestSync(Bundle settingsBundle){
+		SyncUtils.requestSync(settingsBundle);
+	}
+	
 	public boolean isRestoreInstance() {
 		return isRestoreInstance;
 	}
@@ -157,7 +162,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	public DataBase getDataBase() {
 		if (db == null)
 			db = DataBaseServiceHelper.getWritableDatabase(context,
-					dataBaseClass);
+					getDataBaseClass());
 		return db;
 	}
 
@@ -181,13 +186,14 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	@Override
 	public Class<? extends SQLiteOpenHelper> getDataBaseClass() {
+		if(dataBaseClass == null && rp3.configuration.Configuration.getDataBaseConfiguration() != null)
+			dataBaseClass = rp3.configuration.Configuration.getDataBaseConfiguration().getDataBaseClass();		
 		return dataBaseClass;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Configuration.TryInitializeConfiguration(this.context, getDataBaseClass());
+		super.onCreate(savedInstanceState);				
 		if (savedInstanceState != null)
 			isRestoreInstance = true;
 	}

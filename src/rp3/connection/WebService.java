@@ -211,9 +211,11 @@ public class WebService {
             
             if(p.isComplexType() && !(p.getValueType() instanceof SoapObject)){
             	envelope.addMapping(wsData.getNamespace(), p.getValue().getClass().getSimpleName(), (Class<?>) p.getValueType());
-            }                      
+            }                             
         }                               
         
+        envelope.setAddAdornments(false);
+        envelope.implicitTypes = true;
         if(wsData.isDotNet())
         	envelope.dotNet = true;        
                 

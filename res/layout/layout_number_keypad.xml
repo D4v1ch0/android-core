@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:id="@+id/content"
+    android:layout_height="wrap_content">
+    
+    <TableRow>
+        <Button android:text="@string/number_one" 
+            android:id="@+id/button_number_one"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_two"
+            android:id="@+id/button_number_two"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_three"
+            android:id="@+id/button_number_three"
+            style="@android:attr/buttonBarStyle"/>
+    </TableRow>
+    
+    <TableRow>
+        <Button android:text="@string/number_for"
+            android:id="@+id/button_number_for"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_five"
+            android:id="@+id/button_number_five"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_six"
+            android:id="@+id/button_number_six"
+            style="@android:attr/buttonBarStyle"/>
+    </TableRow>
+    
+    <TableRow>
+        <Button android:text="@string/number_seven"
+            android:id="@+id/button_number_seven"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_eight"
+            android:id="@+id/button_number_eight"
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_nine"
+            android:id="@+id/button_number_nine"
+            style="@android:attr/buttonBarStyle"/>
+    </TableRow>
+
+    <TableRow>
+        <ImageButton
+            android:src="@drawable/ic_action_discard_numpad"
+            android:contentDescription="@string/action_discard"
+            android:id="@+id/action_discard"                
+            android:layout_width="match_parent"                    
+            style="@android:attr/buttonBarStyle"/>
+        <Button android:text="@string/number_zero"
+            android:id="@+id/button_number_zero"
+            android:layout_span="2"    
+            android:layout_width="match_parent"                    
+            style="@android:attr/buttonBarStyle"/>
+	</TableRow>
+	
+</TableLayout>

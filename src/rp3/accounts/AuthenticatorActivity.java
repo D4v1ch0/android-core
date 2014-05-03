@@ -8,6 +8,7 @@ import rp3.runtime.Session;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -53,7 +54,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_authenticator);
-        getActionBar().hide();     
+        
+        if(getActionBar()!=null)
+        	getActionBar().hide();     
         
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);            
@@ -134,8 +137,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
     
     public void submit(final String logonName, final String password) {        
-
-        new AsyncTask<String, Void, Intent>() {
+    	
+    	final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting), 
+    			getText(R.string.message_please_wait), false);
+        
+    	new AsyncTask<String, Void, Intent>() {
 
             @Override
             protected Intent doInBackground(String... params) {
@@ -170,6 +176,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             protected void onPostExecute(Intent intent) {
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                	progressDialog.dismiss();
                     Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                 } else {
                     finishLogin(intent);

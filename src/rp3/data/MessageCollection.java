@@ -3,9 +3,16 @@ package rp3.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageCollection {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+
+public class MessageCollection implements Parcelable {
 
 	private List<Message> messages;
+	
+	public MessageCollection() {		
+	}
 	
 	public List<Message> getMessages(){
 		if(messages==null)messages = new ArrayList<Message>();
@@ -48,6 +55,26 @@ public class MessageCollection {
 		getMessages().add( new Message(text, title, type, key) );
 	}
 	
+	public void addMessage(String text, int type){
+		getMessages().add( new Message(text, type) );
+	}
+	
+	public void addErrorMessage(String text){
+		getMessages().add( new Message(text, Message.ERROR_TYPE) );
+	}
+	
+	public void addErrorMessage(String text, String title){
+		getMessages().add( new Message(text, title, Message.ERROR_TYPE) );
+	}
+	
+	public void addWarningMessage(String text){
+		getMessages().add( new Message(text, Message.WARNING_TYPE) );
+	}
+	
+	public void addWarningMessage(String text, String title){
+		getMessages().add( new Message(text, title, Message.WARNING_TYPE) );
+	}
+	
 	public Message getMessage(int key){
 		for(Message m: getMessages()){
 			if(key == m.getKey())
@@ -66,4 +93,31 @@ public class MessageCollection {
 		}
 		if(remove!=null) getMessages().remove(remove);
 	}
+
+	@Override
+	public int describeContents() {		
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel in, int arg1) {		
+		in.writeList(messages);
+	}
+	
+	public MessageCollection(Parcel in){
+		this.messages = new ArrayList<Message>();
+		in.readList(this.messages, getClass().getClassLoader());
+	}
+	
+	
+
+	public static final Parcelable.Creator<MessageCollection> CREATOR = new Parcelable.Creator<MessageCollection>() {
+		 public MessageCollection createFromParcel(Parcel in) {
+			 return new MessageCollection(in);
+		 }
+
+		 public MessageCollection[] newArray(int size) {
+			 return new MessageCollection[size];
+		 }
+	 };
 }

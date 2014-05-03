@@ -21,10 +21,18 @@
     <string name="message_no_search_result">No hay resultados&#8230;</string>
     <string name="message_no_selected_item">Seleccione un elemento</string>
     <string name="message_no_list_item">No hay elementos&#8230;</string>
+    <string name="message_please_wait">Por favor espere</string>
+    <string name="label_connecting">Conectando</string>    
     <string name="undo">Deshacer</string>
     <string name="undo_all">Deshacer Todo</string>
     <string name="item_deleted">Registro eliminado</string>
-    <string name="n_items_deleted">%1$s registros eliminados</string>
+    <string name="n_items_deleted">%1$s registros eliminados</string>        
+    
+    <string name="message_error_sync_connection_server_fail">No pudimos conectar con el servidor. Intenta más tarde</string>
+    <string name="message_error_sync_general_error">Tuvimos un problema al intentar actualizar los datos</string>
+    <string name="message_error_general">Ocurrió un problema, intenta más tarde</string>	
+	
+    
     
     <string name="empty"></string>
     

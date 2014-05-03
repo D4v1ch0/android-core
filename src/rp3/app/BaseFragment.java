@@ -12,6 +12,7 @@ import rp3.sync.SyncUtils;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private int menuResource;
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;
+	
+	private ProgressDialog progressDialog;
 	
 	public View getRootView(){
 		return rootView;
@@ -228,6 +231,31 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}
 	}
 	
+	public void showDialogProgress(int title, int message){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), false);
+	}
+	
+	public void showDialogProgress(int title, int message, boolean indeterminate){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), indeterminate);
+	}
+	
+	public void showDialogProgress(String title, String message){
+		showDialogProgress(title, message, false);
+	}
+	
+	public void showDialogProgress(String title, String message, boolean indeterminate){
+		if(progressDialog==null) progressDialog = new ProgressDialog(getContext());
+		
+		progressDialog.setTitle(title);
+		progressDialog.setMessage(message);				
+		
+		progressDialog.show();
+	}
+	
+	public void closeDialogProgress(){
+		progressDialog.dismiss();
+	}
+	
 	public void showDialogConfirmation(int id, int message){
 		showDialogConfirmation(id, message, message);
 	}
@@ -324,6 +352,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		return ViewUtils.getSpinnerSelectedLongID(getRootView(), id);
 	}
 	
+	public int getSpinnerSelectedPosition(int id){		
+		return ViewUtils.getSpinnerSelectedPosition(getRootView(), id);
+	}
+	
+	public String getSpinnerSelectedFieldCursor(int id, String fieldaName){		
+		return ViewUtils.getSpinnerSelectedFieldCursor(getRootView(), id, fieldaName);
+	}
+	
 	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, columnName, c);
 	}
@@ -334,6 +370,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void setSpinnerSimpleAdapter(int id,Object[] objects) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, objects);
+	}
+	
+	public SpinnerAdapter getSpinnerAdapter(int id) {
+		return ViewUtils.getSpinnerAdapter(getRootView(), id);
+	}
+	
+	public void setSpinnerSelectionByPosition(int id, int position) {
+		ViewUtils.setSpinnerSelectionByPosition(getRootView(), id, position);
+	}
+	
+	public void setSpinnerSelectionByFieldCursor(int id, String fieldaName, Object selectedValue) {
+		ViewUtils.setSpinnerSelectionByFieldCursor(getRootView(), id, fieldaName, selectedValue);
+	}
+	
+	public void setSpinnerSelectionById(int id, long itemId) {
+		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
 	}
 	
 	public void setListViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){

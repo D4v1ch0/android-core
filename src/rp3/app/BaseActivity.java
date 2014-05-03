@@ -2,7 +2,8 @@ package rp3.app;
 
 import java.util.List;
 
-import rp3.configuration.Configuration;
+import rp3.content.SimpleCallback;
+import rp3.content.SyncAdapter;
 import rp3.core.R;
 import rp3.data.Constants;
 import rp3.data.Message;
@@ -14,10 +15,14 @@ import rp3.db.sqlite.DataBaseServiceHelper;
 import rp3.sync.SyncUtils;
 import rp3.util.ViewUtils;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -38,7 +43,7 @@ import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 
 public class BaseActivity extends FragmentActivity implements DataBaseService,
-		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>  {
+		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>   {
 
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
 	protected Context context;
@@ -50,7 +55,9 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private int currentDialogId;
 	private int menuResource; 
 	private FragmentTransaction fragmentTransaction;
-	private boolean inFragmentTransaction;
+	private boolean inFragmentTransaction;		
+	
+	private ProgressDialog progressDialog;
 	
 	public BaseActivity() {		
 		this.context = this;		
@@ -213,13 +220,22 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
+	protected void onPause() {		
 		super.onPause();
+		//Sync Handler
+		unregisterReceiver(syncFinishedReceiver);
+		
 		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
 			closeDataBaseResources();
 	}
+	
+	@Override
+	protected void onResume() {		
+		super.onResume();		
+		registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));		
+	}
 
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -253,10 +269,35 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 
+	public void showDialogProgress(int title, int message){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), false);
+	}
+	
+	public void showDialogProgress(int title, int message, boolean indeterminate){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), indeterminate);
+	}
+	
+	public void showDialogProgress(String title, String message){
+		showDialogProgress(title, message, false);
+	}
+	
+	public void showDialogProgress(String title, String message, boolean indeterminate){
+		if(progressDialog==null) progressDialog = new ProgressDialog(this);
+		
+		progressDialog.setTitle(title);
+		progressDialog.setMessage(message);				
+		
+		progressDialog.show();
+	}
+	
+	public void closeDialogProgress(){
+		progressDialog.dismiss();
+	}
+	
 	public void showDialogConfirmation(int id, int message) {
 		showDialogConfirmation(id, message, message);
 	}
-
+		
 	public void showDialogConfirmation(final int id, int message, int title) {
 		currentDialogId = id;
 
@@ -292,6 +333,31 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 
+	public void showDialogMessage(MessageCollection messages){
+		showDialogMessage(messages, null);
+	}
+
+	public void showDialogMessage(MessageCollection messages, final SimpleCallback callback){		 
+		CharSequence[] items = new CharSequence[messages.getCuount()];
+		int i = 0;
+		for(Message m : messages.getMessages()){
+			items[i++] = m.getText();
+		}
+		Builder dialog = new AlertDialog.Builder(this)
+		.setTitle(R.string.app_name)
+		.setItems(items, null)
+		.setPositiveButton(R.string.action_accept, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				if(callback!=null)
+					callback.onExecute();				
+			}
+		})
+		.setCancelable(true);
+		dialog.show();
+	}
+	
 	public void hideDialogConfirmation() {
 		if (getRootView().findViewById(R.id.base_confirmation_dialog) != null)
 			setViewVisibility(R.id.base_confirmation_dialog, View.GONE);
@@ -349,6 +415,14 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		return ViewUtils.getSpinnerSelectedLongID(getRootView(), id);
 	}
 	
+	public int getSpinnerSelectedPosition(int id){		
+		return ViewUtils.getSpinnerSelectedPosition(getRootView(), id);
+	}
+	
+	public String getSpinnerSelectedFieldCursor(int id, String fieldaName){		
+		return ViewUtils.getSpinnerSelectedFieldCursor(getRootView(), id, fieldaName);
+	}
+	
 	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, columnName, c);
 	}
@@ -359,6 +433,22 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	
 	public void setSpinnerSimpleAdapter(int id,Object[] objects) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, objects);
+	}
+	
+	public SpinnerAdapter getSpinnerAdapter(int id) {
+		return ViewUtils.getSpinnerAdapter(getRootView(), id);
+	}
+	
+	public void setSpinnerSelectionByPosition(int id, int position) {
+		ViewUtils.setSpinnerSelectionByPosition(getRootView(), id, position);
+	}
+	
+	public void setSpinnerSelectionByFieldCursor(int id, String fieldaName, Object selectedValue) {
+		ViewUtils.setSpinnerSelectionByFieldCursor(getRootView(), id, fieldaName, selectedValue);
+	}
+	
+	public void setSpinnerSelectionById(int id, long itemId) {
+		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
 	}
 	
 	public void setListViewOnItemClickListener(int id,
@@ -432,4 +522,18 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	public void onEntityValidationSuccess(Object e) {
 	}
+
+	
+	public void onSyncComplete(Bundle data, MessageCollection messages){		
+	}
+	
+	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
+
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+	    	MessageCollection messages = (MessageCollection)intent.getExtras().getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);	        
+	        Bundle bundle = intent.getExtras().getBundle(SyncAdapter.NOTIFY_EXTRA_DATA);
+	    	onSyncComplete(bundle, messages);
+	    }
+	};
 }

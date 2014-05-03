@@ -301,8 +301,12 @@ public abstract class EntityBase<T> {
 		return true;
 	}
 	
-	public static void deleteAll(DataBase db, String tableName){
-		db.delete(tableName, null);
+	public static long deleteAll(DataBase db, String tableName){
+		return db.delete(tableName);
+	}
+	
+	public static long deleteAll(DataBase db, String tableName, boolean truncateAutIncrementId){
+		return db.delete(tableName, truncateAutIncrementId);
 	}
 		
 }

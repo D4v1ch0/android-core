@@ -83,6 +83,17 @@ public abstract class ViewUtils {
 		return Convert.getInt(sp.getSelectedItemId());		
 	}
 	
+	public static final int getSpinnerSelectedPosition(View rootView, int id){
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		return sp.getSelectedItemPosition();
+	}
+	
+	public static final String getSpinnerSelectedFieldCursor(View rootView, int id, String fieldaName){
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		Cursor c = (Cursor) sp.getSelectedItem();
+		return CursorUtils.getString(c, fieldaName);
+	}
+	
 	public static final void setSpinnerSimpleAdapter(View rootView, Context context, int id, String columnName, Cursor c) {
 		setSpinnerAdapter(rootView, id, 
 				new SimpleCursorAdapter(context,R.layout.base_rowlist_simple_spinner, c, 
@@ -99,6 +110,49 @@ public abstract class ViewUtils {
 				new ArrayAdapter<Object>(context,R.layout.base_rowlist_simple_spinner, R.id.textView_content, objects));
 	}	
 	
+	public static final SpinnerAdapter getSpinnerAdapter(View rootView, int id) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		return sp.getAdapter();
+	}
+	
+	public static final void setSpinnerSelectionByPosition(View rootView, int id, int position) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setSelection(position);
+	}
+	
+	public static final void setSpinnerSelectionByFieldCursor(View rootView, int id, String fieldaName, Object selectedValue) {
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		SpinnerAdapter adapter = sp.getAdapter();
+		
+		if(adapter instanceof SimpleCursorAdapter){
+			Cursor c = ((SimpleCursorAdapter)adapter).getCursor();
+			
+			c.moveToFirst();			
+			do {
+	            	            
+	        	String currentValue = CursorUtils.getString(c, fieldaName);
+	            
+	        	if ( String.valueOf(selectedValue).equals(currentValue) ){
+	        		sp.setSelection(c.getPosition());
+	        		break;
+	        	}
+	        	
+	        } while (c.moveToNext());
+		}
+	}
+	
+	public static final void setSpinnerSelectionById(View rootView, int id, long itemId) {
+		Spinner sp = (Spinner)rootView.findViewById(id);		
+		SpinnerAdapter adapter = sp.getAdapter();		
+		
+		for(int i=0; i < adapter.getCount(); i++){
+			long tempId = adapter.getItemId(i);
+			if(tempId == itemId){
+				sp.setSelection(i);
+				break;
+			}
+		}				
+	}			
 	
 	public static final void setListViewOnClickListener(View rootView,int id, AdapterView.OnItemClickListener l)
 	{		

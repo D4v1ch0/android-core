@@ -11,35 +11,37 @@ import android.widget.ImageView;
 public class StartActivity extends BaseActivity {	
 		
 	public static final int REQUEST_LOGIN_ACTIVITY = 1;	
+	private boolean firstTime = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);		
 				
-		setContentView(R.layout.activity_start);
-		
-		Session.Start(this.getApplicationContext());
-		
-		if(Session.getUser().getAccount() == null){
-			callLoginActivity();
-		}else{
-			if(rp3.runtime.Session.IsLogged()){			
-				if(onNeedRequestAut()){
-					callLoginActivity();
-				}
-				else{
-					onContinue();
-				}			
-			}else
-				callLoginActivity();
-		}
+		setContentView(R.layout.activity_start);				
 	}
 	
 	@Override
 	protected void onStart() {		
 		super.onStart();
 		
-					
+		if(firstTime){
+			firstTime = false;
+			Session.Start(this.getApplicationContext());
+			
+			if(Session.getUser().getAccount() == null){
+				callLoginActivity();
+			}else{
+				if(rp3.runtime.Session.IsLogged()){			
+					if(onNeedRequestAut()){
+						callLoginActivity();
+					}
+					else{
+						onContinue();
+					}			
+				}else
+					callLoginActivity();
+			}			
+		}
 	}
 	
 	private void callLoginActivity(){

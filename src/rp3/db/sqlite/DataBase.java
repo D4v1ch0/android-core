@@ -1,5 +1,6 @@
 package rp3.db.sqlite;
 
+import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import android.content.ContentValues;
@@ -32,6 +33,10 @@ public class DataBase {
 	Context c;
 	private SQLiteOpenHelper dbOpenHelper;
 	private SQLiteDatabase db;		
+	
+	public static DataBase newDataBase(Class<? extends SQLiteOpenHelper> dbClass){
+		return DataBaseServiceHelper.getDataBaseInstance(Session.getContext(), dbClass);
+	}
 	
 	public DataBase(Context c, SQLiteOpenHelper helper){
 		dbOpenHelper = helper;		
@@ -262,6 +267,17 @@ public class DataBase {
 	
 	public long update(String table, ContentValues values, String whereClause, int whereArg) {
 		return getDb().update(table, values, whereClause, Convert.getStringArrayFromScalar(whereArg));
+	}
+	
+	public long delete(String table){
+		return delete(table, false);
+	}
+	
+	public long delete(String table, boolean truncateAutIncrementId){		
+		long returns = getDb().delete(table, null, null);
+		if(truncateAutIncrementId)
+			getDb().execSQL("UPDATE sqlite_sequence SET seq = 0 where name = \"" + table + "\"; ");
+		return returns;
 	}
 	
 	public long delete(String table, String whereClause, String[] whereArgs){

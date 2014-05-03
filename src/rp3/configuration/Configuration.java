@@ -16,7 +16,7 @@ public final class Configuration {
 	private static DataBaseConfiguration dataBaseConfiguration;
 	private static AppConfiguration appConfiguration;
 	private static WebServiceConfiguration webServiceConfiguration;			
-	
+	//private static 
 	private static boolean loaded;	
 	
 	public synchronized static boolean isLoaded(){
@@ -29,7 +29,17 @@ public final class Configuration {
 			initConfiguration(c, dbClass);
 		}
 	}	
+	
+	public static void TryInitializeConfiguration(Context c){
+		if(!isLoaded()){
+			initConfiguration(c, null);
+		}
+	}	
 
+	public static PreferenceManager getParameters(){
+		return null;
+	}
+	
 	public synchronized static AppConfiguration getAppConfiguration() {	
 		return appConfiguration;		
 	}

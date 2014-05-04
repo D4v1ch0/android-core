@@ -32,7 +32,7 @@
     <string name="message_error_sync_general_error">Tuvimos un problema al intentar actualizar los datos</string>
     <string name="message_error_general">Ocurrió un problema, intenta más tarde</string>	
 	
-    
+    <string name="message_error_sync_no_net_available">No hay conexión</string>
     
     <string name="empty"></string>
     

@@ -1,8 +1,12 @@
 package rp3.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Convert {
+	
+	public final static String DEFAULT_FORMAT_DATETIME = "yyyyMMdd HH:mm:ss";
 	
 	public final static String[] getStringArrayFromScalar(String value){
 		String[] values = null;
@@ -32,6 +36,17 @@ public class Convert {
 	
 	public final static Date getDateFromTicks(long ticks){
 		return new Date(ticks);
+	}
+	
+	public final static Date getDateFromString(String dateStr)
+	{
+		try {
+			return new SimpleDateFormat(DEFAULT_FORMAT_DATETIME).parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Date();
 	}
 	
 	public final static Long getTicksFromDate(Date date){

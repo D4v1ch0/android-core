@@ -3,19 +3,24 @@ package rp3.app;
 import java.util.Date;
 import java.util.List;
 
+import rp3.content.SyncAdapter;
 import rp3.core.R;
 import rp3.data.Message;
 import rp3.data.MessageCollection;
 import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.sync.SyncUtils;
+import rp3.util.ConnectionUtils;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -60,7 +65,13 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void requestSync(Bundle settingsBundle){
-		SyncUtils.requestSync(settingsBundle);
+		if(ConnectionUtils.isNetAvailable(getActivity())){
+			SyncUtils.requestSync(settingsBundle);
+		}else{
+			MessageCollection mc = new MessageCollection();
+			mc.addErrorMessage(getText(R.string.message_error_sync_no_net_available).toString());
+			onSyncComplete(new Bundle(), mc);
+		}
 	}
 	
 	public <D> void executeLoader(int id, Bundle args, LoaderCallbacks<D> callback){
@@ -174,6 +185,18 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		super.onAttach(activity);
 		this.context = activity;		
 	}	
+	
+	@Override
+	public void onResume() {		
+		super.onResume();
+		getActivity().registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));
+	}
+	
+	@Override
+	public void onPause() {	
+		super.onPause();
+		getActivity().unregisterReceiver(syncFinishedReceiver);
+	}
 	
 //	private void setMenu(){
 //		Menu menu = null;
@@ -449,4 +472,16 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void onEntityValidationSuccess(Object e) {
 	}
 	
+	public void onSyncComplete(Bundle data, MessageCollection messages){		
+	}
+	
+	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
+
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+	    	MessageCollection messages = (MessageCollection)intent.getExtras().getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);	        
+	        Bundle bundle = intent.getExtras().getBundle(SyncAdapter.NOTIFY_EXTRA_DATA);
+	    	onSyncComplete(bundle, messages);
+	    }
+	};
 }

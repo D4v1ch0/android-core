@@ -13,6 +13,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
 import rp3.sync.SyncUtils;
+import rp3.util.ConnectionUtils;
 import rp3.util.ViewUtils;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -64,7 +65,13 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void requestSync(Bundle settingsBundle){
-		SyncUtils.requestSync(settingsBundle);
+		if(ConnectionUtils.isNetAvailable(this)){
+			SyncUtils.requestSync(settingsBundle);
+		}else{
+			MessageCollection mc = new MessageCollection();
+			mc.addErrorMessage(getText(R.string.message_error_sync_no_net_available).toString());
+			onSyncComplete(new Bundle(), mc);
+		}
 	}
 	
 	public boolean isRestoreInstance() {
@@ -333,6 +340,16 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 
+	public void showDialogMessage(Message message){
+		showDialogMessage(message);
+	}
+	
+	public void showDialogMessage(Message message, final SimpleCallback callback){
+		MessageCollection mc = new MessageCollection();
+		mc.addMessage(message);
+		showDialogMessage(mc, callback);
+	}
+	
 	public void showDialogMessage(MessageCollection messages){
 		showDialogMessage(messages, null);
 	}

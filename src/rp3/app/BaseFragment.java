@@ -3,6 +3,7 @@ package rp3.app;
 import java.util.Date;
 import java.util.List;
 
+import rp3.content.SimpleCallback;
 import rp3.content.SyncAdapter;
 import rp3.core.R;
 import rp3.data.Message;
@@ -313,6 +314,41 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}				
 	}
 	
+	public void showDialogMessage(Message message){
+		showDialogMessage(message);
+	}
+	
+	public void showDialogMessage(Message message, final SimpleCallback callback){
+		MessageCollection mc = new MessageCollection();
+		mc.addMessage(message);
+		showDialogMessage(mc, callback);
+	}
+	
+	public void showDialogMessage(MessageCollection messages){
+		showDialogMessage(messages, null);
+	}
+
+	public void showDialogMessage(MessageCollection messages, final SimpleCallback callback){		 
+		CharSequence[] items = new CharSequence[messages.getCuount()];
+		int i = 0;
+		for(Message m : messages.getMessages()){
+			items[i++] = m.getText();
+		}
+		Builder dialog = new AlertDialog.Builder(getContext())
+		.setTitle(R.string.app_name)
+		.setItems(items, null)
+		.setPositiveButton(R.string.action_accept, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				if(callback!=null)
+					callback.onExecute();				
+			}
+		})
+		.setCancelable(true);
+		dialog.show();
+	}
+	
 	public void hideDialogConfirmation(){
 		if(getRootView().findViewById(R.id.base_confirmation_dialog)!=null)
 			setViewVisibility(R.id.base_confirmation_dialog, View.GONE);
@@ -361,6 +397,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void setListViewAdapter(int id, ListAdapter adapter)
 	{		
 		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setListViewHeader(int id, int resHeaderID){
+		ViewUtils.setListViewHeader(getRootView(), id, resHeaderID);
 	}
 
 	public void setSpinnerAdapter(int id, SpinnerAdapter adapter){

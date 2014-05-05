@@ -419,6 +419,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	public void setListViewAdapter(int id, ListAdapter adapter) {
 		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
 	}
+	
+	public void setListViewHeader(int id, int resHeaderID){
+		ViewUtils.setListViewHeader(getRootView(), id, resHeaderID);
+	}
 
 	public void setSpinnerAdapter(int id, SpinnerAdapter adapter){
 		ViewUtils.setSpinnerAdapter(getRootView(), id, adapter);

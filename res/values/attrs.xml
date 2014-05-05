@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="NumberPad">
-        <attr name="targetView" format="reference" />                            
+        <attr name="targetView" format="reference" />
+        <attr name="maxLength" format="integer" />                            
     </declare-styleable>
 </resources>

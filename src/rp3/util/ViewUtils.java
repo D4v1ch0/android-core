@@ -5,9 +5,11 @@ import java.util.List;
 
 import rp3.core.R;
 import rp3.data.Message;
+import rp3.runtime.Session;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -54,6 +56,12 @@ public abstract class ViewUtils {
 	public static final void setListViewAdapter(View rootView,int id, ListAdapter adapter)
 	{		
 		((ListView) rootView.findViewById(id)).setAdapter(adapter);
+	}
+	
+	public static final void setListViewHeader(View rootView, int id, int resHeaderID){
+		View headerView = LayoutInflater.from(Session.getContext()).inflate(resHeaderID, null);
+		ListView list = ((ListView) rootView.findViewById(id));
+		list.addHeaderView(headerView, null, false);
 	}
 	
 	public static final void setSpinnerAdapter(View rootView, int id, SpinnerAdapter adapter){

@@ -13,6 +13,7 @@ public class NumberPad extends FrameLayout {
 	private int targetViewId;
 	private Context context;	
 	private TextView targetView;
+	private int maxLength = 0;
 	
 	public NumberPad(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -21,7 +22,8 @@ public class NumberPad extends FrameLayout {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs,R.styleable.NumberPad, 0, 0);
 
 		try {
-			targetViewId = a.getResourceId(R.styleable.NumberPad_targetView,0);						
+			targetViewId = a.getResourceId(R.styleable.NumberPad_targetView,0);			
+			maxLength = a.getInteger(R.styleable.NumberPad_maxLength, 0);
 		} finally {
 			a.recycle();
 		}
@@ -73,11 +75,12 @@ public class NumberPad extends FrameLayout {
 						if(text != null && text.length()>0)
 						text = text.substring(0, text.length()-1);
 					}else{
-						if(text==null) text = "";
-						text += String.valueOf(value);
+						if(text==null) text = "";						
+						text += String.valueOf(value);						
 					}
 					
-					targetView.setText(text);
+					if(maxLength == 0 || text.length() <= maxLength)
+						targetView.setText(text);
 				}
 			}
 		});

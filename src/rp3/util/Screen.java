@@ -14,7 +14,7 @@ public class Screen {
 				|| screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
 	}
 
-	public static boolean isMinLageLayoutSize(Context c) {
+	public static boolean isMinLargeLayoutSize(Context c) {
 		int screenSize = getScreenLayoutSize(c);
 		return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
 				|| screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;

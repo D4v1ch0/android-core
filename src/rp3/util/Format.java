@@ -7,12 +7,14 @@ import android.text.format.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @SuppressLint("SimpleDateFormat")
 public final class Format {
 
 	public final static String FORMAT_DATABASE_DATETIME = "yyyyMMdd HH:mm:ss";
+	public final static String FORMAT_DATABASE_DATE = "yyyyMMdd HH:mm:ss";
 	
 	public final static String getDefaultCurrencyFormat(String value)
 	{
@@ -56,6 +58,10 @@ public final class Format {
 				format(getDateFromDataBaseString(dateStr));
 	}
 	
+	public final static String getDefaultDateFormat(Calendar calendar){
+		return getDefaultDateFormat(calendar.getTime());
+	}
+	
 	public final static String getDefaultDateFormat(Date date)
 	{
 		java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
@@ -65,13 +71,46 @@ public final class Format {
 	}
 	
 	
-	public final static String getDataBaseString(Date dateToString)
+	public final static String getDataBaseDateTimeString(Date dateToString)
 	{
 		SimpleDateFormat df = new SimpleDateFormat(FORMAT_DATABASE_DATETIME);				
 		return df.format(dateToString);
 	}
 	
+	public final static String getDataBaseDateString(Date dateToString)
+	{
+		SimpleDateFormat df = new SimpleDateFormat(FORMAT_DATABASE_DATE);				
+		return df.format(dateToString);
+	}
+	
+	public final static String getStringFromDate(Date dateToString, String format)
+	{
+		SimpleDateFormat df = new SimpleDateFormat(format);				
+		return df.format(dateToString);
+	}
+	
+	public final static Date getDateFromString(String dateStr, String format){
+		try {
+			return new SimpleDateFormat(format).parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Date();
+	}
+	
 	public final static Date getDateFromDataBaseString(String dateStr)
+	{
+		try {
+			return new SimpleDateFormat(FORMAT_DATABASE_DATE).parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Date();
+	}
+	
+	public final static Date getDateTimeFromDataBaseString(String dateStr)
 	{
 		try {
 			return new SimpleDateFormat(FORMAT_DATABASE_DATETIME).parse(dateStr);

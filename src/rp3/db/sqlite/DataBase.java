@@ -104,9 +104,19 @@ public class DataBase {
 		return query(table, Convert.getStringArrayFromScalar(column), null, null, null, null,null);
 	}
 	
+	public Cursor query(boolean dictinct, String table, String column)
+	{
+		return query(dictinct, table, Convert.getStringArrayFromScalar(column), null, null, null, null,null);
+	}
+	
 	public Cursor query(String table, String[] columns)
 	{
 		return query(table, columns, null, null, null, null,null);
+	}
+	
+	public Cursor query(boolean dictinct, String table, String[] columns)
+	{
+		return query(dictinct, table, columns, null, null, null, null,null);
 	}
 	
 	public Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
@@ -114,14 +124,30 @@ public class DataBase {
 		return query(table, columns, selection, selectionArgs, null, null,null);
 	}
 	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs)
+	{
+		return query(distinct, table, columns, selection, selectionArgs, null, null,null);
+	}
+	
 	public Cursor query(String table, String[] columns, String selection, String selectionArg)
 	{
 		return query(table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
 	}
 	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, String selectionArg)
+	{
+		return query(distinct, table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
 	public Cursor query(String table, String column, String selection, String selectionArg)
 	{
 		return query(table, Convert.getStringArrayFromScalar(column), 
+				selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
+	public Cursor query(boolean distinct, String table, String column, String selection, String selectionArg)
+	{
+		return query(distinct, table, Convert.getStringArrayFromScalar(column), 
 				selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
 	}
 	
@@ -131,14 +157,51 @@ public class DataBase {
 				selection, selectionArgs, null, null,null);
 	}
 	
+	public Cursor query(boolean distinct, String table, String column, String selection, String[] selectionArgs)
+	{
+		return query(distinct, table, Convert.getStringArrayFromScalar(column), 
+				selection, selectionArgs, null, null,null);
+	}
+	
 	public Cursor query(String table, String[] columns, String selection, boolean selectionArg)
 	{
 		return query(table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
 	}
 	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, boolean selectionArg)
+	{
+		return query(distinct, table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
+	public Cursor query(String table, String[] columns, String selection, Long selectionArg)
+	{
+		return query(table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, Long selectionArg)
+	{
+		return query(distinct, table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
+	public Cursor query(String table, String[] columns, String selection, int selectionArg)
+	{
+		return query(table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, int selectionArg)
+	{
+		return query(distinct, table, columns, selection, Convert.getStringArrayFromScalar(selectionArg), null, null,null);
+	}
+	
 	public Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, 
 			String having, String orderBy){
 		return getDb().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+	}
+		
+	
+	public Cursor query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, 
+			String having, String orderBy){
+		return getDb().query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, null);
 	}
 	
 	public long queryMaxLong(String table, String column, String selection, String[] selectionArgs){

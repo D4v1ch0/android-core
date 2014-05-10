@@ -1,5 +1,6 @@
 package rp3.app;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,9 +40,15 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker.OnDateChangedListener;
 
-public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object> {
-		
+public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, 
+	DialogDatePickerChangeListener, FragmentResultListener {
+	
+	public static final int RESULT_OK = -1;
+	public static final int RESULT_CANCELED = 0;	
+	
 	public BaseFragment()	
 	{		
 	}
@@ -54,6 +61,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private int menuResource;
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;
+	private boolean isDialog;
+	private String currentFragmentTagName;
+	private FragmentResultListener fragmentResultCallback;
 	
 	private ProgressDialog progressDialog;
 	
@@ -63,6 +73,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public Context getContext(){
 		return context;
+	}
+	
+	void setIsDialog(boolean isDialog){
+		this.isDialog = isDialog;
+	}
+	
+	void setFragmentTagName(String tagName){
+		currentFragmentTagName = tagName;
+	}
+	
+	public String getFragmentTagName(){
+		return currentFragmentTagName;
+	}
+	
+	public boolean isDialog(){
+		return isDialog;
 	}
 	
 	public void requestSync(Bundle settingsBundle){
@@ -141,8 +167,15 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		menuResource = menuResID;
 	}
 	
-	public void finish(){		
+	public void finishActivity(){
 		this.getActivity().finish();
+	}
+	
+	public void finish(){
+		if(isDialog)
+			dismiss();
+		else			
+			finishActivity();
 	}
 	
 	@Override
@@ -159,14 +192,46 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		this.rootView = rootView;
 	}
 	
-	public void showDialogFragment(DialogFragment f, String tagName){
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-	    Fragment prev = getFragmentManager().findFragmentByTag(tagName);
-	    if (prev != null) {
-	        ft.remove(prev);
-	    }
-	    ft.addToBackStack(null);
-		f.show(ft,tagName);
+	public void showDialogDatePicker(int id, Calendar c){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id, Date d){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName) {				
+		showDialogFragment(f,tagName, null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, FragmentResultListener l) {
+		fragmentResultCallback = l;
+		if(fragmentResultCallback == null) fragmentResultCallback = this;
+		
+		FragmentTransaction ft = getChildFragmentManager().beginTransaction();		
+		Fragment prev = getChildFragmentManager().findFragmentByTag(tagName);
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		if(f instanceof BaseFragment){
+			((BaseFragment)f).setIsDialog(true);
+			((BaseFragment)f).setFragmentTagName(tagName);
+		}
+		
+		ft.addToBackStack(null);
+		f.show(ft, tagName);
+	}
+	
+	public void setResult(int resultCode, Bundle data){
+		if(fragmentResultCallback!=null)
+			fragmentResultCallback.onFragmentResult(getFragmentTagName(), resultCode, data);
 	}
 		
 	public DataBase getDataBase(){		
@@ -259,20 +324,20 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		showDialogProgress(getText(title).toString(), getText(message).toString(), false);
 	}
 	
-	public void showDialogProgress(int title, int message, boolean indeterminate){
-		showDialogProgress(getText(title).toString(), getText(message).toString(), indeterminate);
+	public void showDialogProgress(int title, int message, boolean cancelable){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), cancelable);
 	}
 	
 	public void showDialogProgress(String title, String message){
 		showDialogProgress(title, message, false);
 	}
 	
-	public void showDialogProgress(String title, String message, boolean indeterminate){
+	public void showDialogProgress(String title, String message, boolean cancelable){
 		if(progressDialog==null) progressDialog = new ProgressDialog(getContext());
 		
 		progressDialog.setTitle(title);
 		progressDialog.setMessage(message);				
-		
+		progressDialog.setCancelable(cancelable);
 		progressDialog.show();
 	}
 	
@@ -314,8 +379,16 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}				
 	}
 	
+	public void showDialogMessage(int messageResID){
+		showDialogMessage(new Message(getText(messageResID).toString()), null);
+	}
+	
+	public void showDialogMessage(String message){
+		showDialogMessage(new Message(message), null);
+	}
+	
 	public void showDialogMessage(Message message){
-		showDialogMessage(message);
+		showDialogMessage(message, null);
 	}
 	
 	public void showDialogMessage(Message message, final SimpleCallback callback){
@@ -451,8 +524,52 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
 	}
 	
+	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setSpinnerOnItemSelectedListener(getRootView(), id, l);
+	}
+	
+	public void setGridViewAdapter(int id, ListAdapter adapter){
+		ViewUtils.setGridViewAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setGridViewdOnItemClickListener(int id, OnItemClickListener l){
+		ViewUtils.setGridViewdOnItemClickListener(getRootView(), id, l);
+	}
+	
+	public void setGridViewdOnItemClickListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setGridViewdOnItemSelectedListener(getRootView(), id, l);
+	}		
+
+	public void setListViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setListViewOnItemSelectedListener(getRootView(), id, l);		
+	}
+	
 	public void setListViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){
 		ViewUtils.setListViewOnClickListener(getRootView(), id, l);
+	}	
+	
+	public void setDatePicker(int id, Date value){
+		ViewUtils.setDatePicker(getRootView(), id, value);
+	}
+	
+	public void setDatePicker(int id, Calendar value){
+		ViewUtils.setDatePicker(getRootView(), id, value);
+	}
+	
+	public void setDatePicker(int id, Date value, OnDateChangedListener l){		
+		ViewUtils.setDatePicker(getRootView(), id, value, l);		
+	}
+	
+	public void setDatePicker(int id, Calendar value, OnDateChangedListener l){
+		ViewUtils.setDatePicker(getRootView(), id, value, l);
+	}
+	
+	public Date getDatePickerDate(int id){		
+		return ViewUtils.getDatePickerDate(getRootView(), id);
+	}
+	
+	public Calendar getDatePickerCalendar(int id){
+		return ViewUtils.getDatePickerCalendar(getRootView(), id);
 	}
 	
 	public String getTextViewString(int id){
@@ -523,5 +640,17 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	        Bundle bundle = intent.getExtras().getBundle(SyncAdapter.NOTIFY_EXTRA_DATA);
 	    	onSyncComplete(bundle, messages);
 	    }
+	};		
+	
+	public void onCancel(DialogInterface dialog) {
+		setResult(RESULT_CANCELED, null);
 	};
+
+	@Override
+	public void onDailogDatePickerChange(int id, Calendar c) {		
+	}
+
+	@Override
+	public void onFragmentResult(String tagName, int resultCode, Bundle data) {		
+	}
 }

@@ -50,7 +50,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		if(Screen.isMinLageLayoutSize(getApplicationContext())){
+		if(Screen.isMinLargeLayoutSize(getApplicationContext())){
 			navMode = NAV_MODE_SLIDING_PANE;
 			setContentView(R.layout.base_activity_navigation_sliding_pane);
 			// SlidingPaneLayout customization

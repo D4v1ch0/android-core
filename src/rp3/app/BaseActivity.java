@@ -1,5 +1,7 @@
 package rp3.app;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import rp3.content.SimpleCallback;
@@ -42,9 +44,11 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker.OnDateChangedListener;
 
 public class BaseActivity extends FragmentActivity implements DataBaseService,
-		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>   {
+		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, DialogDatePickerChangeListener, FragmentResultListener   {
 
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
 	protected Context context;
@@ -58,10 +62,12 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;		
 	
+	private FragmentResultListener fragmentResultCallback;
+	
 	private ProgressDialog progressDialog;
 	
 	public BaseActivity() {		
-		this.context = this;		
+		this.context = this;			
 	}
 
 	public void requestSync(Bundle settingsBundle){
@@ -124,12 +130,39 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		return rootView;
 	}	
 	
-	public void showDialogFragment(DialogFragment f, String tagName) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	public void showDialogDatePicker(int id, Calendar c){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id, Date d){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName) {				
+		showDialogFragment(f,tagName, null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, FragmentResultListener l) {
+		fragmentResultCallback = l;
+		if(fragmentResultCallback == null) fragmentResultCallback = this;
+		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();		
 		Fragment prev = getSupportFragmentManager().findFragmentByTag(tagName);
 		if (prev != null) {
 			ft.remove(prev);
 		}
+		if(f instanceof BaseFragment){
+			((BaseFragment)f).setIsDialog(true);
+			((BaseFragment)f).setFragmentTagName(tagName);
+		}
+		
 		ft.addToBackStack(null);
 		f.show(ft, tagName);
 	}
@@ -280,20 +313,20 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		showDialogProgress(getText(title).toString(), getText(message).toString(), false);
 	}
 	
-	public void showDialogProgress(int title, int message, boolean indeterminate){
-		showDialogProgress(getText(title).toString(), getText(message).toString(), indeterminate);
+	public void showDialogProgress(int title, int message, boolean cancelable){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), cancelable);
 	}
 	
 	public void showDialogProgress(String title, String message){
 		showDialogProgress(title, message, false);
 	}
 	
-	public void showDialogProgress(String title, String message, boolean indeterminate){
+	public void showDialogProgress(String title, String message, boolean cancelable){
 		if(progressDialog==null) progressDialog = new ProgressDialog(this);
 		
 		progressDialog.setTitle(title);
 		progressDialog.setMessage(message);				
-		
+		progressDialog.setCancelable(cancelable);
 		progressDialog.show();
 	}
 	
@@ -340,8 +373,16 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 
+	public void showDialogMessage(int messageResID){
+		showDialogMessage(new Message(getText(messageResID).toString()), null);
+	}
+	
+	public void showDialogMessage(String message){
+		showDialogMessage(new Message(message), null);
+	}
+	
 	public void showDialogMessage(Message message){
-		showDialogMessage(message);
+		showDialogMessage(message, null);
 	}
 	
 	public void showDialogMessage(Message message, final SimpleCallback callback){
@@ -472,11 +513,55 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
 	}
 	
+	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setSpinnerOnItemSelectedListener(getRootView(), id, l);
+	}
+	
+	public void setGridViewAdapter(int id, ListAdapter adapter){
+		ViewUtils.setGridViewAdapter(getRootView(), id, adapter);
+	}
+	
+	public void setGridViewdOnItemClickListener(int id, OnItemClickListener l){
+		ViewUtils.setGridViewdOnItemClickListener(getRootView(), id, l);
+	}
+	
+	public void setGridViewdOnItemClickListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setGridViewdOnItemSelectedListener(getRootView(), id, l);
+	}
+		
 	public void setListViewOnItemClickListener(int id,
 			AdapterView.OnItemClickListener l) {
 		ViewUtils.setListViewOnClickListener(getRootView(), id, l);
 	}
 
+	public void setListViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setListViewOnItemSelectedListener(getRootView(), id, l);		
+	}
+	
+	public void setDatePicker(int id, Date value){
+		ViewUtils.setDatePicker(getRootView(), id, value);
+	}
+	
+	public void setDatePicker(int id, Calendar value){
+		ViewUtils.setDatePicker(getRootView(), id, value);
+	}
+	
+	public void setDatePicker(int id, Date value, OnDateChangedListener l){		
+		ViewUtils.setDatePicker(getRootView(), id, value, l);		
+	}
+	
+	public void setDatePicker(int id, Calendar value, OnDateChangedListener l){
+		ViewUtils.setDatePicker(getRootView(), id, value, l);
+	}
+	
+	public Date getDatePickerDate(int id){		
+		return ViewUtils.getDatePickerDate(getRootView(), id);
+	}
+	
+	public Calendar getDatePickerCalendar(int id){
+		return ViewUtils.getDatePickerCalendar(getRootView(), id);
+	}
+	
 	public String getTextViewString(int id) {
 		return ViewUtils.getTextViewString(getRootView(), id);
 	}
@@ -557,4 +642,12 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	    	onSyncComplete(bundle, messages);
 	    }
 	};
+
+	@Override
+	public void onDailogDatePickerChange(int id, Calendar c) {				
+	}
+
+	@Override
+	public void onFragmentResult(String tagName, int resultCode, Bundle data) {		
+	}
 }

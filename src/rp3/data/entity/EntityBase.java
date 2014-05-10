@@ -13,8 +13,9 @@ import rp3.util.Convert;
 import rp3.util.Format;
 import android.content.ContentValues;
 import android.content.Context;
+import rp3.data.Identifiable;
 
-public abstract class EntityBase<T> {
+public abstract class EntityBase<T> implements Identifiable {
 		
 	public final static int ACTION_INSERT = -1;
 	public final static int ACTION_UPDATE = -2;
@@ -41,7 +42,11 @@ public abstract class EntityBase<T> {
 	public abstract String getTableName();
 	
 	public abstract void setValues();
-		
+	
+	public abstract Object getValue(String key);
+	
+	public abstract String getDescription();	
+	
 	protected void onBeforeInsert(){		
 	}
 	
@@ -193,7 +198,7 @@ public abstract class EntityBase<T> {
 	
 	protected boolean executeInsert(DataBase db){
 		if(isValid())
-			insertDb(db);
+			return insertDb(db);
 		return false;
 	}
 	
@@ -308,5 +313,6 @@ public abstract class EntityBase<T> {
 	public static long deleteAll(DataBase db, String tableName, boolean truncateAutIncrementId){
 		return db.delete(tableName, truncateAutIncrementId);
 	}
+
 		
 }

@@ -1,5 +1,6 @@
 package rp3.util;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -46,7 +51,11 @@ public abstract class ViewUtils {
 	}
 	
 	public static final void setButtonClickListener(View rootView, int id, OnClickListener l){
-		((Button) rootView.findViewById(id)).setOnClickListener(l);		
+		View v = rootView.findViewById(id);
+		if(v instanceof Button)
+			((Button) v).setOnClickListener(l);
+		else if( v instanceof ImageButton)
+			((ImageButton) v).setOnClickListener(l);
 	}
 	
 	public static final void setImageButtonClickListener(View rootView, int id, OnClickListener l){
@@ -162,9 +171,74 @@ public abstract class ViewUtils {
 		}				
 	}			
 	
+	public static final void setSpinnerOnItemSelectedListener(View rootView, int id, AdapterView.OnItemSelectedListener l){
+		Spinner sp = (Spinner)rootView.findViewById(id);
+		sp.setOnItemSelectedListener(l);
+	}
+	
+	public static final void setGridViewAdapter(View rootView, int id, ListAdapter adapter){
+		GridView gv = (GridView)rootView.findViewById(id);
+		gv.setAdapter(adapter);
+	}
+	
+	public static final void setGridViewdOnItemClickListener(View rootView, int id, OnItemClickListener l){
+		GridView gv = (GridView)rootView.findViewById(id);
+		gv.setOnItemClickListener(l);		
+	}
+	
+	public static final void setGridViewdOnItemSelectedListener(View rootView, int id, AdapterView.OnItemSelectedListener l){
+		GridView gv = (GridView)rootView.findViewById(id);
+		gv.setOnItemSelectedListener(l);		
+	}
+	
 	public static final void setListViewOnClickListener(View rootView,int id, AdapterView.OnItemClickListener l)
 	{		
 		((ListView) rootView.findViewById(id)).setOnItemClickListener(l);
+	}	
+	
+	public static final void setListViewOnItemSelectedListener(View rootView,int id, AdapterView.OnItemSelectedListener l){		
+		((ListView) rootView.findViewById(id)).setOnItemSelectedListener(l);
+	}
+	
+	public static void setDatePicker(View rootView, int id, Date value){
+		setDatePicker(rootView, id, value, null);
+	}
+	
+	public static void setDatePicker(View rootView, int id, Calendar value){
+		setDatePicker(rootView, id, value, null);
+	}
+	
+	public static void setDatePicker(View rootView, int id, Date value, OnDateChangedListener l){
+		Calendar cal = Calendar.getInstance();
+		if(value!=null)
+			cal.setTime(value);
+		
+		setDatePicker(rootView, id, cal, l);		
+	}
+	
+	public static void setDatePicker(View rootView, int id, Calendar value, OnDateChangedListener l){
+		DatePicker dp = (DatePicker)rootView.findViewById(id);			        
+		dp.init(value.get(Calendar.YEAR), value.get(Calendar.MONTH), value.get(Calendar.DAY_OF_MONTH), l);
+	}
+	
+	public static Date getDatePickerDate(View rootView, int id){		
+		Calendar cal = getDatePickerCalendar(rootView, id);        
+        return cal.getTime();
+	}
+	
+	public static Calendar getDatePickerCalendar(View rootView, int id){
+		DatePicker dp = (DatePicker)rootView.findViewById(id);
+		
+		int year = dp.getYear();
+		int month = dp.getMonth();
+		int day = dp.getDayOfMonth();
+		
+		Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        
+        return cal;
 	}
 	
 	public static final String getTextViewString(View rootView, int id){

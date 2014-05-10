@@ -176,7 +176,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             protected void onPostExecute(Intent intent) {
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                	progressDialog.dismiss();
+                	progressDialog.dismiss();                	
                     Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                 } else {
                     finishLogin(intent);

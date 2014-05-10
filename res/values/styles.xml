@@ -126,7 +126,8 @@
         <item name="android:paddingBottom">0dp</item>        
     </style>
     
-    <style name="Widget.Button" parent="@android:style/Widget.Holo.Light.Button">        
+    <style name="Widget.Button" parent="@android:style/Widget.Holo.Light.Button">  
+       <item name="android:padding">10dp</item>
     </style>
 
     <style name="SimpleContentBox">
@@ -154,6 +155,7 @@
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:textViewStyle">@style/Widget.TextView</item>
         <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:buttonStyle">@style/Widget.Button</item>
     </style>    	
    
 </resources>

@@ -5,6 +5,7 @@ import rp3.accounts.User;
 import rp3.core.R;
 import rp3.runtime.Session;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -32,12 +33,7 @@ public class StartActivity extends BaseActivity {
 				callLoginActivity();
 			}else{
 				if(rp3.runtime.Session.IsLogged()){			
-					if(onNeedRequestAut()){
-						callLoginActivity();
-					}
-					else{
-						onContinue();
-					}			
+					onVerifyRequestSignIn();
 				}else
 					callLoginActivity();
 			}			
@@ -73,15 +69,30 @@ public class StartActivity extends BaseActivity {
 	
 	public boolean onCallLoginActivity(){
 		return false;
-	}
+	}		
 	
-	public boolean onNeedRequestAut(){
-		return true;
-	}
+	public void onVerifyRequestSignIn(){
+		
+		new AsyncTask<String, Void, Boolean>() {
 
-	public void onContinue(){
+            @Override
+            protected Boolean doInBackground(String... params) {
+
+                return rp3.accounts.Authenticator.getServerAuthenticate().requestSignIn();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean response) {
+            	if(response)
+            		callLoginActivity();
+            	else
+            		onContinue();
+            }
+        }.execute();        
 	}
-	
+		
+	public void onContinue(){
+	}	
 			
 	public void setImage(int resID){
 		ImageView img = (ImageView)this.findViewById(R.id.imageView_icon);	

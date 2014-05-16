@@ -1,0 +1,10 @@
+<statement>
+    CREATE TABLE tbSyncHistory(
+    _id INTEGER PRIMARY KEY AUTOINCREMENT,
+    SyncDate INTEGER,
+    Category TEXT,
+    Event INTEGER,
+    Notes TEXT,
+    User TEXT
+    )
+</statement>

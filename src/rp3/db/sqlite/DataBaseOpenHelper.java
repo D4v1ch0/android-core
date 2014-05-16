@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 	
-	private Context context;
+	Context context;
 	
 	public static final String CREATE_DATABASE_STATEMENT_FILE = "sql_db_create";
 	public static final String UPGRADE_VERSION_DATABASE_STATEMENT_FILE = "sql_db_upv%s";
@@ -36,7 +36,12 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 		super(context, Configuration.getDataBaseConfiguration().getName(), null, 
 				Configuration.getDataBaseConfiguration().getVersion());		
 		initialize(context);
-	}		
+	}
+	
+	public DataBaseOpenHelper(Context context, String dataBaseName, int version) {
+		super(context, dataBaseName, null, 
+				version);
+	}
 	
 	private void initialize(Context context){
 		this.context = context;
@@ -47,9 +52,13 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 		return context;
 	}
 	
+	public String getCreateDataBaseFileName(){
+		return CREATE_DATABASE_STATEMENT_FILE;
+	}
+	
 	@Override
 	public void onCreate(SQLiteDatabase db) {		
-		int resourceId = getContext().getResources().getIdentifier(CREATE_DATABASE_STATEMENT_FILE, "xml", getContext().getApplicationContext().getPackageName());
+		int resourceId = getContext().getResources().getIdentifier(getCreateDataBaseFileName(), "xml", getContext().getApplicationContext().getPackageName());
 		
 		XmlResourceParser parser = getContext().getResources().getXml(resourceId);
 

@@ -135,11 +135,11 @@
         <item name="android:background">@drawable/bg_simple_border_box</item>
     </style>
 
-    <style name="Widget.ListView.Activated" parent="AppTheme">
-        <item name="android:background">@drawable/base_list_item</item>
+    <style name="Widget.ListViewItem.Activated" parent="AppTheme">
+        <item name="android:background">?android:attr/activatedBackgroundIndicator</item>
 	</style>
 	
-    <style name="Widget.ListView.Activated.NavDrawer" parent="AppTheme">
+    <style name="Widget.ListViewItem.Activated.NavDrawer" parent="AppTheme">
         <item name="android:background">@drawable/base_nav_drawer_item</item>
 	</style>
     
@@ -155,7 +155,7 @@
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:textViewStyle">@style/Widget.TextView</item>
         <item name="android:spinnerStyle">@style/Widget.Spinner</item>
-        <item name="android:buttonStyle">@style/Widget.Button</item>
+        <item name="android:buttonStyle">@style/Widget.Button</item>       
     </style>    	
    
 </resources>

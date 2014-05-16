@@ -67,7 +67,7 @@ public class CursorUtils {
 	}
 	
 	public static Date getDate(Cursor c, String columnName){
-		long time = c.getInt( c.getColumnIndex(columnName) );
+		long time = c.getLong( c.getColumnIndex(columnName) );
 		return Convert.getDateFromTicks(time);
 	}
 	

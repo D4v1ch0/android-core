@@ -30,6 +30,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -548,6 +550,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setListViewOnClickListener(getRootView(), id, l);
 	}	
 	
+	public void setListViewChoiceMode(int id, int choiceMode){
+		ViewUtils.setListViewChoiceMode(getRootView(), id, choiceMode);
+	}
+	
 	public void setDatePicker(int id, Date value){
 		ViewUtils.setDatePicker(getRootView(), id, value);
 	}
@@ -604,6 +610,29 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setViewError(getRootView(),id,m);
 	}
 
+	public static final void setViewPagerAdapter(View rootView, int id, PagerAdapter adapter){
+		ViewPager pager = (ViewPager)rootView.findViewById(id);
+		pager.setAdapter(adapter);
+	}
+	
+	public void setImageViewBitmapFromInternalStorageAsync(int id, String fileName){
+		ViewUtils.setImageViewBitmapFromInternalStorageAsync(getRootView(),id, fileName);
+	}
+	
+	public void setImageViewBitmapFromInternalStorageAsync(View rootView, int id, String fileName, 
+			int reqWidth, int reqHeight){
+		ViewUtils.setImageViewBitmapFromInternalStorageAsync(getRootView(), id, fileName, reqWidth, reqHeight);
+	}
+	
+	public void setImageViewBitmapFromResourcesAsync(View rootView, int id, int resID){
+		ViewUtils.setImageViewBitmapFromResourcesAsync(getRootView(), id, resID);
+	}
+	
+	public void setImageViewBitmapFromResourcesAsync(View rootView, int id, int resID,
+			int reqWidth, int reqHeight){
+		ViewUtils.setImageViewBitmapFromResourcesAsync(getRootView(), id, resID, reqWidth, reqHeight);
+	}
+	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {		
 		return null;

@@ -10,6 +10,8 @@ import rp3.runtime.Session;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -200,6 +203,10 @@ public abstract class ViewUtils {
 		((ListView) rootView.findViewById(id)).setOnItemSelectedListener(l);
 	}
 	
+	public static final void setListViewChoiceMode(View rootView, int id, int choiceMode){
+		((ListView) rootView.findViewById(id)).setChoiceMode(choiceMode);
+	}
+	
 	public static void setDatePicker(View rootView, int id, Date value){
 		setDatePicker(rootView, id, value, null);
 	}
@@ -270,5 +277,32 @@ public abstract class ViewUtils {
 		if(v instanceof TextView){
 			((TextView)v).setError(m.getText());
 		}
+	}
+	
+	public static final void setViewPagerAdapter(View rootView, int id, PagerAdapter adapter){
+		ViewPager pager = (ViewPager)rootView.findViewById(id);
+		pager.setAdapter(adapter);
+	}
+	
+	public static final void setImageViewBitmapFromInternalStorageAsync(View rootView, int id, String fileName){
+		ImageView imageView = (ImageView)rootView.findViewById(id);
+		FileUtils.setBitmapFromInternalStorageAsync(imageView, fileName);
+	}
+	
+	public static final void setImageViewBitmapFromInternalStorageAsync(View rootView, int id, String fileName, 
+			int reqWidth, int reqHeight){
+		ImageView imageView = (ImageView)rootView.findViewById(id);
+		FileUtils.setBitmapFromInternalStorageAsync(imageView, fileName, reqWidth, reqHeight);
+	}
+	
+	public static final void setImageViewBitmapFromResourcesAsync(View rootView, int id, int resID){
+		ImageView imageView = (ImageView)rootView.findViewById(id);
+		FileUtils.setBitmapFromResourcesAsync(imageView, resID);
+	}
+	
+	public static final void setImageViewBitmapFromResourcesAsync(View rootView, int id, int resID,
+			int reqWidth, int reqHeight){
+		ImageView imageView = (ImageView)rootView.findViewById(id);
+		FileUtils.setBitmapFromResourcesAsync(imageView, resID, reqWidth, reqHeight);
 	}
 }

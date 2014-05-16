@@ -1,9 +1,24 @@
-package rp3.data.models;
+package rp3.db.sqlite;
 
-import rp3.db.sqlite.DataBase;
 import android.provider.BaseColumns;
 
 public final class Contract {
+	
+	public static abstract class SyncHistory implements BaseColumns{
+		public static final String TABLE_NAME = "tbSyncHistory";
+		
+		public static final String COLUMN_SYNC_DATE = "SyncDate";
+		public static final String COLUMN_CATEGORY = "Category";
+		public static final String COLUMN_EVENT = "Event";
+		public static final String COLUMN_NOTES = "Notes";
+		public static final String COLUMN_USER = "User";
+		
+		public static final String DISPLAY_DATE = COLUMN_SYNC_DATE;
+		public static final String DISPLAY_CATEGORY = COLUMN_CATEGORY;
+		public static final String DISPLAY_EVENT = COLUMN_EVENT;
+		public static final String DISPLAY_NOTES = COLUMN_NOTES;
+		public static final String DISPLAY_USER = COLUMN_USER;
+	}
 	
 	public static abstract class User implements BaseColumns {
         public static final String TABLE_NAME = "tbUser";

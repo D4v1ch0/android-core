@@ -9,8 +9,7 @@
     android:id="@+id/listView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone" 
-    style="@style/Widget.ListView.Activated"  
+    android:visibility="gone"       
     android:dividerHeight="1dp" >
 </ListView>
 

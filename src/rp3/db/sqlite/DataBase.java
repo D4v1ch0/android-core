@@ -1,5 +1,7 @@
 package rp3.db.sqlite;
 
+import java.util.Date;
+
 import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
@@ -205,43 +207,63 @@ public class DataBase {
 	}
 	
 	public long queryMaxLong(String table, String column, String selection, String[] selectionArgs){
-		Cursor c = query(table, column, selection, selectionArgs);
-		return CursorUtils.getLong(c);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArgs);		
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getLong(c);		
 	}
 	
 	public int queryMaxInt(String table, String column, String selection, String[] selectionArgs){
-		Cursor c = query(table, column, selection, selectionArgs);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getInt(c);
 	}
 	
 	public String queryMaxString(String table, String column, String selection, String[] selectionArgs){
-		Cursor c = query(table, column, selection, selectionArgs);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return null;
 		return CursorUtils.getString(c);
 	}
 	
 	public double queryMaxDouble(String table, String column, String selection, String[] selectionArgs){
-		Cursor c = query(table, column, selection, selectionArgs);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getDouble(c);
 	}
 	
+	public Date queryMaxDate(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getDate(c, column);
+	}
+	
 	public long queryMaxLong(String table, String column, String selection, String selectionArg){
-		Cursor c = query(table, column, selection, selectionArg);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getLong(c);
 	}
 	
 	public int queryMaxInt(String table, String column, String selection, String selectionArg){
-		Cursor c = query(table, column, selection, selectionArg);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getInt(c);
 	}
 	
 	public String queryMaxString(String table, String column, String selection, String selectionArg){
-		Cursor c = query(table, column, selection, selectionArg);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return null;
 		return CursorUtils.getString(c);
 	}
 	
 	public double queryMaxDouble(String table, String column, String selection, String selectionArg){
-		Cursor c = query(table, column, selection, selectionArg);
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getDouble(c);
+	}
+	
+	public Date queryMaxDate(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMaxClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getDate(c, column);
 	}
 	
 	public long queryMaxLong(String table, String column, String selection, int selectionArg){
@@ -276,24 +298,37 @@ public class DataBase {
 		return queryMaxDouble(table,column,selection,String.valueOf(selectionArg));
 	}
 	
+	public Date queryMaxDate(String table, String column, String selection, long selectionArg){
+		return queryMaxDate(table,column,selection,String.valueOf(selectionArg));
+	}
+	
 	public long queryMaxLong(String table, String column){
-		Cursor c = query(table, column);
+		Cursor c = query(table, getMaxClauseFrom(column, column));
 		return CursorUtils.getLong(c);
 	}
 	
 	public int queryMaxInt(String table, String column){
-		Cursor c = query(table, column);
+		Cursor c = query(table, getMaxClauseFrom(column, column));
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getInt(c);
 	}
 	
 	public String queryMaxString(String table, String column){
-		Cursor c = query(table, column);
+		Cursor c = query(table, getMaxClauseFrom(column, column));
+		if(!c.moveToFirst()) return null;
 		return CursorUtils.getString(c);
 	}
 	
 	public double queryMaxDouble(String table, String column){
-		Cursor c = query(table, column);
+		Cursor c = query(table, getMaxClauseFrom(column, column));
+		if(!c.moveToFirst()) return 0;
 		return CursorUtils.getDouble(c);
+	}
+	
+	public Date queryMaxDate(String table, String column){
+		Cursor c = query(table, getMaxClauseFrom(column, column));
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getDate(c, column);
 	}
 	
 	public long insert(String table, ContentValues values){

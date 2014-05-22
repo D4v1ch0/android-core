@@ -4,22 +4,31 @@ package rp3.accounts;
 import rp3.accounts.User.UserUpdateCallback;
 import rp3.core.R;
 import rp3.runtime.Session;
+import rp3.util.ViewUtils;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	
 	public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -76,6 +85,37 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             	}
             }
         });
+        
+        if(findViewById(R.id.button_help)!=null){
+        	if(!rp3.configuration.Configuration.getAppConfiguration().allowHelpOnAut()){            	
+        		findViewById(R.id.button_help).setVisibility(View.GONE);        		        	
+        	}
+        	
+        	ViewUtils.setButtonClickListener(getWindow().getDecorView().getRootView(), R.id.button_help, new OnClickListener() {				
+				@Override
+				public void onClick(View arg0) {
+					onHelpAction();
+				}			
+        	});
+        }
+        
+        if(findViewById(R.id.button_settings)!=null){    		
+    		
+    		if(!rp3.configuration.Configuration.getAppConfiguration().allowSettingsOnAut()){
+    			findViewById(R.id.button_settings).setVisibility(View.GONE);
+    		}else if( Build.VERSION.SDK_INT >= 14 && ViewConfiguration.get(this).hasPermanentMenuKey()){  				
+                  findViewById(R.id.button_settings).setVisibility(View.GONE);
+    		}    		
+    		
+    		ViewUtils.setButtonClickListener(getWindow().getDecorView().getRootView(), R.id.button_settings, new OnClickListener() {				
+				@Override
+				public void onClick(View arg0) {
+					onSettingsAction();
+				}			
+        	});
+        }
+        		
+        
 //        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -88,6 +128,46 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 //        });
     }
 
+    public void onSettingsAction(){
+    	callSettingsActivity();
+    }
+    
+    public void onHelpAction(){
+    	String url = rp3.configuration.Configuration.getAppConfiguration().getHelpUrl();
+    	if(!TextUtils.isEmpty(url)){    	
+    		if (!url.startsWith("http://") && !url.startsWith("https://"))
+    			   url = "http://" + url;
+    		
+    		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    		startActivity(browserIntent);
+    	}
+    }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {		
+    	if(rp3.configuration.Configuration.getAppConfiguration().allowSettingsOnAut())
+    		getMenuInflater().inflate(R.menu.activity_authenticator, menu);
+		
+    	return super.onCreateOptionsMenu(menu);
+	}        
+    
+    private void callSettingsActivity(){
+    	Intent i = new Intent();
+		i.setAction(Session.getContext().getApplicationContext().getPackageName() + ".SettingsActivity");
+		startActivity(i);
+    }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    
+    	if(item.getItemId() == R.id.action_settings){
+    		callSettingsActivity();
+    		return true;
+    	}
+    	
+    	return super.onMenuItemSelected(featureId, item);
+    }
+    
     private String getLogonName(){
     	return ((TextView) findViewById(R.id.editText_user)).getText().toString();   	
     }

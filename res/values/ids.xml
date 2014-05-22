@@ -6,5 +6,6 @@
     <item type="id" name="action_search" />
     <item type="id" name="action_discard" />
     <item type="id" name="action_accept" />
-    <item type="id" name="action_cancel" />    
+    <item type="id" name="action_cancel" />  
+    <item type="id" name="action_chart" />    
 </resources>

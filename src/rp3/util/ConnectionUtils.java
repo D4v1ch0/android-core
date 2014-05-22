@@ -8,7 +8,8 @@ public class ConnectionUtils {
 
 	public static Boolean isNetAvailable(Context con)  {
 
-	    try{
+	    try{	    	
+	    	
 	        ConnectivityManager connectivityManager = (ConnectivityManager)       
 	                                                                  con.getSystemService(Context.CONNECTIVITY_SERVICE);
 	        

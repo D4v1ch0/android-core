@@ -16,8 +16,8 @@ public class StartActivity extends BaseActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);		
-				
+		super.onCreate(savedInstanceState);						
+		Session.Start(this.getApplicationContext());
 		setContentView(R.layout.activity_start);				
 	}
 	
@@ -26,8 +26,7 @@ public class StartActivity extends BaseActivity {
 		super.onStart();
 		
 		if(firstTime){
-			firstTime = false;
-			Session.Start(this.getApplicationContext());
+			firstTime = false;			
 			
 			if(Session.getUser().getAccount() == null){
 				callLoginActivity();

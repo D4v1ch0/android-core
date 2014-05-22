@@ -3,7 +3,8 @@ package rp3.app.nav;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
+import rp3.runtime.Session;
+
 import android.text.TextUtils;
 
 public class NavItem {
@@ -13,8 +14,7 @@ public class NavItem {
     private int icon;
     private int resTitleId;
     private String count = "0";
-    private ArrayList<NavItem> navItems;
-    private Context context;
+    private ArrayList<NavItem> navItems;    
     
     // boolean to set visiblity of the counter
     private boolean isCounterVisible = false;
@@ -67,8 +67,8 @@ public class NavItem {
     }
      
     public String getTitle(){
-    	if(TextUtils.isEmpty(title) && context!=null ){
-    		setTitle( context.getText(getResTitleId()).toString() );
+    	if(TextUtils.isEmpty(title)){
+    		setTitle( Session.getContext().getText(getResTitleId()).toString() );
     	}
         return this.title;
     }

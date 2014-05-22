@@ -6,18 +6,43 @@ import rp3.runtime.Session;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public abstract class PreferenceManager {
 
 	private static SharedPreferences preferences;	
 		
-	PreferenceManager(){			
+	PreferenceManager(){
 	}
 	
-	static SharedPreferences getPreferences(){
+	public static String getResultValue(String value){		
+		
+		while(value.contains("[@"))
+		{
+			int initial = value.indexOf("[@");			
+			int end = value.indexOf("]");
+			String parameter = value.substring(initial + 2, end);
+			String key = parameter;
+			String defaultValue = ""; 
+			if(parameter.contains(":")){
+				String[] parts = parameter.split(":");
+				key = parts[0];
+				defaultValue = parts[1];
+			}
+			String keyValue = PreferenceManager.getString(key);
+			if(TextUtils.isEmpty(keyValue)){
+				setValue(key, defaultValue);
+				keyValue = defaultValue;
+			}
+			
+			value = value.replace("[@" + parameter + "]", keyValue);			
+		}
+		return value;
+	}
+	
+	public static SharedPreferences getPreferences(){
 		if(preferences == null)
-			preferences = getContext().getSharedPreferences(
-					getContext().getPackageName(), Context.MODE_PRIVATE);
+			preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(Session.getContext());
 		return preferences;
 	}
 	
@@ -54,7 +79,7 @@ public abstract class PreferenceManager {
 	}
 	
 	public static float getFloat(String key){
-		return getPreferences().getFloat(key, 0);
+		return getPreferences().getFloat(key, 0);		
 	}
 	
 	public static boolean getBoolean(String key){
@@ -63,5 +88,25 @@ public abstract class PreferenceManager {
 	
 	public static String getString(String key){
 		return getPreferences().getString(key, null);
+	}
+	
+	public static long getLong(String key, long defaultValue){
+		return getPreferences().getLong(key, defaultValue);
+	}
+	
+	public static int getInt(String key, int defaultValue){
+		return getPreferences().getInt(key, defaultValue);
+	}
+	
+	public static float getFloat(String key, float defaultValue){
+		return getPreferences().getFloat(key, defaultValue);
+	}
+	
+	public static boolean getBoolean(String key, boolean defaultValue){
+		return getPreferences().getBoolean(key, defaultValue);
+	}
+	
+	public static String getString(String key, String defaultValue){
+		return getPreferences().getString(key, defaultValue);
 	}
 }

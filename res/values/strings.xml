@@ -15,9 +15,10 @@
     <string name="action_discard">Buscar</string>
     <string name="action_edit">Buscar</string>
     <string name="action_cancel">Cancelar</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Ajustes</string>
     <string name="action_new">Nuevo</string>
     <string name="action_accept">Aceptar</string>
+    <string name="action_chart">Graficar</string>
     <string name="message_no_search_result">No hay resultados&#8230;</string>
     <string name="message_no_selected_item">Seleccione un elemento</string>
     <string name="message_no_list_item">No hay elementos&#8230;</string>
@@ -31,6 +32,8 @@
     <string name="message_title_send">Enviando</string>
     <string name="message_title_connecting">Conectando</string> 
     <string name="message_title_synchronizing">Actualizando</string> 
+    <string name="message_title_loading">Cargando</string>
+    <string name="message_title_query">Consultando</string> 
     
     <string name="message_error_sync_connection_server_fail">No pudimos conectar con el servidor. Intenta más tarde</string>
     <string name="message_error_sync_general_error">Tuvimos un problema al intentar actualizar los datos</string>

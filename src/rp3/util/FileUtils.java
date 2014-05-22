@@ -41,6 +41,10 @@ public abstract class FileUtils {
 		return myBitmap;		
 	}
 	
+	public static void deleteFromInternalStorage(String fileName){
+		Session.getContext().deleteFile(fileName);
+	}
+	
 	public static void saveInternalStorage(String fileName, Bitmap bitmap){
 		//File file = new File(Session.getContext().getFilesDir(), fileName);
 		

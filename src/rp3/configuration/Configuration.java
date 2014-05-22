@@ -35,6 +35,10 @@ public final class Configuration {
 			initConfiguration(c, null);
 		}
 	}	
+	
+	public static void reinitializeConfiguration(Context c){		
+		initConfiguration(c, null);		
+	}	
 
 	public static PreferenceManager getParameters(){
 		return null;
@@ -145,7 +149,7 @@ public final class Configuration {
 									else if(key.equalsIgnoreCase(WebServiceData.KEY_SOAPVERSION))
 										wsData.setSoapVersion(element);
 									else if(key.equalsIgnoreCase(WebServiceData.KEY_URL))
-										wsData.setUrl(element);
+										wsData.setUrl(PreferenceManager.getResultValue(element));
 									else if(key.equalsIgnoreCase(WebServiceData.KEY_DOTNET))
 										wsData.setDotNet("TRUE".equalsIgnoreCase(element));
 									else if(key.equalsIgnoreCase(webServideDataName))

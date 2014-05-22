@@ -64,4 +64,6 @@ public class SettingsFragment extends PreferenceFragment implements DataBaseServ
 		super.onCreate(savedInstanceState);						
 	}
 	
+	
+	
 }

@@ -218,11 +218,12 @@ public class WebService {
         envelope.implicitTypes = true;
         if(wsData.isDotNet())
         	envelope.dotNet = true;        
-                
+        
+        
         // Set output SOAP object
         envelope.setOutputSoapObject(request);
         // Create HTTP call object
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(wsData.getUrl());        
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(wsData.getUrl(), HttpConnection.NET_CONNECT_TIMEOUT_MILLIS);        
         
       
         // Invole web service

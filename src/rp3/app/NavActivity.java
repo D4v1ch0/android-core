@@ -15,8 +15,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
+import rp3.widget.SlidingPaneLayout;
+import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +56,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			// SlidingPaneLayout customization
 			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);
 			slidingPane.setParallaxDistance(PARALLAX_SIZE);
-			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
+			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);			
 		}
 		else{
 			navMode = NAV_MODE_DRAWER;

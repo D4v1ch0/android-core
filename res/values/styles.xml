@@ -136,7 +136,7 @@
     </style>
 
     <style name="Widget.ListViewItem.Activated" parent="AppTheme">
-        <item name="android:background">?android:attr/activatedBackgroundIndicator</item>
+        <item name="android:background">@drawable/base_list_item</item>
 	</style>
 	
     <style name="Widget.ListViewItem.Activated.NavDrawer" parent="AppTheme">
@@ -150,6 +150,18 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:editTextStyle">@style/Widget.EditText</item>
+        <item name="android:textViewStyle">@style/Widget.TextView</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:buttonStyle">@style/Widget.Button</item>
+        <!-- item name="android:alertDialogTheme">@style/CustomDialogTheme</item>-->
+        <item name="android:dialogTheme">@style/AppDialogTheme</item>       
+    </style>    
+    
+     <!-- Application theme. -->
+    <style name="AppDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:editTextStyle">@style/Widget.EditText</item>

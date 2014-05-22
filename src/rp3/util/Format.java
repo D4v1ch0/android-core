@@ -14,7 +14,7 @@ import java.util.Date;
 public final class Format {
 
 	public final static String FORMAT_DATABASE_DATETIME = "yyyyMMdd HH:mm:ss";
-	public final static String FORMAT_DATABASE_DATE = "yyyyMMdd HH:mm:ss";
+	public final static String FORMAT_DATABASE_DATE = "yyyyMMdd";
 	
 	public final static String getDefaultCurrencyFormat(String value)
 	{
@@ -52,6 +52,22 @@ public final class Format {
 		return format.format(value);
 	}
 	
+	public final static String getPercentFormat(double value)
+	{
+		NumberFormat format = NumberFormat.getPercentInstance();
+		return format.format(value);
+	}
+	
+	public final static String getPercentFormat(int value){
+		NumberFormat format = NumberFormat.getPercentInstance();
+		return format.format(value);
+	}
+	
+	public final static String getPercentFormat(float value){
+		NumberFormat format = NumberFormat.getPercentInstance();
+		return format.format(value);
+	}
+	
 	public final static String getMediumDateFormat(Context context, String dateStr)
 	{
 		return DateFormat.getMediumDateFormat(context).
@@ -83,10 +99,16 @@ public final class Format {
 		return df.format(dateToString);
 	}
 	
-	public final static String getStringFromDate(Date dateToString, String format)
+	public final static String getDateFormat(Date dateToString, String format)
 	{
 		SimpleDateFormat df = new SimpleDateFormat(format);				
 		return df.format(dateToString);
+	}
+	
+	public final static String getDateFormat(Calendar dateToString, String format)
+	{
+		SimpleDateFormat df = new SimpleDateFormat(format);				
+		return df.format(dateToString.getTime());
 	}
 	
 	public final static Date getDateFromString(String dateStr, String format){

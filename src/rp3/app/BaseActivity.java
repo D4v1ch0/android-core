@@ -40,6 +40,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -63,6 +64,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private int menuResource; 
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;		
+	private boolean finishOnHomeUpButton = false;
 	
 	private FragmentResultListener fragmentResultCallback;
 	
@@ -91,12 +93,37 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		menuResource = menuResID;
 	}
 	
+	public void setHomeButtonEnabled(boolean enable){
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	public void setHomeAsUpEnabled(boolean enable, boolean finishOnHomeUpButton){
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		this.finishOnHomeUpButton = finishOnHomeUpButton;
+	}
+	
 	public FragmentManager getCurrentFragmentManager(){
 		return getSupportFragmentManager();
 	}
 	
 	public LoaderManager getCurrentLoaderManager(){
 		return getSupportLoaderManager();
+	}
+	
+	public boolean hasFragment(int id){
+		return getCurrentFragmentManager().findFragmentById(id) != null;
+	}
+	
+	public Fragment getFragment(int id){
+		return getCurrentFragmentManager().findFragmentById(id);
+	}
+	
+	public boolean hasFragment(String tag){
+		return getCurrentFragmentManager().findFragmentByTag(tag)!=null;
+	}
+	
+	public Fragment getFragment(String tag){
+		return getCurrentFragmentManager().findFragmentByTag(tag);
 	}
 	
 	public void setFragment(int id, Fragment fragment){
@@ -133,17 +160,34 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}	
 	
 	public void showDialogDatePicker(int id, Calendar c){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this);		
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this, false);		
 		showDialogFragment(f,"datepicker");
 	}
 	
 	public void showDialogDatePicker(int id){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this);		
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this, false);		
+		showDialogFragment(f,"datepicker");
+	}
+		
+	
+	public void showDialogDatePicker(int id, Date d){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this, false);		
 		showDialogFragment(f,"datepicker");
 	}
 	
-	public void showDialogDatePicker(int id, Date d){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this);		
+	public void showDialogDatePicker(int id, Calendar c, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this, asYearMonth);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this, asYearMonth);		
+		showDialogFragment(f,"datepicker");
+	}
+		
+	
+	public void showDialogDatePicker(int id, Date d, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this, asYearMonth);		
 		showDialogFragment(f,"datepicker");
 	}
 	
@@ -285,6 +329,19 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 			closeDataBaseResources();
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+				
+		if(item.getItemId() == android.R.id.home){
+			if(finishOnHomeUpButton){
+				finish();
+				return true;
+			}
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
 	/* Inline Dialog Confirmation */
 
 	private void setInlineDialog() {
@@ -438,6 +495,26 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	/* View Set Extensions */
+	
+	public void setViewText(int id, String text){
+		ViewUtils.setViewText(getRootView(), id, text);
+	}
+	
+	public void setViewDefaultDateText(int id, Date date){
+		ViewUtils.setViewDefaultDateText(getRootView(), id, date);
+	}
+	
+	public void setViewDefaultDateText(int id, Calendar date){
+		ViewUtils.setViewDefaultDateText(getRootView(), id, date);
+	}
+	
+	public void setViewDefaultCurrencyText(int id, double value){
+		ViewUtils.setViewDefaultCurrencyText(getRootView(), id, value);
+	}
+	
+	public void setViewTextDefaultNumberText(int id, double value){
+		ViewUtils.setViewDefaultNumberText(getRootView(), id, value);
+	}
 
 	public void setTextViewText(int id, String value) {
 		ViewUtils.setTextViewText(getRootView(), id, value);
@@ -499,6 +576,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, objects);
 	}
 	
+	public void setSpinnerSimpleAdapter(int id, int arrayResourceID) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, arrayResourceID);
+	}
+	
 	public SpinnerAdapter getSpinnerAdapter(int id) {
 		return ViewUtils.getSpinnerAdapter(getRootView(), id);
 	}
@@ -558,6 +639,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	
 	public void setDatePicker(int id, Calendar value, OnDateChangedListener l){
 		ViewUtils.setDatePicker(getRootView(), id, value, l);
+	}
+	
+	public void setDatePickerAsYearMonth(int id){
+		ViewUtils.setDatePickerAsYearMonth(getRootView(), id);
 	}
 	
 	public Date getDatePickerDate(int id){		

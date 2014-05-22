@@ -113,6 +113,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}
 	}
 	
+	public boolean hasFragment(int id){
+		return getChildFragmentManager().findFragmentById(id) != null;
+	}
+	
+	public Fragment getFragment(int id){
+		return getChildFragmentManager().findFragmentById(id);
+	}
+	
+	public boolean hasFragment(String tag){
+		return getChildFragmentManager().findFragmentByTag(tag)!=null;
+	}
+	
+	public Fragment getFragment(String tag){
+		return getChildFragmentManager().findFragmentByTag(tag);
+	}
+	
 	public void setFragment(int id, Fragment fragment){
 		if(inFragmentTransaction){
 			fragmentTransaction.replace(id, fragment);
@@ -195,17 +211,33 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void showDialogDatePicker(int id, Calendar c){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this);		
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this, false);		
 		showDialogFragment(f,"datepicker");
 	}
 	
 	public void showDialogDatePicker(int id){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this);		
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this, false);		
 		showDialogFragment(f,"datepicker");
 	}
 	
 	public void showDialogDatePicker(int id, Date d){
-		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this);		
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this, false);		
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id, Calendar c, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this, asYearMonth);				
+		showDialogFragment(f,"datepicker");
+	}
+	
+	public void showDialogDatePicker(int id, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, this, asYearMonth);		
+		showDialogFragment(f,"datepicker");
+	}
+		
+	
+	public void showDialogDatePicker(int id, Date d, boolean asYearMonth){
+		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this, asYearMonth);		
 		showDialogFragment(f,"datepicker");
 	}
 	
@@ -445,6 +477,26 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	/*View Set Extensions*/
 	
+	public void setViewText(int id, String text){
+		ViewUtils.setViewText(getRootView(), id, text);
+	}
+	
+	public void setViewDefaultDateText(int id, Date date){
+		ViewUtils.setViewDefaultDateText(getRootView(), id, date);
+	}
+	
+	public void setViewDefaultDateText(int id, Calendar date){
+		ViewUtils.setViewDefaultDateText(getRootView(), id, date);
+	}
+	
+	public void setViewDefaultCurrencyText(int id, double value){
+		ViewUtils.setViewDefaultCurrencyText(getRootView(), id, value);
+	}
+	
+	public void setViewDefaultNumberText(int id, double value){
+		ViewUtils.setViewDefaultNumberText(getRootView(), id, value);
+	}
+	
 	public void setTextViewText(int id, String value){
 		ViewUtils.setTextViewText(getRootView(), id, value);
 	}	
@@ -510,6 +562,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, objects);
 	}
 	
+	public void setSpinnerSimpleAdapter(int id, int arrayResourceID) {
+		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, arrayResourceID);
+	}
+	
 	public SpinnerAdapter getSpinnerAdapter(int id) {
 		return ViewUtils.getSpinnerAdapter(getRootView(), id);
 	}
@@ -568,6 +624,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void setDatePicker(int id, Calendar value, OnDateChangedListener l){
 		ViewUtils.setDatePicker(getRootView(), id, value, l);
+	}
+	
+	public void setDatePickerAsYearMonth(int id){
+		ViewUtils.setDatePickerAsYearMonth(getRootView(), id);
 	}
 	
 	public Date getDatePickerDate(int id){		

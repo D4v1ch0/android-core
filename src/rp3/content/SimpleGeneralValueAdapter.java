@@ -3,7 +3,6 @@ package rp3.content;
 import java.util.List;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,49 +10,42 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import rp3.core.R;
 import rp3.data.Identifiable;
+import rp3.data.models.GeneralValue;
+import rp3.db.sqlite.DataBase;
 
-public class SimpleIdentifiableAdapter extends BaseAdapter {
+public class SimpleGeneralValueAdapter extends BaseAdapter {
 
-	private List<Identifiable> data;
+	private List<GeneralValue> data;
 	private LayoutInflater inflater = null;
-	private Context context;
-	private String contentKey;
+	private Context context;	
 	private int layoutResID;
 	
 	static class ViewHolder {
 		TextView textView_content;
 	}
 	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data){
-		this.data = data;
+	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId){
+		this.data = GeneralValue.getGeneralValues(db, generalTableId);
 		this.context = c;
 		this.inflater = LayoutInflater.from(context);
 		layoutResID = R.layout.base_rowlist_simple_spinner;
 	}	
 	
-	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data, String contentKey){
+	public SimpleGeneralValueAdapter(Context c, List<GeneralValue> data){
 		this.data = data;
 		this.context = c;
-		this.contentKey = contentKey;
 		this.inflater = LayoutInflater.from(context);
-		layoutResID = R.layout.base_rowlist_simple_spinner; 
-	}
+		layoutResID = R.layout.base_rowlist_simple_spinner;
+	}	
+		
 	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data, int layoutResID){
-		this.data = data;
-		this.context = c;
-		this.layoutResID = layoutResID;
-		this.inflater = LayoutInflater.from(context);
-	}
-	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data, int layoutResID, String contentKey){
+	public SimpleGeneralValueAdapter(Context c, List<GeneralValue> data, int layoutResID){
 		this.data = data;
 		this.context = c;
 		this.layoutResID = layoutResID;
-		this.contentKey = contentKey;
 		this.inflater = LayoutInflater.from(context);
 	}
+	
 	
 	@Override
 	public int getCount() {		
@@ -63,6 +55,14 @@ public class SimpleIdentifiableAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {		
 		return data.get(position);
+	}
+	
+	public GeneralValue getGeneralValue(int position) {		
+		return (GeneralValue)data.get(position);
+	}
+	
+	public String getCode(int position) {		
+		return getGeneralValue(position).getCode();
 	}
 
 	@Override
@@ -86,11 +86,9 @@ public class SimpleIdentifiableAdapter extends BaseAdapter {
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
-		Identifiable current = (Identifiable)getItem(position);
+		Identifiable current = (GeneralValue)getItem(position);
 		if(current!=null){
-			String value = current.getDescription();
-			if(!TextUtils.isEmpty(contentKey))
-				value = (String) current.getValue(contentKey);
+			String value = current.getDescription();			
 				
 			holder.textView_content.setText(value);
 		}

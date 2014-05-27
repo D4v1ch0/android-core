@@ -5,6 +5,7 @@
     <color name="bg_nav_drawer">#D6D6D6</color>
     <color name="bg_nav_drawer_dark">#3A3A3C</color>
     <color name="nav_item_text">#5E5E5E</color>
+    <color name="nav_item_text_group">#5E5E5E</color>
     <color name="nav_item_divider">#aaa</color>   
     
     <color name="bg_selected_list_item">#0099CC</color>

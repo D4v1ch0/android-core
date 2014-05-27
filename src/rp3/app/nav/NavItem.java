@@ -8,12 +8,17 @@ import rp3.runtime.Session;
 import android.text.TextUtils;
 
 public class NavItem {
+	
+	public static final int TYPE_CATEGORY = 2;
+	public static final int TYPE_NAV = 0;
+	public static final int TYPE_ACTION = 1;
+	
 	private String title;
-	private int id;
-	private boolean isCategory;
+	private int id;	
     private int icon;
     private int resTitleId;
     private String count = "0";
+    private int itemType = TYPE_NAV;
     private ArrayList<NavItem> navItems;    
     
     // boolean to set visiblity of the counter
@@ -28,16 +33,16 @@ public class NavItem {
         this.icon = icon;
     }
     
-    public NavItem(int id,String title, int icon, boolean isCategory){
+    public NavItem(int id,String title, int icon, int navItemType){
     	this.setId(id);
-        this.title = title;
-        this.isCategory = isCategory;
+    	this.itemType = navItemType;
+        this.title = title;        
         this.icon = icon;
     }       
      
-    public NavItem(int id,String title, int icon,boolean isCategory,boolean isCounterVisible, String count){
+    public NavItem(int id,String title, int icon,int navItemType,boolean isCounterVisible, String count){
     	this.id = id;
-    	this.isCategory = isCategory;
+    	this.itemType = navItemType;
         this.title = title;
         this.icon = icon;
         this.isCounterVisible = isCounterVisible;
@@ -50,16 +55,16 @@ public class NavItem {
         this.icon = icon;
     }
     
-    public NavItem(int id,int resTitleId, int icon, boolean isCategory){
+    public NavItem(int id,int resTitleId, int icon, int navItemType){
     	this.setId(id);
     	this.setResTitleId(resTitleId);
-        this.isCategory = isCategory;
+    	this.itemType = navItemType;
         this.icon = icon;
     }
      
-    public NavItem(int id,int resTitleId, int icon,boolean isCategory,boolean isCounterVisible, String count){
+    public NavItem(int id,int resTitleId, int icon,int navItemType,boolean isCounterVisible, String count){
     	this.id = id;
-    	this.isCategory = isCategory;
+    	this.itemType = navItemType;
         this.setResTitleId(resTitleId);
         this.icon = icon;
         this.isCounterVisible = isCounterVisible;
@@ -101,12 +106,12 @@ public class NavItem {
         this.isCounterVisible = isCounterVisible;
     }
 
-	public boolean isCategory() {
-		return isCategory;
+	public int getNavItemType() {
+		return itemType;
 	}
 
-	public void setCategory(boolean isCategory) {
-		this.isCategory = isCategory;
+	public void setNavItemType(int navItemType) {
+		this.itemType = navItemType;
 	}
 
 	public int getId() {

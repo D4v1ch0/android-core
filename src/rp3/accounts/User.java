@@ -236,8 +236,8 @@ public class User {
             	if(deleteAccount){
             		finishUserUpdate(user, mAccountManager, true);
             	}
-            	
-            	userUpdateCallback.onUserFinishUpdate(null);
+            	if(userUpdateCallback!=null)
+            		userUpdateCallback.onUserFinishUpdate(null);
             }
         };
         
@@ -246,10 +246,12 @@ public class User {
         	mAccountManager.removeAccount(account, callback, null);
         }else if(addingAccount){
         	finishUserUpdate(user, mAccountManager, true);
-        	userUpdateCallback.onUserFinishUpdate(null);
+        	if(userUpdateCallback!=null)
+        		userUpdateCallback.onUserFinishUpdate(null);
         }else if(updateAccount){
-        	finishUserUpdate(user, mAccountManager, false);
-        	userUpdateCallback.onUserFinishUpdate(null);
+        	finishUserUpdate(user, mAccountManager, false); 
+        	if(userUpdateCallback!=null)
+        		userUpdateCallback.onUserFinishUpdate(null);
         }                                   
     }
 

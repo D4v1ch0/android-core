@@ -14,6 +14,7 @@ import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
+import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
 import rp3.util.ViewUtils;
@@ -38,6 +39,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -191,11 +193,24 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		showDialogFragment(f,"datepicker");
 	}
 	
+	
 	public void showDialogFragment(DialogFragment f, String tagName) {				
 		showDialogFragment(f,tagName, null);
 	}
 	
-	public void showDialogFragment(DialogFragment f, String tagName, FragmentResultListener l) {
+	public void showDialogFragment(DialogFragment f, String tagName, String title) {				
+		showDialogFragment(f,tagName, title, null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, int title) {				
+		showDialogFragment(f,tagName, Session.getContext().getText(title).toString(), null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, int title, FragmentResultListener l) {
+		showDialogFragment(f,tagName, Session.getContext().getText(title).toString(), l);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, String title, FragmentResultListener l) {
 		fragmentResultCallback = l;
 		if(fragmentResultCallback == null) fragmentResultCallback = this;
 		
@@ -206,6 +221,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 		if(f instanceof BaseFragment){
 			((BaseFragment)f).setIsDialog(true);
+			if(!TextUtils.isEmpty(title))
+				((BaseFragment)f).setDialogTitle(title);
 			((BaseFragment)f).setFragmentTagName(tagName);
 		}
 		
@@ -254,7 +271,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	public DataBase getDataBase() {
 		if (db == null)
-			db = DataBaseServiceHelper.getWritableDatabase(context,
+			db = DataBaseServiceHelper.getWritableDatabase((context == null ? Session.getContext(): context),
 					getDataBaseClass());
 		return db;
 	}
@@ -309,7 +326,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	protected void onPause() {		
 		super.onPause();
 		//Sync Handler
+		try{
 		unregisterReceiver(syncFinishedReceiver);
+		}catch(IllegalArgumentException e) {			
+		}
 		
 		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
 			closeDataBaseResources();
@@ -317,8 +337,11 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	
 	@Override
 	protected void onResume() {		
-		super.onResume();		
-		registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));		
+		super.onResume();
+		try{
+		registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));
+		}catch(IllegalArgumentException e) {			
+		}
 	}
 
 	
@@ -564,6 +587,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		return ViewUtils.getSpinnerSelectedFieldCursor(getRootView(), id, fieldaName);
 	}
 	
+	public String getSpinnerGeneralValueSelectedCode(int id){
+		return ViewUtils.getSpinnerGeneralValueSelectedCode(getRootView(), id);
+	}
+	
 	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), this, id, columnName, c);
 	}
@@ -594,6 +621,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	
 	public void setSpinnerSelectionById(int id, long itemId) {
 		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
+	}
+	
+	public void setSpinnerGeneralValueSelection(int id, String code){
+		ViewUtils.setSpinnerGeneralValueSelection(getRootView(), id, code);
 	}
 	
 	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){

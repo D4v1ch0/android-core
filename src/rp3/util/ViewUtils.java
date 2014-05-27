@@ -5,8 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.content.SimpleGeneralValueAdapter;
 import rp3.core.R;
 import rp3.data.Message;
+import rp3.data.models.GeneralValue;
 import rp3.runtime.Session;
 
 import android.app.DatePickerDialog;
@@ -145,7 +147,7 @@ public abstract class ViewUtils {
 	public static final int getSpinnerSelectedPosition(View rootView, int id) {
 		Spinner sp = (Spinner) rootView.findViewById(id);
 		return sp.getSelectedItemPosition();
-	}
+	}	
 
 	public static final String getSpinnerSelectedFieldCursor(View rootView,
 			int id, String fieldaName) {
@@ -155,6 +157,12 @@ public abstract class ViewUtils {
 			return CursorUtils.getString(c, fieldaName);
 		else
 			return null;
+	}
+	
+	public static final String getSpinnerGeneralValueSelectedCode(View rootView, int id) {
+		Spinner sp = (Spinner) rootView.findViewById(id);
+		GeneralValue gv = (GeneralValue)sp.getSelectedItem();
+		return gv.getCode();
 	}
 
 	public static final void setSpinnerSimpleAdapter(View rootView,
@@ -228,6 +236,19 @@ public abstract class ViewUtils {
 		for (int i = 0; i < adapter.getCount(); i++) {
 			long tempId = adapter.getItemId(i);
 			if (tempId == itemId) {
+				sp.setSelection(i);
+				break;
+			}
+		}
+	}
+
+	public static final void setSpinnerGeneralValueSelection(View rootView, int id, String code){
+		Spinner sp = (Spinner) rootView.findViewById(id);
+		SimpleGeneralValueAdapter adapter = (SimpleGeneralValueAdapter)sp.getAdapter();
+
+		for (int i = 0; i < adapter.getCount(); i++) {
+			String tempId = adapter.getCode(i);
+			if (tempId.equals(code)) {
 				sp.setSelection(i);
 				break;
 			}

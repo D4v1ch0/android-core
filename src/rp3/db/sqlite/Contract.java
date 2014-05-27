@@ -13,11 +13,11 @@ public final class Contract {
 		public static final String COLUMN_NOTES = "Notes";
 		public static final String COLUMN_USER = "User";
 		
-		public static final String DISPLAY_DATE = COLUMN_SYNC_DATE;
-		public static final String DISPLAY_CATEGORY = COLUMN_CATEGORY;
-		public static final String DISPLAY_EVENT = COLUMN_EVENT;
-		public static final String DISPLAY_NOTES = COLUMN_NOTES;
-		public static final String DISPLAY_USER = COLUMN_USER;
+		public static final String FIELD_DATE = COLUMN_SYNC_DATE;
+		public static final String FIELD_CATEGORY = COLUMN_CATEGORY;
+		public static final String FIELD_EVENT = COLUMN_EVENT;
+		public static final String FIELD_NOTES = COLUMN_NOTES;
+		public static final String FIELD_USER = COLUMN_USER;
 	}
 	
 	public static abstract class User implements BaseColumns {
@@ -39,6 +39,6 @@ public final class Contract {
         	COLUMN_ISLOGGED + DataBase.INTEGER_TYPE + DataBase.COMMA_SEP +
         	COLUMN_CURRENT + DataBase.INTEGER_TYPE + ");";
         	
-    }
+    }		
 	
 }

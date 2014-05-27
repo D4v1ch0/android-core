@@ -19,11 +19,14 @@
     <string name="action_new">Nuevo</string>
     <string name="action_accept">Aceptar</string>
     <string name="action_chart">Graficar</string>
+    <string name="action_logout">Cerrar Sesión</string>
     <string name="message_no_search_result">No hay resultados&#8230;</string>
     <string name="message_no_selected_item">Seleccione un elemento</string>
     <string name="message_no_list_item">No hay elementos&#8230;</string>
     <string name="message_please_wait">Por favor espere</string>
-    <string name="label_connecting">Conectando</string>    
+    <string name="label_connecting">Conectando</string>
+    <string name="label_sync">Sincronizar</string>
+    <string name="label_update">Actualizar</string>    
     <string name="undo">Deshacer</string>
     <string name="undo_all">Deshacer Todo</string>
     <string name="item_deleted">Registro eliminado</string>
@@ -31,7 +34,8 @@
     
     <string name="message_title_send">Enviando</string>
     <string name="message_title_connecting">Conectando</string> 
-    <string name="message_title_synchronizing">Actualizando</string> 
+    <string name="message_title_synchronizing">Sincronizando</string> 
+    <string name="message_title_updating">Actualizando</string>
     <string name="message_title_loading">Cargando</string>
     <string name="message_title_query">Consultando</string> 
     

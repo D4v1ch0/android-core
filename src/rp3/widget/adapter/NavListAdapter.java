@@ -55,7 +55,7 @@ public class NavListAdapter extends BaseAdapter {
     
     @Override
     public int getItemViewType(int position) {    	
-    	return  getNavItem(position).isCategory() ? 1: 0;
+    	return  getNavItem(position).getNavItemType() == NavItem.TYPE_CATEGORY ? 1: 0;
     }
     
     @Override
@@ -65,7 +65,7 @@ public class NavListAdapter extends BaseAdapter {
  
     @Override
     public boolean isEnabled(int position) {
-    	return !getNavItem(position).isCategory();
+    	return !(getNavItem(position).getNavItemType() == NavItem.TYPE_CATEGORY);
     }
     
     @Override
@@ -74,7 +74,7 @@ public class NavListAdapter extends BaseAdapter {
     	NavItem item = getNavItem(position);
     	
     	
-    	if(!item.isCategory())
+    	if(!(item.getNavItemType() == NavItem.TYPE_CATEGORY))
     	{
     		ViewHolder viewHolder;
     		if (convertView == null) {    		

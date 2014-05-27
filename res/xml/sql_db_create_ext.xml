@@ -1,0 +1,22 @@
+<sql>
+    <statement>
+    CREATE TABLE tbGeneralTable(
+    _id INTEGER PRIMARY KEY,
+    Name TEXT     
+    )
+    </statement>
+    <statement>
+    CREATE TABLE tbGeneralValue(
+    _id INTEGER PRIMARY KEY AUTOINCREMENT,
+    GeneralTableId INTEGER,
+    Code TEXT,    
+    Value TEXT,
+    Reference1 TEXT,
+    Reference2 TEXT,
+    Reference3 TEXT,
+    Reference4 TEXT,
+    Reference5 TEXT
+    )
+    </statement>
+
+</sql>

@@ -1,4 +1,5 @@
-<statement>
+<sql>
+    <statement>
     CREATE TABLE tbSyncHistory(
     _id INTEGER PRIMARY KEY AUTOINCREMENT,
     SyncDate INTEGER,
@@ -7,4 +8,6 @@
     Notes TEXT,
     User TEXT
     )
-</statement>
+    </statement>
+	
+</sql>

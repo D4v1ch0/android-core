@@ -26,7 +26,8 @@ public final class Session {
 	public static void logOut(){							
 		user = User.getCurrentUser(getContext());
 		if(user!=null){
-			user.isLogged(false);			
+			user.isLogged(false);
+			User.updateAccount(null);
 		}
 	}
 	

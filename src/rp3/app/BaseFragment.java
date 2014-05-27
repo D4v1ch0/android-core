@@ -11,6 +11,7 @@ import rp3.data.Message;
 import rp3.data.MessageCollection;
 import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
+import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
 import rp3.util.ViewUtils;
@@ -32,6 +33,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,6 +66,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;
 	private boolean isDialog;
+	private String dialogTitle;
 	private String currentFragmentTagName;
 	private FragmentResultListener fragmentResultCallback;
 	
@@ -74,12 +77,20 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public Context getContext(){
+		if(context == null)
+			return Session.getContext();
 		return context;
 	}
 	
 	void setIsDialog(boolean isDialog){
 		this.isDialog = isDialog;
 	}
+	
+	void setDialogTitle(String title){
+		if(getDialog()!=null)
+			getDialog().setTitle(title);
+		dialogTitle = title;
+	}	
 	
 	void setFragmentTagName(String tagName){
 		currentFragmentTagName = tagName;
@@ -242,10 +253,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void showDialogFragment(DialogFragment f, String tagName) {				
-		showDialogFragment(f,tagName, null);
+		showDialogFragment(f,tagName, null, null);
 	}
 	
-	public void showDialogFragment(DialogFragment f, String tagName, FragmentResultListener l) {
+	public void showDialogFragment(DialogFragment f, String tagName, String title) {				
+		showDialogFragment(f,tagName, title, null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, int title) {				
+		showDialogFragment(f,tagName, Session.getContext().getText(title).toString(), null);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, int title, FragmentResultListener l) {
+		showDialogFragment(f,tagName, Session.getContext().getText(title).toString(), l);
+	}
+	
+	public void showDialogFragment(DialogFragment f, String tagName, String title, FragmentResultListener l) {
 		fragmentResultCallback = l;
 		if(fragmentResultCallback == null) fragmentResultCallback = this;
 		
@@ -256,6 +279,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}
 		if(f instanceof BaseFragment){
 			((BaseFragment)f).setIsDialog(true);
+			if(!TextUtils.isEmpty(title))
+				((BaseFragment)f).setDialogTitle(title);
 			((BaseFragment)f).setFragmentTagName(tagName);
 		}
 		
@@ -289,13 +314,21 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	@Override
 	public void onResume() {		
 		super.onResume();
-		getActivity().registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));
+		try {
+			getActivity().registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));			
+		} catch(IllegalArgumentException e) {			
+		}
 	}
 	
 	@Override
 	public void onPause() {	
 		super.onPause();
-		getActivity().unregisterReceiver(syncFinishedReceiver);
+		try {
+			getActivity().unregisterReceiver(syncFinishedReceiver);			
+		} catch(IllegalArgumentException e) {
+			
+		}
+		
 	}
 	
 //	private void setMenu(){
@@ -320,6 +353,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 				
 		if(contentViewResource!=null){
 			setRootView(inflater.inflate(contentViewResource, container, false));
+			
+			if(isDialog() && !TextUtils.isEmpty(dialogTitle))
+				setDialogTitle(dialogTitle);
+			
 			onFragmentCreateView(getRootView(), savedInstanceState);								
 			
 			
@@ -550,6 +587,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		return ViewUtils.getSpinnerSelectedFieldCursor(getRootView(), id, fieldaName);
 	}
 	
+	public String getSpinnerGeneralValueSelectedCode(int id){
+		return ViewUtils.getSpinnerGeneralValueSelectedCode(getRootView(), id);
+	}
+		
 	public void setSpinnerSimpleAdapter(int id, String columnName, Cursor c) {
 		ViewUtils.setSpinnerSimpleAdapter(getRootView(), getActivity(), id, columnName, c);
 	}
@@ -584,6 +625,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
 		ViewUtils.setSpinnerOnItemSelectedListener(getRootView(), id, l);
+	}
+	
+	public void setSpinnerGeneralValueSelection(int id, String code){
+		ViewUtils.setSpinnerGeneralValueSelection(getRootView(), id, code);
 	}
 	
 	public void setGridViewAdapter(int id, ListAdapter adapter){

@@ -15,6 +15,7 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 	
 	Context context;
 	
+	public static final String CREATE_DATABASE_EXT_STATEMENT_FILE = "sql_db_create_ext";
 	public static final String CREATE_DATABASE_STATEMENT_FILE = "sql_db_create";
 	public static final String UPGRADE_VERSION_DATABASE_STATEMENT_FILE = "sql_db_upv%s";
 	public static final String DROP_DATABASE_STATEMENT_FILE = "sql_db_drop";
@@ -58,11 +59,17 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {		
-		int resourceId = getContext().getResources().getIdentifier(getCreateDataBaseFileName(), "xml", getContext().getApplicationContext().getPackageName());
-		
+		int resourceId = getContext().getResources().getIdentifier(getCreateDataBaseFileName(), "xml", getContext().getApplicationContext().getPackageName());		
 		XmlResourceParser parser = getContext().getResources().getXml(resourceId);
 
 		List<String> statements = XmlPull.getTextElements(parser, "statement");		
+		
+		int resourseExtId = getContext().getResources().getIdentifier(CREATE_DATABASE_EXT_STATEMENT_FILE, "xml", getContext().getApplicationContext().getPackageName());
+		XmlResourceParser parserExt = getContext().getResources().getXml(resourseExtId);
+		
+		List<String> statementsExt = XmlPull.getTextElements(parserExt, "statement");
+		if(statementsExt.size()>0)
+			statements.addAll(statementsExt);
 		
 		executeListStatements(db, statements);
 	}

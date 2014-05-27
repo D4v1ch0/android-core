@@ -134,11 +134,11 @@ public class SyncHistory extends EntityBase<SyncHistory> {
 		
 		if(c.moveToFirst()){
 			s = new SyncHistory();
-			s.setCategory( CursorUtils.getString(c, Contract.SyncHistory.DISPLAY_CATEGORY) );
-			s.setSyncDate( CursorUtils.getDate(c, Contract.SyncHistory.DISPLAY_DATE) );
-			s.setEvent( CursorUtils.getInt(c, Contract.SyncHistory.DISPLAY_EVENT) );
-			s.setNotes( CursorUtils.getString(c, Contract.SyncHistory.DISPLAY_NOTES) );
-			s.setUser( CursorUtils.getString(c, Contract.SyncHistory.DISPLAY_USER) );
+			s.setCategory( CursorUtils.getString(c, Contract.SyncHistory.FIELD_CATEGORY) );
+			s.setSyncDate( CursorUtils.getDate(c, Contract.SyncHistory.FIELD_DATE) );
+			s.setEvent( CursorUtils.getInt(c, Contract.SyncHistory.FIELD_EVENT) );
+			s.setNotes( CursorUtils.getString(c, Contract.SyncHistory.FIELD_NOTES) );
+			s.setUser( CursorUtils.getString(c, Contract.SyncHistory.FIELD_USER) );
 			s.setID( CursorUtils.getLong(c, Contract.SyncHistory._ID) );
 		}
 					

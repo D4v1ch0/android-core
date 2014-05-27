@@ -7,22 +7,28 @@ import rp3.app.nav.NavItem;
 import rp3.app.nav.NavSetting;
 import rp3.core.R;
 import rp3.util.Screen;
+import rp3.util.ViewUtils;
 import rp3.widget.adapter.NavListAdapter;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 @SuppressLint("NewApi")
@@ -31,14 +37,16 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	private final static String STATE_CURRENTNAV = "currentNav";
 	private final static int NAV_MODE_DRAWER = 1;
 	private final static int NAV_MODE_SLIDING_PANE = 2;
-	 private static final int PARALLAX_SIZE = 30;
+	private static final int PARALLAX_SIZE = 30;
 	
 	private NavListAdapter navDrawerAdapter;
 	private ListView listViewDrawer;
+	private View viewDrawer;
+	private ViewGroup viewContentHeader;
 	private ArrayList<NavItem> navItems;
 	private ArrayList<NavItem> resultNavItems;
 	private NavSetting navSettingCallback;
-	private int currentNavigationSelectionId = 0;
+	private long currentNavigationSelectionId = 0;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private DrawerLayout drawerLayout;
 	private SlidingPaneLayout slidingPane;
@@ -62,6 +70,8 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			navMode = NAV_MODE_DRAWER;
 			setContentView(R.layout.base_activity_navigation_drawer);
 		}
+		
+		viewContentHeader = (ViewGroup)findViewById(R.id.nav_header);
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
@@ -76,8 +86,8 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			setNavSettingListener(this);
 			if(!isPaneFragmentLoaded)
 			{
-				int sel = currentNavigationSelectionId;
-				currentNavigationSelectionId = -99999999;
+				long sel = currentNavigationSelectionId;
+				currentNavigationSelectionId = -999999999;
 				setNavigationSelection(sel);
 			}
 		}
@@ -87,14 +97,14 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	protected void onSaveInstanceState(Bundle outState) {		
 		super.onSaveInstanceState(outState);
 		
-		outState.putInt(STATE_CURRENTNAV, currentNavigationSelectionId);
+		outState.putLong(STATE_CURRENTNAV, currentNavigationSelectionId);
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
 		super.onRestoreInstanceState(savedInstanceState);
 		
-		currentNavigationSelectionId = savedInstanceState.getInt(STATE_CURRENTNAV);
+		currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
 	}
 	
 	public void setPaneContentView(int resID) {
@@ -116,7 +126,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		resultNavItems = new ArrayList<NavItem>();
 		for (NavItem item : navItems) {
 			resultNavItems.add(item);
-			if (item.isCategory()) {
+			if (item.getNavItemType() == NavItem.TYPE_CATEGORY) {
 				resultNavItems.addAll(item.getNavItems());
 			}
 		}
@@ -124,6 +134,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		listViewDrawer = (ListView) findViewById(R.id.listView_navigationDrawer);
 		navDrawerAdapter = new NavListAdapter(this, resultNavItems);
 		listViewDrawer.setAdapter(navDrawerAdapter);		
+		viewDrawer = findViewById(R.id.viewDrawer);
 		
 		if(navMode == NAV_MODE_DRAWER){
 			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,8 +156,14 @@ public class NavActivity extends BaseActivity implements NavSetting {
 				}
 				
 				NavItem item = resultNavItems.get(position);
+				if(item.getNavItemType() == NavItem.TYPE_NAV){
+					currentNavigationSelectionId = id;
+				}else{										
+					int beforePosition = getNavItemPosition(currentNavigationSelectionId);					
+					listViewDrawer.setSelection(beforePosition);
+					listViewDrawer.setItemChecked(beforePosition, true);
+				}
 				
-				//if(!NavActivity.this.navSettingCallback.equals(this)) onNavItemSelected(item);
 				NavActivity.this.navSettingCallback.onNavItemSelected(item);				
 			}
 		});
@@ -212,25 +229,41 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			slidingPane.setPanelSlideListener(panelSlideListener);
 		}
 	}	
-
-	public void setNavigationSelection(int id) {
-		if(currentNavigationSelectionId!=id){
-			currentNavigationSelectionId = id;
-			if (resultNavItems != null) {
-				int position = currentNavigationSelectionId;
-				for (NavItem item : resultNavItems) {
-					if (item.getId() == id) {
-						position = resultNavItems.indexOf(item);
-						break;
-					}
-				}
 	
-				listViewDrawer.setSelection(position);
-				listViewDrawer.setItemChecked(position, true);
+	public void reset(){
+		long navGo = currentNavigationSelectionId;
+		currentNavigationSelectionId = -999999999;
+		setNavigationSelection(navGo);
+	}
+
+	public void setNavigationSelection(long sel) {
+		if(currentNavigationSelectionId!=sel){
+			currentNavigationSelectionId = sel;
+			if (resultNavItems != null) {
+				int position = 0;
+						//currentNavigationSelectionId;
+				position = getNavItemPosition(sel);
 				
-				onNavItemSelected(resultNavItems.get(position));
+				NavItem item = resultNavItems.get(position);
+				if(item.getNavItemType() == NavItem.TYPE_NAV){
+					listViewDrawer.setSelection(position);
+					listViewDrawer.setItemChecked(position, true);	
+				}
+																
+				onNavItemSelected(item);								
 			}
 		}
+	}
+	
+	private int getNavItemPosition(long id){
+		int position = 0;
+		for (NavItem item : resultNavItems) {
+			if (item.getId() == id) {
+				position = resultNavItems.indexOf(item);
+				break;
+			}
+		}
+		return position;
 	}
 
 	@Override
@@ -259,7 +292,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	public boolean isNavOpen(){
 		boolean drawerOpen = false;
 		if(navMode == NAV_MODE_DRAWER)
-			drawerOpen = drawerLayout.isDrawerOpen(listViewDrawer);
+			drawerOpen = drawerLayout.isDrawerOpen(viewDrawer);
 		else
 			drawerOpen  =  slidingPane.isOpen();
 		return drawerOpen;
@@ -311,5 +344,75 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	@Override
 	public void navConfig(List<NavItem> navItems, NavActivity currentActivity) {
 		
+	}
+	
+	public void setNavHeaderTitle(int title){
+		setNavHeaderTitle(getText(title).toString());
+	}
+	
+	public void setNavHeaderTitle(String title){
+		if(!TextUtils.isEmpty(title)){
+			ViewUtils.setTextViewText(viewContentHeader,R.id.nav_header_title, title);
+		}
+	}
+	
+	public void setNavHeaderSubtitle(int subtitle){
+		setNavHeaderSubtitle(getText(subtitle).toString());
+	}
+	
+	public void setNavHeaderSubtitle(String subtitle){
+		if(!TextUtils.isEmpty(subtitle)){
+			ViewUtils.setViewVisibility(viewContentHeader,R.id.nav_header_subtitle, View.VISIBLE);
+			ViewUtils.setTextViewText(viewContentHeader,R.id.nav_header_subtitle, subtitle);
+		}else{
+			ViewUtils.setTextViewText(viewContentHeader,R.id.nav_header_subtitle, "");
+			ViewUtils.setViewVisibility(viewContentHeader,R.id.nav_header_subtitle, View.GONE);
+		}
+	}
+	
+	public void setNavHeaderIcon(int icon){
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		imageView.setImageResource(icon);
+	}
+	
+	public void setNavHeaderIcon(Drawable icon){
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		imageView.setImageDrawable(icon);
+	}
+	
+	public void setNavHeaderIcon(Bitmap icon){
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		imageView.setImageBitmap(icon);
+	}
+	
+	public void setNavHeaderLayout(int layout){
+		View viewInsert = getLayoutInflater().inflate(layout, null);
+		viewContentHeader.removeAllViews();
+		viewContentHeader.addView(viewInsert);
+	}
+	
+	public void setNavHeaderViewText(int id, int value){
+		ViewUtils.setTextViewText(viewContentHeader,id, getText(value).toString());
+	}
+	
+	public void setNavHeaderViewText(int id, String value){
+		ViewUtils.setTextViewText(viewContentHeader,id, value);
+	}
+	
+	public void setNavHeaderViewIcon(int id, Drawable icon){
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(id);
+		imageView.setImageDrawable(icon);
+	}
+	
+	public void setNavHeaderViewIcon(int id, Bitmap icon){
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(id);
+		imageView.setImageBitmap(icon);
+	}
+	
+	public void showNavHeader(boolean show){
+		if(show)
+			viewContentHeader.findViewById(R.id.nav_header).setVisibility(View.VISIBLE);
+		else
+			viewContentHeader.findViewById(R.id.nav_header).setVisibility(View.GONE);
 	}
 }

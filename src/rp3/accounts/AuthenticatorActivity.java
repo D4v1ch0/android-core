@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-	
+			
 	public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -43,6 +43,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     private String mAuthTokenType;
+    
+    public final static Intent newIntent(Context c){		
+    	final Intent intent = new Intent(c, AuthenticatorActivity.class);                        
+        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, Session.getUser().getLogonName());
+        
+        return intent;
+	}
     
     public static Intent newIntent(Context c, String accountName, 
     		String authTokenType, AccountAuthenticatorResponse response){

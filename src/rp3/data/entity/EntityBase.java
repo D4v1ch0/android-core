@@ -177,13 +177,17 @@ public abstract class EntityBase<T> implements Identifiable {
 				null,Message.ERROR_TYPE, key);
 	}
 	
-	protected void prepareInsert(int actionId){
+	protected void initPrepareInsert(DataBase db, int actionId){
 		setAction(actionId);
 		clearValues();
 		initializeMessages();
 		onBeforeInsert();				
 		setValues();
+		onPrepareInsert(db, actionId);
 		executeValidate();
+	}
+	
+	protected void onPrepareInsert(DataBase db, int actionId){		
 	}
 	
 	protected boolean insert(DataBase db){			
@@ -192,7 +196,7 @@ public abstract class EntityBase<T> implements Identifiable {
 	
 	protected boolean insert(DataBase db, int actionId){			
 		setAction(actionId);
-		prepareInsert(actionId);
+		initPrepareInsert(db,actionId);
 		return executeInsert(db);
 	}
 	
@@ -237,18 +241,22 @@ public abstract class EntityBase<T> implements Identifiable {
 		}
 	}
 
-	protected void prepareUpdate(int actionId){
+	protected void initUpdate(DataBase db, int actionId){
 		setAction(actionId);
 		clearValues();
 		initializeMessages();
 		onBeforeUpdate();			
 		setValues();
+		onPrepareUpdate(db, actionId);
 		executeValidate();	
+	}
+	
+	protected void onPrepareUpdate(DataBase db, int actionId){		
 	}
 	
 	protected boolean update(DataBase db, int actionId){
 		setAction(actionId);
-		prepareUpdate(actionId);		
+		initUpdate(db, actionId);		
 		return executeUpdate(db);		
 	}
 	

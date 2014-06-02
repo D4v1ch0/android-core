@@ -2,6 +2,7 @@ package rp3.db.sqlite;
 
 import java.util.Date;
 
+import rp3.db.QueryDir;
 import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
@@ -79,6 +80,26 @@ public class DataBase {
 	public void endTransaction(){
 		if(getDb().inTransaction())
 			getDb().endTransaction();
+	}
+	
+	public Cursor rawQueryDir(String queryName){		
+		return getDb().rawQuery(QueryDir.getQuery(queryName), null);
+	}
+	
+	public Cursor rawQueryDir(String queryName,String[] selectionArgs){		
+		return getDb().rawQuery(QueryDir.getQuery(queryName), selectionArgs);
+	}
+	
+	public Cursor rawQueryDir(String queryName,String selectionArg){		
+		return rawQueryDir(queryName, Convert.getStringArrayFromScalar(selectionArg));
+	}
+	
+	public Cursor rawQueryDir(String queryName,long selectionArg){		
+		return rawQueryDir(queryName, Convert.getStringArrayFromScalar(selectionArg));
+	}
+	
+	public Cursor rawQueryDir(String queryName,int selectionArg){		
+		return rawQueryDir(queryName, Convert.getStringArrayFromScalar(selectionArg));
 	}
 	
 	public Cursor rawQuery(String sql){		

@@ -40,9 +40,17 @@ public abstract class PreferenceManager {
 		return value;
 	}
 	
+	public static void close(){
+		preferences = null;
+	}
+	
+	
 	public static SharedPreferences getPreferences(){
 		if(preferences == null)
-			preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(Session.getContext());
+			preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(), 
+					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+			//preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(Session.getContext());
+		
 		return preferences;
 	}
 	
@@ -63,7 +71,7 @@ public abstract class PreferenceManager {
 	}
 	
 	public static void setValue(String key, int value){
-		getPreferences().edit().putInt(key, value).commit();
+		getPreferences().edit().putInt(key, value).commit();		
 	}
 	
 	public static void setValue(String key, float value){

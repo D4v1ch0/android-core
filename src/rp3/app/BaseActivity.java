@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.configuration.Configuration;
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.content.SyncAdapter;
 import rp3.core.R;
@@ -49,7 +51,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker.OnDateChangedListener;
 
 public class BaseActivity extends FragmentActivity implements DataBaseService,
@@ -78,6 +79,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	public void requestSync(Bundle settingsBundle){
 		if(ConnectionUtils.isNetAvailable(this)){
+			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
 		}else{
 			MessageCollection mc = new MessageCollection();
@@ -269,10 +271,16 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		context = c;
 	}
 
-	public DataBase getDataBase() {
+	public DataBase getDataBase() {		
 		if (db == null)
-			db = DataBaseServiceHelper.getWritableDatabase((context == null ? Session.getContext(): context),
-					getDataBaseClass());
+		{
+			if(context == null)
+				context = Session.getContext();
+			if(dataBaseClass == null)
+				dataBaseClass = Configuration.getDataBaseConfiguration().getDataBaseClass();
+				
+			db = DataBaseServiceHelper.getWritableDatabase(context, dataBaseClass);
+		}
 		return db;
 	}
 
@@ -559,10 +567,11 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		ViewUtils.setImageButtonClickListener(getRootView(), id, l);
 	}
 
-	public void setListViewAdapter(int id, ListAdapter adapter) {
-		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
+	public void setViewAdapter(int id, ListAdapter adapter){
+		ViewUtils.setViewAdapter(getRootView(), id, adapter);
 	}
 	
+
 	public void setListViewHeader(int id, int resHeaderID){
 		ViewUtils.setListViewHeader(getRootView(), id, resHeaderID);
 	}
@@ -627,31 +636,14 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		ViewUtils.setSpinnerGeneralValueSelection(getRootView(), id, code);
 	}
 	
-	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setSpinnerOnItemSelectedListener(getRootView(), id, l);
+	public void setViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){
+		ViewUtils.setViewOnItemClickListener(getRootView(), id, l);
 	}
 	
-	public void setGridViewAdapter(int id, ListAdapter adapter){
-		ViewUtils.setGridViewAdapter(getRootView(), id, adapter);
-	}
-	
-	public void setGridViewdOnItemClickListener(int id, OnItemClickListener l){
-		ViewUtils.setGridViewdOnItemClickListener(getRootView(), id, l);
-	}
-	
-	public void setGridViewdOnItemClickListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setGridViewdOnItemSelectedListener(getRootView(), id, l);
+	public void setViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setViewOnItemSelectedListener(getRootView(), id, l);
 	}
 		
-	public void setListViewOnItemClickListener(int id,
-			AdapterView.OnItemClickListener l) {
-		ViewUtils.setListViewOnClickListener(getRootView(), id, l);
-	}
-
-	public void setListViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setListViewOnItemSelectedListener(getRootView(), id, l);		
-	}
-	
 	public void setListViewChoiceMode(int id, int choiceMode){
 		ViewUtils.setListViewChoiceMode(getRootView(), id, choiceMode);
 	}

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import rp3.core.R;
-import rp3.data.Identifiable;
 import rp3.data.models.GeneralValue;
 import rp3.db.sqlite.DataBase;
 
@@ -86,9 +85,9 @@ public class SimpleGeneralValueAdapter extends BaseAdapter {
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
-		Identifiable current = (GeneralValue)getItem(position);
+		GeneralValue current = (GeneralValue)getItem(position);
 		if(current!=null){
-			String value = current.getDescription();			
+			String value = current.getValue();			
 				
 			holder.textView_content.setText(value);
 		}

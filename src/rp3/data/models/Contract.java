@@ -18,6 +18,7 @@ public class Contract {
 		public static final String COLUMN_GENERAL_TABLE_ID = "GeneralTableId";		
 		public static final String COLUMN_CODE = "Code";
 		public static final String COLUMN_VALUE = "Value";
+		public static final String COLUMN_ORDER = "DisplayOrder";
 		public static final String COLUMN_REFERENCE1 = "Reference1";
 		public static final String COLUMN_REFERENCE2 = "Reference2";
 		public static final String COLUMN_REFERENCE3 = "Reference3";
@@ -27,6 +28,7 @@ public class Contract {
 		public static final String FIELD_GENERAL_TABLE_ID = COLUMN_GENERAL_TABLE_ID;		
 		public static final String FIELD_CODE = COLUMN_CODE;
 		public static final String FIELD_VALUE = COLUMN_VALUE;
+		public static final String FIELD_ORDER = COLUMN_ORDER;
 		public static final String FIELD_REFERENCE1 = COLUMN_REFERENCE1;
 		public static final String FIELD_REFERENCE2 = COLUMN_REFERENCE2;
 		public static final String FIELD_REFERENCE3 = COLUMN_REFERENCE3;

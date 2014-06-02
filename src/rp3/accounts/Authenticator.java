@@ -12,11 +12,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 public class Authenticator extends AbstractAccountAuthenticator {
-	private String TAG = "UdinicAuthenticator";
+
     private final Context mContext;
 
     private static ServerAuthenticate sServerAuthenticate;
@@ -30,8 +29,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     
     @Override
-    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        Log.d("udinic", TAG + "> addAccount");
+    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {        
 
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);

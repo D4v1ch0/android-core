@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.database.Cursor;
 
+import rp3.data.Dictionary;
 import rp3.data.Identifiable;
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
@@ -22,6 +23,7 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 	private String reference3;
 	private String reference4;
 	private String reference5;
+	private int order;
 	
 	@Override
 	public long getID() {		
@@ -53,6 +55,7 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		setValue(Contract.GeneralValue.COLUMN_REFERENCE3, this.reference3);
 		setValue(Contract.GeneralValue.COLUMN_REFERENCE4, this.reference4);
 		setValue(Contract.GeneralValue.COLUMN_REFERENCE5, this.reference5);
+		setValue(Contract.GeneralValue.COLUMN_ORDER, this.order);
 	}
 
 	@Override
@@ -73,6 +76,8 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 			return this.reference4;
 		else if(key.equals(Contract.GeneralValue.COLUMN_REFERENCE5))
 			return this.reference5;
+		else if(key.equals(Contract.GeneralValue.COLUMN_ORDER))
+			return this.order;
 		return null;
 	}
 
@@ -144,6 +149,14 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 	public void setReference5(String reference5) {
 		this.reference5 = reference5;
 	}
+	
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
 	private static GeneralValue getGeneralValue(Cursor c){
 		GeneralValue gv = new GeneralValue();
@@ -157,6 +170,7 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		gv.setReference3( CursorUtils.getString(c, Contract.GeneralValue.COLUMN_REFERENCE3) );
 		gv.setReference4( CursorUtils.getString(c, Contract.GeneralValue.COLUMN_REFERENCE4) );
 		gv.setReference5( CursorUtils.getString(c, Contract.GeneralValue.COLUMN_REFERENCE5) );
+		gv.setOrder( CursorUtils.getInt(c, Contract.GeneralValue.COLUMN_ORDER) );
 		
 		return gv;
 	}
@@ -172,14 +186,33 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		return null;
 	}
 	
+	public static Dictionary<String, String> getDictionary(DataBase db, long generalTableId){
+		List<GeneralValue> gvs = getGeneralValues(db, generalTableId, false);
+		Dictionary<String, String> dic = new Dictionary<String, String>();
+		for(GeneralValue gv : gvs){
+			dic.set(gv.getCode(), gv.getValue());
+		}
+		return dic;
+	}
+	
 	public static List<GeneralValue> getGeneralValues(DataBase db, long generalTableId){
+		return getGeneralValues(db, generalTableId, false);
+	}
+	
+	public static List<GeneralValue> getGeneralValues(DataBase db, long generalTableId, boolean useOrderByColumn){
 		List<GeneralValue> gv = new ArrayList<GeneralValue>();
+		
+		String orderQuery = "";
+		if(useOrderByColumn)
+			orderQuery = Contract.GeneralValue.COLUMN_ORDER;
+		else
+			orderQuery = Contract.GeneralValue.COLUMN_VALUE;
 		
 		Cursor c = db.query(Contract.GeneralValue.TABLE_NAME, getSelectColumns()			
 		,  Contract.GeneralValue.COLUMN_GENERAL_TABLE_ID + " = ? ", 
 			Convert.getStringArrayFromScalar(generalTableId),
 			null,null,
-			Contract.GeneralValue.COLUMN_VALUE);
+			orderQuery);
 		
 		if(c.moveToFirst()){
 			do{
@@ -199,7 +232,12 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		Contract.GeneralValue.COLUMN_REFERENCE2,
 		Contract.GeneralValue.COLUMN_REFERENCE3,
 		Contract.GeneralValue.COLUMN_REFERENCE4,
-		Contract.GeneralValue.COLUMN_REFERENCE5};
+		Contract.GeneralValue.COLUMN_REFERENCE5,
+		Contract.GeneralValue.COLUMN_ORDER};
+	}
+	
+	public static boolean delete(DataBase db, long generalTableId){
+		return db.delete(Contract.GeneralValue.TABLE_NAME, Contract.GeneralValue.COLUMN_GENERAL_TABLE_ID + " = ? ", generalTableId) != 0;
 	}
 	
 }

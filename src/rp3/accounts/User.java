@@ -259,6 +259,8 @@ public class User {
 		if(addAccount){
 			user.setAccount(new Account(user.getLogonName(), getAccountType()));
             mAccountManager.addAccountExplicitly(user.getAccount(), user.getPassword(), null);
+		}else{
+			mAccountManager.setPassword(user.getAccount(), user.getPassword());			
 		}
 		Account account = user.getAccount();
 				

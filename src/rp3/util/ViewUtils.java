@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -102,11 +101,15 @@ public abstract class ViewUtils {
 		((ImageButton) rootView.findViewById(id)).setOnClickListener(l);
 	}
 
-	public static final void setListViewAdapter(View rootView, int id,
-			ListAdapter adapter) {
-		((ListView) rootView.findViewById(id)).setAdapter(adapter);
+	public static final void setViewAdapter(View rootView, int id,
+			ListAdapter adapter) {		
+		View v = rootView.findViewById(id);
+		if(v instanceof ListView)
+			((ListView) v).setAdapter(adapter);
+		else if(v instanceof GridView)
+			((GridView) v).setAdapter(adapter);
 	}
-
+		
 	public static final void setListViewHeader(View rootView, int id,
 			int resHeaderID) {
 		View headerView = LayoutInflater.from(Session.getContext()).inflate(
@@ -232,7 +235,7 @@ public abstract class ViewUtils {
 			long itemId) {
 		Spinner sp = (Spinner) rootView.findViewById(id);
 		SpinnerAdapter adapter = sp.getAdapter();
-
+				
 		for (int i = 0; i < adapter.getCount(); i++) {
 			long tempId = adapter.getItemId(i);
 			if (tempId == itemId) {
@@ -254,40 +257,28 @@ public abstract class ViewUtils {
 			}
 		}
 	}
-
-	public static final void setSpinnerOnItemSelectedListener(View rootView,
-			int id, AdapterView.OnItemSelectedListener l) {
-		Spinner sp = (Spinner) rootView.findViewById(id);
-		sp.setOnItemSelectedListener(l);
-	}
-
-	public static final void setGridViewAdapter(View rootView, int id,
-			ListAdapter adapter) {
-		GridView gv = (GridView) rootView.findViewById(id);
-		gv.setAdapter(adapter);
-	}
-
-	public static final void setGridViewdOnItemClickListener(View rootView,
-			int id, OnItemClickListener l) {
-		GridView gv = (GridView) rootView.findViewById(id);
-		gv.setOnItemClickListener(l);
-	}
-
-	public static final void setGridViewdOnItemSelectedListener(View rootView,
-			int id, AdapterView.OnItemSelectedListener l) {
-		GridView gv = (GridView) rootView.findViewById(id);
-		gv.setOnItemSelectedListener(l);
-	}
-
-	public static final void setListViewOnClickListener(View rootView, int id,
+		
+	public static final void setViewOnItemClickListener(View rootView, int id,
 			AdapterView.OnItemClickListener l) {
-		((ListView) rootView.findViewById(id)).setOnItemClickListener(l);
+		View v = rootView.findViewById(id);
+		if(v instanceof ListView)
+			((ListView) v).setOnItemClickListener(l);
+		else if(v instanceof GridView)
+			((GridView)v).setOnItemClickListener(l);
+		else if(v instanceof Spinner)
+			((Spinner)v).setOnItemClickListener(l);
 	}
-
-	public static final void setListViewOnItemSelectedListener(View rootView,
+	
+	public static final void setViewOnItemSelectedListener(View rootView,
 			int id, AdapterView.OnItemSelectedListener l) {
-		((ListView) rootView.findViewById(id)).setOnItemSelectedListener(l);
-	}
+		View v = rootView.findViewById(id);
+		if(v instanceof ListView)
+			((ListView) v).setOnItemSelectedListener(l);
+		else if(v instanceof GridView)
+			((GridView)v).setOnItemSelectedListener(l);
+		else if(v instanceof Spinner)
+			((Spinner)v).setOnItemSelectedListener(l);
+	}	
 
 	public static final void setListViewChoiceMode(View rootView, int id,
 			int choiceMode) {

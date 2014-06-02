@@ -15,7 +15,8 @@
     Reference2 TEXT,
     Reference3 TEXT,
     Reference4 TEXT,
-    Reference5 TEXT
+    Reference5 TEXT,
+    DisplayOrder INTEGER
     )
     </statement>
 

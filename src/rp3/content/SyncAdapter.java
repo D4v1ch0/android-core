@@ -1,5 +1,6 @@
 package rp3.content;
 
+import rp3.configuration.PreferenceManager;
 import rp3.core.R;
 import rp3.data.Message;
 import rp3.data.MessageCollection;
@@ -53,7 +54,8 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			data = extras;
 		else
 			data = new Bundle();
-		
+			
+		PreferenceManager.close();
 		Session.Start(this.getContext());
 		rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());		
 	}

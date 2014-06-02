@@ -3,6 +3,7 @@ package rp3.configuration;
 import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
+import rp3.runtime.Session;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -61,7 +62,11 @@ public class SettingsFragment extends PreferenceFragment implements DataBaseServ
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);						
+		super.onCreate(savedInstanceState);		
+		
+		android.preference.PreferenceManager prefMgr = getPreferenceManager();
+        prefMgr.setSharedPreferencesName(Session.getContext().getApplicationContext().getPackageName());
+        prefMgr.setSharedPreferencesMode(Context.MODE_MULTI_PROCESS | Context.MODE_PRIVATE);
 	}
 	
 	

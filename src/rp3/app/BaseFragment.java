@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.content.SyncAdapter;
 import rp3.core.R;
@@ -44,7 +45,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker.OnDateChangedListener;
 
 public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, 
@@ -106,6 +106,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void requestSync(Bundle settingsBundle){
 		if(ConnectionUtils.isNetAvailable(getActivity())){
+			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
 		}else{
 			MessageCollection mc = new MessageCollection();
@@ -558,9 +559,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setImageButtonClickListener(getRootView(), id, l);
 	}
 	
-	public void setListViewAdapter(int id, ListAdapter adapter)
-	{		
-		ViewUtils.setListViewAdapter(getRootView(), id, adapter);
+	public void setViewAdapter(int id, ListAdapter adapter){
+		ViewUtils.setViewAdapter(getRootView(), id, adapter);
 	}
 	
 	public void setListViewHeader(int id, int resHeaderID){
@@ -621,36 +621,20 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void setSpinnerSelectionById(int id, long itemId) {
 		ViewUtils.setSpinnerSelectionById(getRootView(), id, itemId);
-	}
-	
-	public void setSpinnerOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setSpinnerOnItemSelectedListener(getRootView(), id, l);
-	}
+	}		
 	
 	public void setSpinnerGeneralValueSelection(int id, String code){
 		ViewUtils.setSpinnerGeneralValueSelection(getRootView(), id, code);
 	}
 	
-	public void setGridViewAdapter(int id, ListAdapter adapter){
-		ViewUtils.setGridViewAdapter(getRootView(), id, adapter);
+	public void setViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){
+		ViewUtils.setViewOnItemClickListener(getRootView(), id, l);
 	}
 	
-	public void setGridViewdOnItemClickListener(int id, OnItemClickListener l){
-		ViewUtils.setGridViewdOnItemClickListener(getRootView(), id, l);
+	public void setViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
+		ViewUtils.setViewOnItemSelectedListener(getRootView(), id, l);
 	}
-	
-	public void setGridViewdOnItemClickListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setGridViewdOnItemSelectedListener(getRootView(), id, l);
-	}		
-
-	public void setListViewOnItemSelectedListener(int id, AdapterView.OnItemSelectedListener l){
-		ViewUtils.setListViewOnItemSelectedListener(getRootView(), id, l);		
-	}
-	
-	public void setListViewOnItemClickListener(int id, AdapterView.OnItemClickListener l){
-		ViewUtils.setListViewOnClickListener(getRootView(), id, l);
-	}	
-	
+			
 	public void setListViewChoiceMode(int id, int choiceMode){
 		ViewUtils.setListViewChoiceMode(getRootView(), id, choiceMode);
 	}

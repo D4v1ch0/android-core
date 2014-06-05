@@ -33,7 +33,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -699,9 +698,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setViewError(getRootView(),id,m);
 	}
 
-	public static final void setViewPagerAdapter(View rootView, int id, PagerAdapter adapter){
-		ViewPager pager = (ViewPager)rootView.findViewById(id);
-		pager.setAdapter(adapter);
+	public final void setViewPagerAdapter(int id, PagerAdapter adapter){
+		ViewUtils.setViewPagerAdapter(getRootView(), id, adapter);
 	}
 	
 	public void setImageViewBitmapFromInternalStorageAsync(int id, String fileName){

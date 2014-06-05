@@ -165,7 +165,9 @@ public abstract class ViewUtils {
 	public static final String getSpinnerGeneralValueSelectedCode(View rootView, int id) {
 		Spinner sp = (Spinner) rootView.findViewById(id);
 		GeneralValue gv = (GeneralValue)sp.getSelectedItem();
-		return gv.getCode();
+		if(gv!=null)
+			return gv.getCode();
+		return null;
 	}
 
 	public static final void setSpinnerSimpleAdapter(View rootView,

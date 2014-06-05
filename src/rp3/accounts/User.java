@@ -75,11 +75,11 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password;
+		return password;			
 	}
 
 	void setPassword(String password) {
-		this.password = password;
+		this.password = password;	
 	}	
 
 	void setLogonName(String logonName) {
@@ -183,6 +183,9 @@ public class User {
 			user.setAccount(account);
 			user.setLogonName(account.name);
 			
+			AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+			user.setPassword(mAccountManager.getPassword(account));
+			
 			String userId = user.getUserData(account,USER_DATA_USERID);
 			if(!TextUtils.isEmpty(userId))			
 				user.setUserId(Integer.parseInt(userId));
@@ -266,7 +269,7 @@ public class User {
 				
 		mAccountManager.setUserData(account, USER_DATA_FULLNAME, user.getFullName());
         mAccountManager.setUserData(account, USER_DATA_USERID, String.valueOf(user.getUserId()) );
-        mAccountManager.setUserData(account, USER_DATA_ISLOGGED, String.valueOf(user.isLogged()) );
+        mAccountManager.setUserData(account, USER_DATA_ISLOGGED, String.valueOf(user.isLogged()) );        
 	}
 	
 	public static Account getDefaultAccount(Context c) {

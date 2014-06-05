@@ -6,7 +6,6 @@ import java.util.List;
 import rp3.db.sqlite.DataBase;
 import rp3.db.sqlite.DataBaseService;
 import rp3.db.sqlite.DataBaseServiceHelper;
-import rp3.runtime.Session;
 
 import android.content.Context;
 import android.content.Intent;

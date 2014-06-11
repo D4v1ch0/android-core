@@ -9,8 +9,8 @@
 	<dimen name="action_bar_subtitle_top_margin">-3dp</dimen>
 	<dimen name="action_bar_subtitle_bottom_margin">3dip</dimen>
 	
-	<dimen name="text_input_size">19sp</dimen>
-	<dimen name="text_medium_size">20sp</dimen>
-	<dimen name="text_large_size">23sp</dimen>
-	<dimen name="text_small_size">15sp</dimen>
+	<dimen name="text_input_size">18sp</dimen>
+	<dimen name="text_medium_size">18sp</dimen>
+	<dimen name="text_large_size">22sp</dimen>
+	<dimen name="text_small_size">14sp</dimen>
 </resources>

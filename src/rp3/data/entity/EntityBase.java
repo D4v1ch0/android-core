@@ -181,9 +181,9 @@ public abstract class EntityBase<T> implements Identifiable {
 		setAction(actionId);
 		clearValues();
 		initializeMessages();
-		onBeforeInsert();				
-		setValues();
+		onBeforeInsert();						
 		onPrepareInsert(db, actionId);
+		setValues();
 		executeValidate();
 	}
 	
@@ -245,9 +245,9 @@ public abstract class EntityBase<T> implements Identifiable {
 		setAction(actionId);
 		clearValues();
 		initializeMessages();
-		onBeforeUpdate();			
-		setValues();
+		onBeforeUpdate();					
 		onPrepareUpdate(db, actionId);
+		setValues();
 		executeValidate();	
 	}
 	

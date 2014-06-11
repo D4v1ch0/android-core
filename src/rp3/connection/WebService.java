@@ -125,7 +125,7 @@ public class WebService {
 		return Integer.parseInt(getStringResponse());
 	}
 	
-	private String getStringResponse(){
+	public String getStringResponse(){
 		if(wsData.getType().equalsIgnoreCase(TYPE_SOAP)){
         	return getSoapPrimitiveResponse().getValue().toString();
         }else if(wsData.getType().equalsIgnoreCase(TYPE_REST)){

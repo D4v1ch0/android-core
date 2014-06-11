@@ -39,7 +39,7 @@ public class StartActivity extends BaseActivity {
 		}
 	}
 	
-	private void callLoginActivity(){
+	public void callLoginActivity(){
 		if(!onCallLoginActivity()){
 			Intent intent  = AuthenticatorActivity.newIntent(getApplicationContext(), Session.getUser().getLogonName(), 
 					User.DEFAULT_TOKEN_TYPE , 

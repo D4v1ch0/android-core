@@ -32,7 +32,8 @@
     <string name="undo_all">Deshacer Todo</string>
     <string name="item_deleted">Registro eliminado</string>
     <string name="n_items_deleted">%1$s registros eliminados</string>        
-    
+    <string name="message_connected">Concetado</string>
+    <string name="message_unresolved">No Resuelto</string>
     <string name="message_title_send">Enviando</string>
     <string name="message_title_connecting">Conectando</string> 
     <string name="message_title_synchronizing">Sincronizando</string> 

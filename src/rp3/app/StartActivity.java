@@ -5,6 +5,7 @@ import rp3.accounts.User;
 import rp3.core.R;
 import rp3.runtime.Session;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ public class StartActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);						
 		Session.Start(this.getApplicationContext());
 		setContentView(R.layout.activity_start);				
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 	
 	@Override

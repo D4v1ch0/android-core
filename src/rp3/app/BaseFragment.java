@@ -41,10 +41,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ExpandableListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, 
 	DialogDatePickerChangeListener, FragmentResultListener {
@@ -413,7 +415,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void closeDialogProgress(){
-		progressDialog.dismiss();
+		try{
+			progressDialog.dismiss();
+		}catch(Exception ex){}
 	}
 	
 	public void showDialogConfirmation(int id, int message){
@@ -562,6 +566,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setViewAdapter(getRootView(), id, adapter);
 	}
 	
+	public void setViewAdapter(int id, ExpandableListAdapter adapter) {
+		ViewUtils.setViewAdapter(getRootView(), id, adapter);
+	}
+	
 	public void setListViewHeader(int id, int resHeaderID){
 		ViewUtils.setListViewHeader(getRootView(), id, resHeaderID);
 	}
@@ -638,6 +646,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setListViewChoiceMode(getRootView(), id, choiceMode);
 	}
 	
+	public void setViewOnChildClickListener(int id, OnChildClickListener l) {
+		ViewUtils.setViewOnChildClickListener(getRootView(), id, l);
+	}
+	
 	public void setDatePicker(int id, Date value){
 		ViewUtils.setDatePicker(getRootView(), id, value);
 	}
@@ -690,12 +702,20 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		ViewUtils.setTextViewDefaultDateText(getRootView(), id, date);
 	}	
 	
-	public void setViewError(int id, String text){
-		ViewUtils.setViewError(getRootView(),id,text);
+	public void setViewError(int id, String text) {
+		ViewUtils.setViewError(getRootView(), id, text);
 	}
 	
-	public void setViewError(int id, Message m){
-		ViewUtils.setViewError(getRootView(),id,m);
+	public void setViewError(int id, String text, int innerViewId) {
+		ViewUtils.setViewError(getRootView(), id, text, innerViewId);
+	}
+
+	public void setViewError(int id, Message m) {
+		ViewUtils.setViewError(getRootView(), id, m);
+	}
+	
+	public void setViewError(int id, Message m, int innerViewId) {
+		ViewUtils.setViewError(getRootView(), id, m, innerViewId);
 	}
 
 	public final void setViewPagerAdapter(int id, PagerAdapter adapter){

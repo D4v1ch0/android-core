@@ -3,6 +3,7 @@ package rp3.content;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,29 @@ public class SimpleGeneralValueAdapter extends BaseAdapter {
 	}
 	
 	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId){
+		this(c,db,generalTableId,false,null);
+	}
+	
+	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId, boolean includeNullItem){
+		this(c,db,generalTableId,includeNullItem,null);
+	}
+			
+	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId, boolean includeNullItem, String nullItemText){
 		this.data = GeneralValue.getGeneralValues(db, generalTableId);
+		
+		if(includeNullItem){
+			GeneralValue empty = new GeneralValue();
+			empty.setCode(null);
+			if(TextUtils.isEmpty(nullItemText))
+				empty.setValue(c.getText(R.string.hint_default_select_element).toString());
+			else
+				empty.setValue(nullItemText);
+			
+			empty.setID(-1);
+			
+			this.data.add(0,empty);
+		}
+		
 		this.context = c;
 		this.inflater = LayoutInflater.from(context);
 		layoutResID = R.layout.base_rowlist_simple_spinner;

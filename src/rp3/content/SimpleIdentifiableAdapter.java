@@ -14,7 +14,7 @@ import rp3.data.Identifiable;
 
 public class SimpleIdentifiableAdapter extends BaseAdapter {
 
-	private List<Identifiable> data;
+	private List<? extends Identifiable> data;
 	private LayoutInflater inflater = null;
 	private Context context;
 	private String contentKey;
@@ -24,7 +24,7 @@ public class SimpleIdentifiableAdapter extends BaseAdapter {
 		TextView textView_content;
 	}
 	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data){
+	public SimpleIdentifiableAdapter(Context c, List<? extends Identifiable> data){
 		this.data = data;
 		this.context = c;
 		this.inflater = LayoutInflater.from(context);
@@ -32,7 +32,7 @@ public class SimpleIdentifiableAdapter extends BaseAdapter {
 	}	
 	
 	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data, String contentKey){
+	public SimpleIdentifiableAdapter(Context c, List<? extends Identifiable> data, String contentKey){
 		this.data = data;
 		this.context = c;
 		this.contentKey = contentKey;
@@ -40,7 +40,7 @@ public class SimpleIdentifiableAdapter extends BaseAdapter {
 		layoutResID = R.layout.base_rowlist_simple_spinner; 
 	}
 	
-	public SimpleIdentifiableAdapter(Context c, List<Identifiable> data, int layoutResID){
+	public SimpleIdentifiableAdapter(Context c, List<? extends Identifiable> data, int layoutResID){
 		this.data = data;
 		this.context = c;
 		this.layoutResID = layoutResID;

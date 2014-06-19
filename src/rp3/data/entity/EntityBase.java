@@ -183,7 +183,7 @@ public abstract class EntityBase<T> implements Identifiable {
 		initializeMessages();
 		onBeforeInsert();						
 		onPrepareInsert(db, actionId);
-		setValues();
+		setValues();		
 		executeValidate();
 	}
 	
@@ -223,9 +223,10 @@ public abstract class EntityBase<T> implements Identifiable {
 	
 	@SuppressWarnings("unchecked")
 	protected void executeValidate(){
-		initializeMessages();
-		validate();
+		initializeMessages();		
 		if(onEntityCheckerListener!=null){
+			validate();
+			
 			if(isValid())
 				onEntityCheckerListener.onEntityValidationSuccess((T)this);
 			else{

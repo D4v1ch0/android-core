@@ -1,6 +1,8 @@
 package rp3.content;
 
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import rp3.core.R;
 import rp3.data.DictionaryEntry;
+import rp3.data.Identifiable;
 import rp3.data.SimpleDictionary;
 
 public class SimpleDictionaryAdapter extends BaseAdapter {
@@ -21,6 +24,13 @@ public class SimpleDictionaryAdapter extends BaseAdapter {
 	
 	static class ViewHolder {		
 		TextView textView_content;
+	}
+	
+	public SimpleDictionaryAdapter(Context c, List<? extends Identifiable> data){		
+		this.data = SimpleDictionary.getFromIdentifiables(data);
+		this.context = c;
+		this.inflater = LayoutInflater.from(context);
+		layoutResID = R.layout.base_rowlist_simple_spinner;
 	}
 	
 	public SimpleDictionaryAdapter(Context c, SimpleDictionary data){		

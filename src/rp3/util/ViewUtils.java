@@ -24,6 +24,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -101,6 +104,13 @@ public abstract class ViewUtils {
 		((ImageButton) rootView.findViewById(id)).setOnClickListener(l);
 	}
 
+	public static final void setViewAdapter(View rootView, int id,
+			ExpandableListAdapter adapter) {		
+		View v = rootView.findViewById(id);
+		if(v instanceof ExpandableListView)
+			((ExpandableListView) v).setAdapter(adapter);
+	}
+	
 	public static final void setViewAdapter(View rootView, int id,
 			ListAdapter adapter) {		
 		View v = rootView.findViewById(id);
@@ -253,7 +263,7 @@ public abstract class ViewUtils {
 
 		for (int i = 0; i < adapter.getCount(); i++) {
 			String tempId = adapter.getCode(i);
-			if (tempId.equals(code)) {
+			if (tempId != null && tempId.equals(code)) {
 				sp.setSelection(i);
 				break;
 			}
@@ -281,6 +291,12 @@ public abstract class ViewUtils {
 		else if(v instanceof Spinner)
 			((Spinner)v).setOnItemSelectedListener(l);
 	}	
+	
+	public static final void setViewOnChildClickListener(View rootView, int id,
+			OnChildClickListener l) {
+		ExpandableListView view = (ExpandableListView)rootView.findViewById(id);
+		view.setOnChildClickListener(l);
+	}
 
 	public static final void setListViewChoiceMode(View rootView, int id,
 			int choiceMode) {
@@ -401,13 +417,25 @@ public abstract class ViewUtils {
 	}
 
 	public static final void setViewError(View rootView, int id, String text) {
-		setViewError(rootView, id, new Message(text));
-	}
+		setViewError(rootView, id, new Message(text), R.id.textView_content);
+	}	
+	
+	public static final void setViewError(View rootView, int id, String text, int innerViewId) {
+		setViewError(rootView, id, new Message(text), innerViewId);
+	}	
 
-	public static final void setViewError(View rootView, int id, Message m) {
+	public static final void setViewError(View rootView, int id, Message m){
+		setViewError(rootView, id, m, R.id.textView_content);
+	}
+	
+	public static final void setViewError(View rootView, int id, Message m, int innerViewId) {
 		View v = rootView.findViewById(id);
 		if (v instanceof TextView) {
 			((TextView) v).setError(m.getText());
+		}else if(v instanceof Spinner){
+			TextView vE = (TextView)((Spinner)v).getSelectedView().findViewById(innerViewId);
+			if(vE!=null)
+				vE.setError(m.getText());
 		}
 	}
 

@@ -79,6 +79,12 @@ public class Convert {
 		}
 	}
 	
+	public final static boolean getBoolean(String value){
+		if( value.toLowerCase().equals("true") || value.toLowerCase().equals("1"))
+			return true;
+		return false;
+	}
+	
 	public final static double getDouble(Object value){
 		return getDouble(String.valueOf(value));
 	}

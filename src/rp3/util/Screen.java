@@ -1,11 +1,30 @@
 package rp3.util;
 
+import rp3.runtime.Session;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 
 public class Screen {
+	
+	public static final int ORIENTATION_PORTRAIT = 1;
+	public static final int ORIENTATION_LANDSCAPE = 2;
+	
+	public static int getOrientation(){
+		return Session.getContext().getResources().getConfiguration().orientation;
+	}
+	
+	public static int getRequestOrientationFromCurrentScreen(){
+		switch (getOrientation()) {
+		case android.content.res.Configuration.ORIENTATION_PORTRAIT:
+			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+		case android.content.res.Configuration.ORIENTATION_LANDSCAPE:
+			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			}
+		return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+	}
 
 	public static boolean isMinNormalLayoutSize(Context c) {
 		int screenSize = getScreenLayoutSize(c);

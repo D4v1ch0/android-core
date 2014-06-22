@@ -20,6 +20,7 @@ import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
+import rp3.util.Screen;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,7 +74,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	private FragmentTransaction fragmentTransaction;
 	private boolean inFragmentTransaction;
 	private boolean finishOnHomeUpButton = false;
-
+	private Integer backupRequestOrientation = 0;
+	
 	private FragmentResultListener fragmentResultCallback;
 
 	private ProgressDialog progressDialog;
@@ -82,16 +84,27 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		this.context = this;
 	}
 
+	
 	public void requestSync(Bundle settingsBundle) {
 		if (ConnectionUtils.isNetAvailable(this)) {
 			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
+			lockRotation();
 		} else {
 			MessageCollection mc = new MessageCollection();
 			mc.addErrorMessage(getText(
 					R.string.message_error_sync_no_net_available).toString());
 			onSyncComplete(new Bundle(), mc);
 		}
+	}	
+	
+	public void lockRotation(){
+		backupRequestOrientation = getRequestedOrientation();		
+		setRequestedOrientation(Screen.getRequestOrientationFromCurrentScreen());
+	}
+	
+	public void resetRotation(){
+		setRequestedOrientation(backupRequestOrientation);
 	}
 
 	public boolean isRestoreInstance() {
@@ -848,13 +861,15 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	public void onEntityValidationSuccess(Object e) {
 	}
 
-	public void onSyncComplete(Bundle data, MessageCollection messages) {
+	public void onSyncComplete(Bundle data, MessageCollection messages) {		
+		resetRotation();
 	}
 
 	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
-
+		
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			resetRotation();
 			MessageCollection messages = (MessageCollection) intent.getExtras()
 					.getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);
 			Bundle bundle = intent.getExtras().getBundle(

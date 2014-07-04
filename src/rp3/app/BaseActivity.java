@@ -346,13 +346,14 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		if (savedInstanceState != null)
 			isRestoreInstance = true;
 	}
-
+		
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {	
+		super.onCreateOptionsMenu(menu);
 		if (menuResource != 0)
-			getMenuInflater().inflate(menuResource, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+			getMenuInflater().inflate(menuResource, menu);		
+		return true;
+	}	
 
 	@Override
 	public View onCreateView(View parent, String name, Context context,
@@ -365,14 +366,19 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// Sync Handler
+		// Sync Handler		
+
+		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
+			closeDataBaseResources();
+	}
+	
+	@Override
+	protected void onDestroy() {		
+		super.onDestroy();
 		try {
 			unregisterReceiver(syncFinishedReceiver);
 		} catch (IllegalArgumentException e) {
 		}
-
-		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
-			closeDataBaseResources();
 	}
 
 	@Override

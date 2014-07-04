@@ -325,13 +325,17 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	@Override
 	public void onPause() {	
-		super.onPause();
+		super.onPause();			
+	}
+	
+	@Override
+	public void onDestroy() {		
+		super.onDestroy();
 		try {
 			getActivity().unregisterReceiver(syncFinishedReceiver);			
 		} catch(IllegalArgumentException e) {
 			
 		}
-		
 	}
 	
 //	private void setMenu(){

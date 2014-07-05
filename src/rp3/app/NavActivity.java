@@ -93,6 +93,17 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		}
 	}
 	
+	public void setSlindigEnabled(boolean enabled){
+		if(navMode == NAV_MODE_DRAWER){
+			if(!enabled)
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+			else
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		}else{
+			slidingPane.setSlidingEnabled(enabled);
+		}
+	}
+	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {		
 		super.onSaveInstanceState(outState);

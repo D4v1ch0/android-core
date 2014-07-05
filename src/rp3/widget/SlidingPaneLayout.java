@@ -106,6 +106,16 @@ import java.util.ArrayList;
 public class SlidingPaneLayout extends ViewGroup {
 	private static final String TAG = "SlidingPaneLayout";
 
+	private boolean slidingEnabled = true;
+	
+	public void setSlidingEnabled(boolean enabled){
+		this.slidingEnabled = enabled;
+	}
+	
+	public boolean isSlidingEnabled(){
+		return this.slidingEnabled;
+	}
+	
 	/**
 	 * Default size of the overhang for a pane in the open state. At least this
 	 * much of a sliding pane will remain visible. This indicates that there is
@@ -1531,11 +1541,17 @@ public class SlidingPaneLayout extends ViewGroup {
 			}
 			mPostedRunnables.remove(this);
 		}
-	}
-
+	}	
+	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		try {
+			if (!slidingEnabled) {
+		        // Careful here, view might be null
+		        //getChildAt(1).dispatchTouchEvent(ev);
+		        return false;
+		    }
+			
 			final int action = MotionEventCompat.getActionMasked(ev);
 
 			// Preserve the open state based on the last view that was touched.

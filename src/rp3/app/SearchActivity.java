@@ -118,7 +118,7 @@ public class SearchActivity extends BaseActivity {
 	
 	protected void onItemClick(AdapterView<?> adapterView, View view, int position,long id){
 		Intent intent = new Intent();
-		intent.putExtra(RESULT_ARG_ID, Integer.valueOf(String.valueOf(id)) );				
+		intent.putExtra(RESULT_ARG_ID, id );				
 		setResult(RESULT_OK, intent);
 		finish();
 	}

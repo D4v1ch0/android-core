@@ -76,6 +76,10 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		getActionBar().setHomeButtonEnabled(true);
+		
+		if(savedInstanceState != null){
+			currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
+		}
 	}
 
 	@Override
@@ -113,9 +117,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
-		super.onRestoreInstanceState(savedInstanceState);
-		
-		currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
+		super.onRestoreInstanceState(savedInstanceState);			
 	}
 	
 	public void setPaneContentView(int resID) {

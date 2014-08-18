@@ -12,15 +12,30 @@ import android.widget.ImageView;
 
 public class StartActivity extends BaseActivity {	
 		
-	public static final int REQUEST_LOGIN_ACTIVITY = 1;	
+	public static final int REQUEST_LOGIN_ACTIVITY = 1;
+	
+	public static final String STATE_FIRST_LOAD = "firstload";
+	
 	private boolean firstTime = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);						
+		super.onCreate(savedInstanceState);			
+		
+		if(savedInstanceState!=null){
+			firstTime = savedInstanceState.getBoolean(STATE_FIRST_LOAD);
+		}
+		
 		Session.Start(this.getApplicationContext());
 		setContentView(R.layout.activity_start);				
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {		
+		super.onSaveInstanceState(outState);
+		
+		outState.putBoolean(STATE_FIRST_LOAD, firstTime);
 	}
 	
 	@Override

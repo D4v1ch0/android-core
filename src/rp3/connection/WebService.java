@@ -11,11 +11,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -298,19 +302,40 @@ public class WebService {
 
 			if (wsMethod.getWebMethod().equalsIgnoreCase("POST")) {
 				HttpPost post = new HttpPost(urlString);
+				
 				post.setHeader("content-type", "application/json");
-
+				
 				JSONObject dato = new JSONObject();
+				JSONArray jArray = null;
+				
 				for (WebServiceParameter p : this.getParameters()) {
 					if (p.getValue() instanceof JSONObject) {
 						dato = (JSONObject) p.getValue();
 						break;
+					}else if(p.getValue() instanceof JSONArray){
+						jArray = (JSONArray) p.getValue();
+						break;
 					}
+					
 					dato.put(p.getName(), p.getValue());
 				}
-
-				StringEntity entity = new StringEntity(dato.toString());
-				post.setEntity(entity);
+												
+//				if(array!=null){
+//					List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+//					postParameters.add(new BasicNameValuePair("collection", array.toString()));
+//					UrlEncodedFormEntity entityA = new UrlEncodedFormEntity(postParameters);					
+//					post.setEntity(entityA);
+//				}
+//				else{
+					StringEntity entity;
+					if(jArray!=null){
+						entity = new StringEntity(jArray.toString(), HTTP.UTF_8);
+					}else{
+						entity = new StringEntity(dato.toString(), HTTP.UTF_8);
+					}
+					
+					post.setEntity(entity);
+//				}																				
 
 				resp = httpClient.execute(post);
 			} else {

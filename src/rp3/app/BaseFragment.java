@@ -224,6 +224,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		this.rootView = rootView;
 	}
 	
+	public void setFragmentResultCallback(FragmentResultListener c){
+		this.fragmentResultCallback = c;
+	}
+	
 	public void showDialogDatePicker(int id, Calendar c){
 		DialogDatePickerFragment f = new DialogDatePickerFragment(id, c, this, false);		
 		showDialogFragment(f,"datepicker");
@@ -271,9 +275,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		showDialogFragment(f,tagName, Session.getContext().getText(title).toString(), l);
 	}
 	
-	public void showDialogFragment(DialogFragment f, String tagName, String title, FragmentResultListener l) {
-		fragmentResultCallback = l;
-		if(fragmentResultCallback == null) fragmentResultCallback = this;
+	public void showDialogFragment(DialogFragment f, String tagName, String title, FragmentResultListener l) {		
+		if(l == null) l = this;
+		if(f instanceof BaseFragment) ((BaseFragment) f).setFragmentResultCallback(l);
 		
 		FragmentTransaction ft = getChildFragmentManager().beginTransaction();		
 		Fragment prev = getChildFragmentManager().findFragmentByTag(tagName);

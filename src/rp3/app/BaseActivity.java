@@ -426,7 +426,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 				
 				break;
 			}
-		}
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+				break;
+		}			
 	}
 
 	@Override

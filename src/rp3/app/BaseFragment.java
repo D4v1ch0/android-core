@@ -291,7 +291,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			((BaseFragment)f).setFragmentTagName(tagName);
 		}
 		
-		ft.addToBackStack(null);
+		ft.addToBackStack(null);		
 		f.show(ft, tagName);
 	}
 	
@@ -307,9 +307,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
+		setHasOptionsMenu(true);		
 	}
 	
 	@Override

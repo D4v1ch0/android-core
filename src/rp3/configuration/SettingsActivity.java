@@ -118,7 +118,7 @@ public class SettingsActivity extends PreferenceActivity implements DataBaseServ
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {        
         @SuppressWarnings("deprecation")
-		Preference pref = findPreference(key);
+		Preference pref = findPreference("");
         onPreferenceChanged(pref);       
     }
 	

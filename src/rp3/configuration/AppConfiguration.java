@@ -22,7 +22,10 @@ public class AppConfiguration {
 	}
 	
 	public String get(String key){
-		return configurations.getAsString(key);
+		if(configurations.containsKey(key))
+			return configurations.getAsString(key);
+		else
+			return null;
 	}
 	
 	public String getHelpUrl(){

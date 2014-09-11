@@ -28,7 +28,7 @@ public class StartActivity extends BaseActivity {
 		
 		Session.Start(this.getApplicationContext());
 		setContentView(R.layout.activity_start);				
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 	
 	@Override

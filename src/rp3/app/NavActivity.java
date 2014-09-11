@@ -384,17 +384,17 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	}
 	
 	public void setNavHeaderIcon(int icon){
-		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageResource(icon);
 	}
 	
 	public void setNavHeaderIcon(Drawable icon){
-		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageDrawable(icon);
 	}
 	
 	public void setNavHeaderIcon(Bitmap icon){
-		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.imageView_icon);
+		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageBitmap(icon);
 	}
 	

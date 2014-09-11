@@ -273,7 +273,11 @@ public abstract class EntityBase<T> implements Identifiable {
 	}
 	
 	protected boolean updateDb(DataBase db){
-		return db.update(getTableName(), getValues(), getID()) != 0;		
+		return db.update(getTableName(), getValues(), getWhere(), getID()) != 0;
+	}
+	
+	public String getWhere(){
+		return DataBase.DEFAULT_WHERE_UPDATE;
 	}
 	
 	protected void prepareDelete(int actionId){

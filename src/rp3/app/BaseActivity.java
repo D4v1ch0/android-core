@@ -301,8 +301,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	public DataBase getDataBase() {
 		if (db == null) {
-			if (context == null)
-				context = Session.getContext();
+			if (context == null){
+				context = this;
+						//Session.getContext();
+			}
 			if (dataBaseClass == null)
 				dataBaseClass = Configuration.getDataBaseConfiguration()
 						.getDataBaseClass();

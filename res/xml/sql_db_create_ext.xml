@@ -19,5 +19,25 @@
     DisplayOrder INTEGER
     )
     </statement>
+    <statement>
+    CREATE TABLE tbGeopoliticalStructureType(
+    _id INTEGER PRIMARY KEY,
+    GeopoliticalStructureTypeId INTEGER,
+	Name TEXT,
+	LevelStructure INTEGER
+	)    
+    </statement>
+    <statement>
+    CREATE TABLE tbGeopoliticalStructure(
+    _id INTEGER PRIMARY KEY,
+    GeopoliticalStructureId INTEGER,
+    GeopoliticalStructureTypeId INTEGER,
+    IsoCode TEXT,
+    Name TEXT,
+    Latitude REAL,
+    Longitude REAL,
+	ParentGeopoliticalStructureId INTEGER    
+    )    
+    </statement>
 
 </sql>

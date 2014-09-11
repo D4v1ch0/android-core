@@ -34,7 +34,38 @@ public class Contract {
 		public static final String FIELD_REFERENCE3 = COLUMN_REFERENCE3;
 		public static final String FIELD_REFERENCE4 = COLUMN_REFERENCE4;
 		public static final String FIELD_REFERENCE5 = COLUMN_REFERENCE5;		
+	}
+	
+	public abstract class GeopoliticalStructureType implements BaseColumns{
+		public static final String TABLE_NAME = "tbGeopoliticalStructureType";
 		
+		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID = "GeopoliticalStructureTypeId";		
+		public static final String COLUMN_NAME = "Name";
+		public static final String COLUMN_LEVEL_STRUCTURE = "LevelStructure";
+		
+		public static final String FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID;		
+		public static final String FIELD_NAME = COLUMN_NAME;
+		public static final String FIELD_LEVEL_STRUCTURE = COLUMN_LEVEL_STRUCTURE;
+	}
+	
+	public abstract class GeopoliticalStructure implements BaseColumns{
+		public static final String TABLE_NAME = "tbGeopoliticalStructure";
+		
+		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_ID = "GeopoliticalStructureId";		
+		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID = "GeopoliticalStructureTypeId";
+		public static final String COLUMN_ISO_CODE = "IsoCode";
+		public static final String COLUMN_NAME = "Name";
+		public static final String COLUMN_LATITUDE = "Latitude";
+		public static final String COLUMN_LONGITUDE = "Longitude";
+		public static final String COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID = "ParentGeopoliticalStructureId";
+		
+		public static final String FIELD_GEOPOLITICAL_STRUCTURE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_ID;
+		public static final String FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID;
+		public static final String FIELD_ISO_CODE = COLUMN_ISO_CODE;
+		public static final String FIELD_NAME = COLUMN_NAME;
+		public static final String FIELD_LATITUDE = COLUMN_LATITUDE;
+		public static final String FIELD_LONGITUDE = COLUMN_LONGITUDE;
+		public static final String FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID = COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID;
 	}
 	
 }

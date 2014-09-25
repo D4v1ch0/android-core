@@ -10,11 +10,14 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class User {
 
@@ -114,6 +117,10 @@ public class User {
 		if (accountType == null)
 			initializeAuthenticatorParams(Session.getContext());
 		return accountType;
+	}
+	
+	public String getAuthTokenType() {
+		return getAccountType();
 	}
 	
 	public static String getAuthority() {
@@ -260,7 +267,7 @@ public class User {
 
 	private static void finishUserUpdate(User user, AccountManager mAccountManager, boolean addAccount){		
 		if(addAccount){
-			user.setAccount(new Account(user.getLogonName(), getAccountType()));
+			user.setAccount(new Account(user.getLogonName(), User.getAccountType()));
             mAccountManager.addAccountExplicitly(user.getAccount(), user.getPassword(), null);
 		}else{
 			mAccountManager.setPassword(user.getAccount(), user.getPassword());			
@@ -285,23 +292,32 @@ public class User {
 		return accountManager.getUserData(account, key);
 	}
 
-	public String getAuthToken() throws Exception {
-		return getAuthToken((Activity)context, DEFAULT_TOKEN_TYPE);
+	public String getAuthToken() {
+		return getAuthToken((context instanceof Activity? (Activity)context: null), getAccountType());
 	}
 	
-	public String getAuthToken(String authTokenType) throws Exception {
-		return getAuthToken((Activity)context, authTokenType);
+	public String getAuthToken(String authTokenType)  {
+		return getAuthToken((context instanceof Activity? (Activity)context: null), authTokenType);
 	}
 	
-	public String getAuthToken(Activity activity) throws Exception {
-		return getAuthToken(activity, DEFAULT_TOKEN_TYPE);
+	public String getAuthToken(Activity activity)  {		
+		return getAuthToken(activity, User.getAccountType());
 	}
 	
-	public String getAuthToken(Activity activity, String authTokenType) throws Exception {
+	public String getAuthToken(Activity activity, String authTokenType) {
 		final AccountManagerFuture<Bundle> future = 
 				accountManager.getAuthToken(account, authTokenType, null, activity, null, null);
 
-		Bundle bnd = future.getResult();
+		Bundle bnd = null;
+		try {
+			bnd = future.getResult();
+		} catch (OperationCanceledException e) {
+			Log.e("User Token: OperationCanceledException", e.getMessage());
+		} catch (AuthenticatorException e) {
+			Log.e("User Token: AuthenticatorException", e.getMessage());
+		} catch (IOException e) {
+			Log.e("User Token: IOException", e.getMessage());
+		}
 
 		final String authtoken = bnd
 				.getString(AccountManager.KEY_AUTHTOKEN);				
@@ -309,7 +325,7 @@ public class User {
 		return authtoken;
 	}
 	
-	public static void setAuthToken(String authtokenType, String authtoken){
+	public void setAuthToken(String authtokenType, String authtoken){
 		AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
 		Account account = Session.getUser().getAccount();
 				

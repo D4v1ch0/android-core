@@ -11,13 +11,12 @@ import rp3.util.CursorUtils;
 public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 
 	private long id;
-	private int GeopoliticalStructureId;
 	private int geopoliticalStructureTypeId;
 	private String isoCode;
 	private String name;
-	private float latitude;
-	private float longitude;
-	private int parentGeopoliticalStructureId;
+	private Double latitude;
+	private Double longitude;
+	private Long parentGeopoliticalStructureId;
 	
 	@Override
 	public long getID() {		
@@ -41,8 +40,7 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 
 	@Override
 	public void setValues() {
-		setValue(Contract.GeopoliticalStructure._ID, this.id);
-		setValue(Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_ID, this.GeopoliticalStructureId);
+		setValue(Contract.GeopoliticalStructure._ID, this.id);		
 		setValue(Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID, this.geopoliticalStructureTypeId);
 		setValue(Contract.GeopoliticalStructure.COLUMN_ISO_CODE, this.isoCode);
 		setValue(Contract.GeopoliticalStructure.COLUMN_NAME, this.name);
@@ -61,13 +59,6 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 		return this.name;
 	}
 
-	public int getGeopoliticalStructureId() {
-		return GeopoliticalStructureId;
-	}
-
-	public void setGeopoliticalStructureId(int geopoliticalStructureId) {
-		GeopoliticalStructureId = geopoliticalStructureId;
-	}
 
 	public int getGeopoliticalStructureTypeId() {
 		return geopoliticalStructureTypeId;
@@ -93,33 +84,32 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 		this.name = name;
 	}
 
-	public float getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(float latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public float getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(float longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
-	public int getParentGeopoliticalStructureId() {
+	public Long getParentGeopoliticalStructureId() {
 		return parentGeopoliticalStructureId;
 	}
 
-	public void setParentGeopoliticalStructureId(int parentGeopoliticalStructureId) {
+	public void setParentGeopoliticalStructureId(Long parentGeopoliticalStructureId) {
 		this.parentGeopoliticalStructureId = parentGeopoliticalStructureId;
 	}
 	
 	public static List<GeopoliticalStructure> getGeopoliticalStructure(DataBase db, String code){
 		Cursor c = db.query(Contract.GeopoliticalStructure.TABLE_NAME, new String[]{
-			Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_ID,
 		    Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID,
 		    Contract.GeopoliticalStructure.COLUMN_ISO_CODE,
 		    Contract.GeopoliticalStructure.COLUMN_NAME,
@@ -130,14 +120,13 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 		
 		List<GeopoliticalStructure> list = new ArrayList<GeopoliticalStructure>();
 		while(c.moveToNext()){
-			GeopoliticalStructure geo = new GeopoliticalStructure();
-			geo.setGeopoliticalStructureId(CursorUtils.getInt(c, Contract.GeopoliticalStructure.FIELD_GEOPOLITICAL_STRUCTURE_ID));
+			GeopoliticalStructure geo = new GeopoliticalStructure();			
 			geo.setGeopoliticalStructureTypeId(CursorUtils.getInt(c, Contract.GeopoliticalStructure.FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID));
 			geo.setIsoCode(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_ISO_CODE));
 			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
-			geo.setLatitude(CursorUtils.getFloat(c, Contract.GeopoliticalStructure.FIELD_LATITUDE));
-			geo.setLongitude(CursorUtils.getFloat(c, Contract.GeopoliticalStructure.FIELD_LONGITUDE));
-			geo.setParentGeopoliticalStructureId(CursorUtils.getInt(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
+			geo.setLatitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LATITUDE));
+			geo.setLongitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LONGITUDE));
+			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
 		
 			list.add(geo);
 		}

@@ -5,7 +5,6 @@ import rp3.accounts.User;
 import rp3.core.R;
 import rp3.runtime.Session;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -26,7 +25,7 @@ public class StartActivity extends BaseActivity {
 			firstTime = savedInstanceState.getBoolean(STATE_FIRST_LOAD);
 		}
 		
-		Session.Start(this.getApplicationContext());
+		Session.Start(this);
 		setContentView(R.layout.activity_start);				
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
@@ -59,8 +58,8 @@ public class StartActivity extends BaseActivity {
 	public void callLoginActivity(){
 		if(!onCallLoginActivity()){
 			Intent intent  = AuthenticatorActivity.newIntent(getApplicationContext(), Session.getUser().getLogonName(), 
-					User.DEFAULT_TOKEN_TYPE , 
-					null);			
+					User.getAccountType(), 
+					null);
 			startActivityForResult(intent, REQUEST_LOGIN_ACTIVITY);
 		}
 	}

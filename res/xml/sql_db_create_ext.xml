@@ -1,5 +1,12 @@
 <sql>
     <statement>
+    CREATE TABLE tbIdentificationType(
+    _id INTEGER PRIMARY KEY,
+    Name TEXT,
+    ApplyNaturalPersonOnly INTEGER
+    )
+    </statement>
+    <statement>
     CREATE TABLE tbGeneralTable(
     _id INTEGER PRIMARY KEY,
     Name TEXT     
@@ -22,15 +29,13 @@
     <statement>
     CREATE TABLE tbGeopoliticalStructureType(
     _id INTEGER PRIMARY KEY,
-    GeopoliticalStructureTypeId INTEGER,
 	Name TEXT,
 	LevelStructure INTEGER
 	)    
     </statement>
     <statement>
     CREATE TABLE tbGeopoliticalStructure(
-    _id INTEGER PRIMARY KEY,
-    GeopoliticalStructureId INTEGER,
+    _id INTEGER PRIMARY KEY,    
     GeopoliticalStructureTypeId INTEGER,
     IsoCode TEXT,
     Name TEXT,

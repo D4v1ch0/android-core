@@ -11,7 +11,6 @@ import android.database.Cursor;
 public class GeopoliticalStructureType extends EntityBase<GeopoliticalStructureType> {
 
 	private long id;
-	private int geopoliticalStructureTypeId;
 	private String name;
 	private int levelStructure;
 	
@@ -37,8 +36,7 @@ public class GeopoliticalStructureType extends EntityBase<GeopoliticalStructureT
 
 	@Override
 	public void setValues() {
-		setValue(Contract.GeopoliticalStructureType._ID, this.id);
-		setValue(Contract.GeopoliticalStructureType.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID, this.geopoliticalStructureTypeId);
+		setValue(Contract.GeopoliticalStructureType._ID, this.id);		
 		setValue(Contract.GeopoliticalStructureType.COLUMN_NAME, this.name);
 		setValue(Contract.GeopoliticalStructureType.COLUMN_LEVEL_STRUCTURE, this.levelStructure);
 	}
@@ -52,15 +50,7 @@ public class GeopoliticalStructureType extends EntityBase<GeopoliticalStructureT
 	public String getDescription() {		
 		return this.name;
 	}
-	
-	public int getGeopoliticalStructureTypeId() {
-		return geopoliticalStructureTypeId;
-	}
-
-	public void setGeopoliticalStructureTypeId(int geopoliticalStructureTypeId) {
-		this.geopoliticalStructureTypeId = geopoliticalStructureTypeId;
-	}
-
+		
 	public String getName() {
 		return name;
 	}
@@ -78,16 +68,14 @@ public class GeopoliticalStructureType extends EntityBase<GeopoliticalStructureT
 		}
 
 	public static List<GeopoliticalStructureType> getGeopoliticalStructureType(DataBase db, String code){
-		Cursor c = db.query(Contract.GeopoliticalStructureType.TABLE_NAME, new String[]{
-			Contract.GeopoliticalStructureType.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID,
+		Cursor c = db.query(Contract.GeopoliticalStructureType.TABLE_NAME, new String[]{			
 			Contract.GeopoliticalStructureType.COLUMN_NAME,
 			Contract.GeopoliticalStructureType.COLUMN_LEVEL_STRUCTURE
 		});
 		
 		List<GeopoliticalStructureType> list = new ArrayList<GeopoliticalStructureType>();
 		while(c.moveToNext()){
-			GeopoliticalStructureType geo = new GeopoliticalStructureType();
-			geo.setGeopoliticalStructureTypeId(CursorUtils.getInt(c, Contract.GeopoliticalStructureType.FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID));
+			GeopoliticalStructureType geo = new GeopoliticalStructureType();			
 			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructureType.FIELD_NAME));
 			geo.setLevelStructure(CursorUtils.getInt(c, Contract.GeopoliticalStructureType.FIELD_LEVEL_STRUCTURE));
 		

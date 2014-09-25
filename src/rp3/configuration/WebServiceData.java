@@ -13,7 +13,9 @@ public class WebServiceData {
 	public static final String KEY_NAMESPACE = "namespace";
 	public static final String KEY_SOAPACTION = "soapAction";	
 	public static final String KEY_DOTNET = "dotNet";
-	public static final String KEY_SOAPVERSION = "soapVersion";		
+	public static final String KEY_SOAPVERSION = "soapVersion";
+	public static final String KEY_OAUTH_CLIENT_SECRET = "oAuthClientSecret";
+	public static final String KEY_OAUTH_CLIENT_ID = "oAuthClientId";
 		
 	private String name;
 	private String namespace;
@@ -22,6 +24,8 @@ public class WebServiceData {
 	private String soapVersion;
 	private boolean dotNet;
 	private List<WebServiceDataMethod> methods; 
+	private String oAuthClientId;
+	private String oAuthClientSecret;	
 	
 	public String getName() {
 		return name;
@@ -58,6 +62,20 @@ public class WebServiceData {
 	}
 	public void setDotNet(boolean dotNet) {
 		this.dotNet = dotNet;
+	}
+	
+	public String getOAuthClientId() {
+		return oAuthClientId;
+	}
+	
+	public void setOAuthClientId(String oAuthClientId) {
+		this.oAuthClientId = oAuthClientId;
+	}
+	public String getOAuthClientSecret() {
+		return oAuthClientSecret;
+	}
+	public void setOAuthClientSecret(String oAuthClientSecret) {
+		this.oAuthClientSecret = oAuthClientSecret;
 	}
 	
 	public WebServiceDataMethod getMethod(String name){

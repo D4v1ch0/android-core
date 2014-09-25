@@ -78,7 +78,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);            
         
         if (mAuthTokenType == null)
-            mAuthTokenType = User.DEFAULT_TOKEN_TYPE;
+            mAuthTokenType = User.getAccountType();
 
         if (accountName != null) {
         	setLogonName(accountName);
@@ -287,7 +287,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 				String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
 			    String authtokenType = mAuthTokenType;
 			    			       
-			    User.setAuthToken(authtokenType, authtoken);
+			    Session.getUser().setAuthToken(authtokenType, authtoken);
 			    
 			    setAccountAuthenticatorResult(intent.getExtras());
 			    setResult(RESULT_OK, intent);

@@ -46,6 +46,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
     }
     
     public static ServerAuthenticate getServerAuthenticate(){
+    	if(sServerAuthenticate == null)
+    		rp3.accounts.Authenticator.setServerAuthenticate(new DefaultServerAuthenticate());	
     	return sServerAuthenticate;
     }
     
@@ -73,8 +75,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 try {
                     
                     Bundle r = sServerAuthenticate.signIn(account.name, password, authTokenType);
-                    if(r.getBoolean(ServerAuthenticate.KEY_SUCCESS, false))                    
+                    if(r.getBoolean(ServerAuthenticate.KEY_SUCCESS, false))      {              
                     	authToken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
+                    	Session.getUser().setAuthToken(authTokenType, authToken);
+                    }
                     else{
                     	Toast.makeText(Session.getContext(), r.getInt(ServerAuthenticate.KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                     }

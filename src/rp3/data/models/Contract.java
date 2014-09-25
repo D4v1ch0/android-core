@@ -4,6 +4,18 @@ import android.provider.BaseColumns;
 
 public class Contract {
 
+	public abstract class IdentificationType implements BaseColumns{
+		
+		public static final String TABLE_NAME = "tbIdentificationType";
+		
+		public static final String COLUMN_NAME = "Name";
+		public static final String COLUMN_APPLY_NATURAL_PERSON_ONLY = "ApplyNaturalPersonOnly";
+		
+		public static final String FIELD_NAME = COLUMN_NAME;
+		public static final String FIELD_APPLY_NATURAL_PERSON_ONLY = COLUMN_APPLY_NATURAL_PERSON_ONLY;
+				
+	}
+	
 	public abstract class GeneralTable implements BaseColumns{
 		public static final String TABLE_NAME = "tbGeneralTable";
 		
@@ -38,28 +50,24 @@ public class Contract {
 	
 	public abstract class GeopoliticalStructureType implements BaseColumns{
 		public static final String TABLE_NAME = "tbGeopoliticalStructureType";
-		
-		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID = "GeopoliticalStructureTypeId";		
+					
 		public static final String COLUMN_NAME = "Name";
 		public static final String COLUMN_LEVEL_STRUCTURE = "LevelStructure";
-		
-		public static final String FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID;		
+						
 		public static final String FIELD_NAME = COLUMN_NAME;
 		public static final String FIELD_LEVEL_STRUCTURE = COLUMN_LEVEL_STRUCTURE;
 	}
 	
 	public abstract class GeopoliticalStructure implements BaseColumns{
 		public static final String TABLE_NAME = "tbGeopoliticalStructure";
-		
-		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_ID = "GeopoliticalStructureId";		
+				
 		public static final String COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID = "GeopoliticalStructureTypeId";
 		public static final String COLUMN_ISO_CODE = "IsoCode";
 		public static final String COLUMN_NAME = "Name";
 		public static final String COLUMN_LATITUDE = "Latitude";
 		public static final String COLUMN_LONGITUDE = "Longitude";
 		public static final String COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID = "ParentGeopoliticalStructureId";
-		
-		public static final String FIELD_GEOPOLITICAL_STRUCTURE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_ID;
+				
 		public static final String FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID = COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID;
 		public static final String FIELD_ISO_CODE = COLUMN_ISO_CODE;
 		public static final String FIELD_NAME = COLUMN_NAME;

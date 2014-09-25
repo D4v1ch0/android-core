@@ -152,10 +152,14 @@ public final class Configuration {
 										wsData.setUrl(PreferenceManager.getResultValue(element));
 									else if(key.equalsIgnoreCase(WebServiceData.KEY_DOTNET))
 										wsData.setDotNet("TRUE".equalsIgnoreCase(element));
+									else if(key.equalsIgnoreCase(WebServiceData.KEY_OAUTH_CLIENT_ID))
+										wsData.setOAuthClientId(element);
+									else if(key.equalsIgnoreCase(WebServiceData.KEY_OAUTH_CLIENT_SECRET))
+										wsData.setOAuthClientSecret(element);
 									else if(key.equalsIgnoreCase(webServideDataName))
 										webServiceConfiguration.addWebServiceData(wsData);
 									else if(key.equalsIgnoreCase(WebServiceConfiguration.class.getSimpleName()))
-										exitWebServiceC = true;								
+										exitWebServiceC = true;
 									break;
 							}
 							

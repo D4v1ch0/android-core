@@ -11,14 +11,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -37,14 +34,16 @@ import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
-import android.util.Xml;
-
 import rp3.configuration.Configuration;
 import rp3.configuration.WebServiceData;
 import rp3.configuration.WebServiceDataMethod;
+import rp3.data.Dictionary;
+import rp3.data.DictionaryEntry;
 import rp3.runtime.Session;
 import rp3.util.DateTime;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Xml;
 
 public class WebService {
 
@@ -60,11 +59,14 @@ public class WebService {
 	private Integer timeOut;	
 	private File responseFile;
 	private boolean useFileResponse;	
+	private Dictionary<String, String> headers;
 
 	public WebService() {
+		headers = new Dictionary<String, String>();
 	}
 
 	public WebService(String wsConfigurationName, String methodName) {
+		headers = new Dictionary<String, String>();
 		setConfigurationName(wsConfigurationName, methodName);
 	}
 
@@ -79,6 +81,23 @@ public class WebService {
 	public void setTimeOut(int timeOut) {
 		this.timeOut = timeOut;
 	}
+	
+	public void setHeader(String name, String value){
+		headers.set(name, value);
+	}
+	
+	public void addCurrentAuthToken(){
+		setAuthToken(Session.getUser().getAuthToken());
+		setAuthTokenType(Session.getUser().getAuthTokenType());
+	}
+	
+	public void setAuthToken(String authToken){	
+		setHeader("AuthToken", authToken);
+	}
+	
+	public void setAuthTokenType(String authTokenType){		
+		setHeader("AuthTypeToken", authTokenType);
+	}	
 
 	public List<WebServiceParameter> getParameters() {
 		if (parameters == null)
@@ -225,6 +244,7 @@ public class WebService {
 		}
 		return null;
 	}
+	
 
 	private void executeSoap() throws HttpResponseException, IOException,
 			XmlPullParserException {
@@ -292,7 +312,9 @@ public class WebService {
 			
 		}
 	}
+		
 
+	
 	private void executeRest() {
 		String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
 
@@ -304,6 +326,15 @@ public class WebService {
 				HttpPost post = new HttpPost(urlString);
 				
 				post.setHeader("content-type", "application/json");
+				
+				if(!TextUtils.isEmpty(wsData.getOAuthClientId()) && !TextUtils.isEmpty(wsData.getOAuthClientSecret())){
+					post.setHeader("ClientId", wsData.getOAuthClientId());
+					post.setHeader("ClientSecret", wsData.getOAuthClientSecret());															
+				}
+								
+				for(DictionaryEntry<String, String> header: headers.getEntries()){
+					post.setHeader(header.getKey(), header.getValue());
+				}
 				
 				JSONObject dato = new JSONObject();
 				JSONArray jArray = null;
@@ -347,6 +378,15 @@ public class WebService {
 				HttpGet get = new HttpGet(urlString);
 				get.setHeader("content-type", "application/json");
 
+				if(!TextUtils.isEmpty(wsData.getOAuthClientId()) && !TextUtils.isEmpty(wsData.getOAuthClientSecret())){
+					get.setHeader("ClientId", wsData.getOAuthClientId());
+					get.setHeader("ClientSecret", wsData.getOAuthClientSecret());															
+				}
+				
+				for(DictionaryEntry<String, String> header: headers.getEntries()){
+					get.setHeader(header.getKey(), header.getValue());
+				}
+				
 				resp = httpClient.execute(get);
 			}
 

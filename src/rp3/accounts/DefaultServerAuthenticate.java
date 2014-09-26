@@ -55,13 +55,20 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 	@Override
 	public boolean requestSignIn() {		
 		Bundle data = signIn(Session.getUser().getLogonName(), Session.getUser().getPassword(), User.getAccountType());
+		if(data.getBoolean(ServerAuthenticate.KEY_SUCCESS))
+		{
+			String token = data.getString(AccountManager.KEY_AUTHTOKEN);
+			String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
+			Session.getUser().setAuthToken(authType, token);
+			
+			return TextUtils.isEmpty(token);
+		}
+		else{
+			Session.getUser().invalidateAuthToken();
+			return true;
+		}
 		
-		String token = data.getString(AccountManager.KEY_AUTHTOKEN);
-		String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 		
-		Session.getUser().setAuthToken(authType, token);
-		
-		return TextUtils.isEmpty(token);
 	}
 	
 }

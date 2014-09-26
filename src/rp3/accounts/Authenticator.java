@@ -65,7 +65,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
         final AccountManager am = AccountManager.get(mContext);
-
+        
         String authToken = am.peekAuthToken(account, authTokenType);       
 
         // Lets give another try to authenticate the user
@@ -80,7 +80,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     	Session.getUser().setAuthToken(authTokenType, authToken);
                     }
                     else{
-                    	Toast.makeText(Session.getContext(), r.getInt(ServerAuthenticate.KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    	//Toast.makeText(Session.getContext(), r.getInt(ServerAuthenticate.KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,8 +100,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // If we get here, then we couldn't access the user's password - so we
         // need to re-prompt them for their credentials. We do that by creating
         // an intent to display our AuthenticatorActivity.
-        final Intent intent = AuthenticatorActivity.newIntent(mContext, account.name, authTokenType, response);        		
-        		
+        final Intent intent = AuthenticatorActivity.newIntent(mContext, account.name, authTokenType, response);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Session.getContext().startActivity(intent);
+        
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;

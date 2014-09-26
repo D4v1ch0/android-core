@@ -11,9 +11,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -42,11 +44,12 @@ import rp3.data.DictionaryEntry;
 import rp3.runtime.Session;
 import rp3.util.DateTime;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Xml;
 
 public class WebService {
 
+	
+	
 	public static final String TYPE_SOAP = "SOAP";
 	public static final String TYPE_REST = "REST";
 
@@ -60,7 +63,8 @@ public class WebService {
 	private File responseFile;
 	private boolean useFileResponse;	
 	private Dictionary<String, String> headers;
-
+	private boolean unAuthorized = false;  
+	
 	public WebService() {
 		headers = new Dictionary<String, String>();
 	}
@@ -245,6 +249,9 @@ public class WebService {
 		return null;
 	}
 	
+	public boolean isUnAuthorized(){
+		return unAuthorized;
+	}
 
 	private void executeSoap() throws HttpResponseException, IOException,
 			XmlPullParserException {
@@ -315,10 +322,11 @@ public class WebService {
 		
 
 	
-	private void executeRest() {
+	private void executeRest() throws JSONException, ClientProtocolException, IOException {
 		String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
-
-		try {
+		boolean oAuthEnabled = true;
+		
+		
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpResponse resp = null;
 
@@ -329,7 +337,9 @@ public class WebService {
 				
 				if(!TextUtils.isEmpty(wsData.getOAuthClientId()) && !TextUtils.isEmpty(wsData.getOAuthClientSecret())){
 					post.setHeader("ClientId", wsData.getOAuthClientId());
-					post.setHeader("ClientSecret", wsData.getOAuthClientSecret());															
+					post.setHeader("ClientSecret", wsData.getOAuthClientSecret());	
+					
+					oAuthEnabled = true;
 				}
 								
 				for(DictionaryEntry<String, String> header: headers.getEntries()){
@@ -369,6 +379,9 @@ public class WebService {
 //				}																				
 
 				resp = httpClient.execute(post);
+				
+				evaluateStatusResponse(resp, httpClient, post, oAuthEnabled);
+				
 			} else {
 				for (WebServiceParameter p : this.getParameters()) {
 					urlString = urlString.replace(p.getName(), p.getValue()
@@ -388,16 +401,45 @@ public class WebService {
 				}
 				
 				resp = httpClient.execute(get);
+				evaluateStatusResponse(resp, httpClient, get, oAuthEnabled);
+							
 			}
 
 			respJSONString = EntityUtils.toString(resp.getEntity());
-		} catch (Exception ex) {
-			Log.e("Service Rest", "Error!", ex);
-		}
+		
 	}	
 	
+	private void evaluateStatusResponse(HttpResponse response,HttpClient httpClient, HttpUriRequest uri, boolean oAuthEnabled) throws ClientProtocolException, IOException {
+		int status = response.getStatusLine().getStatusCode();
+		switch (status) {
+		case HttpConnection.HTTP_STATUS_BAD_REQUEST:
+			throw new HttpResponseException(status);
+		case HttpConnection.HTTP_STATUS_ERROR:
+			throw new HttpResponseException(status);
+		case HttpConnection.HTTP_STATUS_FORBIDDEN:
+			throw new HttpResponseException(status);
+		case HttpConnection.HTTP_STATUS_NOT_FOUND:
+			throw new HttpResponseException(status);
+		case HttpConnection.HTTP_STATUS_UNAUTHORIZED:
+			if(oAuthEnabled){
+				Session.getUser().invalidateAuthToken();						
+				String token = Session.getUser().getAuthToken();		
+				
+				if(!TextUtils.isEmpty(token)){
+					uri.setHeader("AuthToken",  token);							
+					response = httpClient.execute(uri);
+				}else
+					throw new HttpResponseException(status);
+			}
+			else			
+				throw new HttpResponseException(status);
+		default:
+			break;
+		}
+	}
+	
 	public void invokeWebService() throws HttpResponseException, IOException,
-			XmlPullParserException {		
+			XmlPullParserException, JSONException {		
 		if (wsData.getType().equalsIgnoreCase(TYPE_SOAP)) {
 			executeSoap();
 		} else if (wsData.getType().equalsIgnoreCase(TYPE_REST)) {

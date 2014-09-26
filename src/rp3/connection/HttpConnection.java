@@ -7,6 +7,12 @@ import java.net.URL;
 
 public class HttpConnection {
 	
+	public final static int HTTP_STATUS_UNAUTHORIZED = 401;
+	public final static int HTTP_STATUS_NOT_FOUND = 404;
+	public final static int HTTP_STATUS_FORBIDDEN = 403;
+	public final static int HTTP_STATUS_BAD_REQUEST = 400;
+	public final static int HTTP_STATUS_ERROR = 500;
+	
 	/**
      * Network connection timeout, in milliseconds.
      */

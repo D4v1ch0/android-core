@@ -292,6 +292,11 @@ public class User {
 		return accountManager.getUserData(account, key);
 	}
 
+	public void invalidateAuthToken() {
+		AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+		mAccountManager.invalidateAuthToken(Session.getUser().getAuthTokenType(), Session.getUser().getAuthToken());
+	}
+	
 	public String getAuthToken() {
 		return getAuthToken((context instanceof Activity? (Activity)context: null), getAccountType());
 	}
@@ -307,7 +312,7 @@ public class User {
 	public String getAuthToken(Activity activity, String authTokenType) {
 		final AccountManagerFuture<Bundle> future = 
 				accountManager.getAuthToken(account, authTokenType, null, activity, null, null);
-
+		
 		Bundle bnd = null;
 		try {
 			bnd = future.getResult();

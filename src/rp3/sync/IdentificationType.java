@@ -1,13 +1,11 @@
 package rp3.sync;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
-import org.xmlpull.v1.XmlPullParserException;
 
+import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.data.models.Contract;
@@ -24,12 +22,12 @@ public class IdentificationType {
 			try {
 				webService.invokeWebService();
 			} catch (HttpResponseException e) {
+				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
 				return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
-			} catch (IOException e) {
+			} catch (Exception e) {
 				return SyncAdapter.SYNC_EVENT_ERROR;
-			} catch (XmlPullParserException e) {
-				return SyncAdapter.SYNC_EVENT_ERROR;
-			}		
+			}
 			
 			JSONArray gvs = webService.getJSONArrayResponse();			
 			

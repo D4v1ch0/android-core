@@ -6,6 +6,7 @@ import rp3.connection.WebService;
 import rp3.runtime.Session;
 import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 public class DefaultServerAuthenticate implements ServerAuthenticate {
 
@@ -29,8 +30,11 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 			method.invokeWebService();
 						
 			JSONObject response = method.getJSONObjectResponse();
+			String authToken = null;
 			
-			String authToken = response.getJSONObject("Data").getString("AuthToken");
+			if(!response.getJSONObject("Data").isNull("AuthToken")){
+				authToken = response.getJSONObject("Data").getString("AuthToken");
+			}					
 						
 			if(!response.isNull("Message"))
 				bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, response.getJSONObject("Message").getString("Text"));
@@ -41,7 +45,7 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
     	}
     	catch(Exception e) {
     		bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, e.getMessage());
-    		bundle.putString(AccountManager.KEY_AUTHTOKEN, "");
+    		bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
 			bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
     	}
 		
@@ -51,12 +55,13 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 	@Override
 	public boolean requestSignIn() {		
 		Bundle data = signIn(Session.getUser().getLogonName(), Session.getUser().getPassword(), User.getAccountType());
+		
 		String token = data.getString(AccountManager.KEY_AUTHTOKEN);
 		String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 		
 		Session.getUser().setAuthToken(authType, token);
 		
-		return token ==null || token.length() == 0;
+		return TextUtils.isEmpty(token);
 	}
 	
 }

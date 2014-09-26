@@ -29,6 +29,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public static final int SYNC_EVENT_CONNECTION_FAILED = 2;	
 	public static final int SYNC_EVENT_PARTIAL = 3;
 	public static final int SYNC_EVENT_HTTP_ERROR = 4;
+	public static final int SYNC_EVENT_AUTH_ERROR = 5;
 	
 	private MessageCollection messages = new MessageCollection();
 	private Bundle data = new Bundle();
@@ -111,7 +112,9 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_server_fail).toString());
 			break;	
 		case SYNC_EVENT_HTTP_ERROR:
-			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_server_fail).toString());
+			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_http_error).toString());
+			break;
+		case SYNC_EVENT_AUTH_ERROR:
 			break;
 		case SYNC_EVENT_SUCCESS:
 			break;

@@ -34,6 +34,10 @@ public class Convert {
 		return getStringArrayFromScalar(Format.getDataBaseBoolean(value));
 	}
 	
+	public final static Date getDateFromDotNetTicks(long ticks){
+		return new Date(DateTime.getTicksFromDotNet(ticks));
+	}
+	
 	public final static Date getDateFromTicks(long ticks){
 		return new Date(ticks);
 	}
@@ -52,6 +56,16 @@ public class Convert {
 	public final static Long getTicksFromDate(Date date){
 		if(date!=null)
 			return date.getTime();
+		return null;
+	}
+	
+	public final static Long getDotNetTicksFromDate(Date date){
+		if(date!=null){
+	        long ticks = date.getTime();
+			ticks = DateTime.getDotNetTicks(ticks);
+			return ticks;
+		}
+			
 		return null;
 	}
 	

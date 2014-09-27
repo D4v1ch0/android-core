@@ -5,7 +5,23 @@ import java.util.Date;
 
 public class DateTime {
 
+	public static final long TICKS_AT_EPOCH = 621355968000000000L;
+    public static final long TICKS_PER_MILLISECOND = 10000;
+	
 	public static final long MILLISECS_PER_DAY = 24 * 60 * 60 * 1000;
+	
+	public static long getTicksFromDotNet(long ticks){
+		Calendar c = Calendar.getInstance();
+		long jTicks = (ticks - DateTime.TICKS_AT_EPOCH) / DateTime.TICKS_PER_MILLISECOND - c.get(Calendar.ZONE_OFFSET);		
+		return jTicks;
+	}
+	
+	public static long getDotNetTicks(long ticks){				
+		//TimeZone utc = TimeZone.getTimeZone("UTC");
+        Calendar c = Calendar.getInstance();
+        		
+		return DateTime.TICKS_AT_EPOCH + ((ticks + c.get(Calendar.ZONE_OFFSET) ) * DateTime.TICKS_PER_MILLISECOND);
+	}
 	
 	public static Date getCurrentDateTime(){
 		Calendar cal = Calendar.getInstance();

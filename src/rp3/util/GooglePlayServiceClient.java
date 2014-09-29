@@ -1,6 +1,7 @@
 package rp3.util;
 
 import rp3.app.BaseActivity;
+import rp3.content.SimpleCallback;
 import android.content.IntentSender;
 import android.os.Bundle;
 
@@ -12,13 +13,27 @@ public class GooglePlayServiceClient implements
 		GooglePlayServicesClient.OnConnectionFailedListener {
 
 	BaseActivity activity;
+	SimpleCallback connectedCallback;
+	
+	public GooglePlayServiceClient(BaseActivity activity, SimpleCallback connectedCallback){
+		this.activity = activity;
+		this.connectedCallback = connectedCallback;
+	}
 	
 	public GooglePlayServiceClient(BaseActivity activity){
 		this.activity = activity;
 	}
 	
+	public GooglePlayServiceClient(SimpleCallback connectedCallback){
+		this.connectedCallback = connectedCallback;
+	}
+	
+	public GooglePlayServiceClient(){
+	}
+	
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
+		if(activity==null) return;		
 		/*
          * Google Play services can resolve some errors it detects.
          * If the error has a resolution, try sending an Intent to
@@ -50,6 +65,8 @@ public class GooglePlayServiceClient implements
 
 	@Override
 	public void onConnected(Bundle bundle) {
+		if(connectedCallback!=null)
+			connectedCallback.onExecute(bundle);		
 	}
 
 	@Override

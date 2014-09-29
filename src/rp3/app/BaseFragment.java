@@ -4,6 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.content.SyncAdapter;
@@ -15,6 +19,8 @@ import rp3.db.sqlite.DataBase;
 import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
+import rp3.util.GooglePlayServicesUtils;
+import rp3.util.LocationUtils;
 import rp3.util.ViewUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -70,11 +77,21 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private String dialogTitle;
 	private String currentFragmentTagName;
 	private FragmentResultListener fragmentResultCallback;
+	LocationClient locationClient;
+	private boolean enableGooglePlayServices = false;
 	
 	private ProgressDialog progressDialog;
 	
 	public View getRootView(){
 		return rootView;
+	}
+	
+	public void tryEnableGooglePlayServices(boolean enableGooglePlayServices){		
+		this.enableGooglePlayServices = enableGooglePlayServices;
+		if(this.enableGooglePlayServices){
+			this.enableGooglePlayServices = 
+					GooglePlayServicesUtil.isGooglePlayServicesAvailable(Session.getContext()) == ConnectionResult.SUCCESS;
+		}
 	}
 	
 	public Context getContext(){
@@ -84,7 +101,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	void setIsDialog(boolean isDialog){
-		this.isDialog = isDialog;
+		this.isDialog = isDialog;		
 	}
 	
 	void setDialogTitle(String title){
@@ -210,11 +227,12 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			finishActivity();
 	}
 	
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		if(menuResource!=0) inflater.inflate(menuResource, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-		onAfterCreateOptionsMenu(menu);
+		onAfterCreateOptionsMenu(menu);				
 	}
 	
 	public void onAfterCreateOptionsMenu(Menu menu){		
@@ -309,13 +327,17 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub		
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);		
+		setHasOptionsMenu(true);	
+		
+		if(enableGooglePlayServices){
+			locationClient = LocationUtils.getLocationClient((BaseActivity)this.getActivity());
+		}
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {		
 		super.onAttach(activity);
-		this.context = activity;		
+		this.context = activity;					
 	}	
 	
 	@Override
@@ -325,7 +347,21 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			getActivity().registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));			
 		} catch(IllegalArgumentException e) {			
 		}
+		if(enableGooglePlayServices){
+			if(GooglePlayServicesUtils.servicesConnected((BaseActivity)this.getActivity()))
+				locationClient.connect();
+		}
 	}
+	
+	@Override
+	public void onStop() {		
+		super.onStop();
+		if(enableGooglePlayServices){
+			if(GooglePlayServicesUtils.servicesConnected((BaseActivity)this.getActivity()))
+				locationClient.disconnect();
+		}
+	}
+	
 	
 	@Override
 	public void onPause() {	
@@ -340,6 +376,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		} catch(IllegalArgumentException e) {
 			
 		}
+	}
+	
+	public Location getLastLocation(){		
+		if(GooglePlayServicesUtils.servicesConnected((BaseActivity) this.getActivity())){
+			Location location = locationClient.getLastLocation();
+			return location;
+		}
+		return null;
 	}
 	
 //	private void setMenu(){

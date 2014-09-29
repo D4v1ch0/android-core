@@ -148,6 +148,19 @@ public class WebService {
 	public void addFloatParameter(String name, Object value, Object valueType) {
 		getParameters().add(new WebServiceParameter(name, value, valueType));
 	}
+	
+	public void setParameter(String name, Object value){
+		boolean exists = false;
+		for(WebServiceParameter p : getParameters()){
+			if(p.getName().equals(name)){
+				exists = true;
+				p.setValue(value);
+				break;
+			}
+		}
+		if(!exists)
+			addParameter(name, value);
+	}
 
 	public boolean useFileResponse() {
 		return useFileResponse;
@@ -331,6 +344,27 @@ public class WebService {
 			HttpResponse resp = null;
 
 			if (wsMethod.getWebMethod().equalsIgnoreCase("POST")) {
+				
+				JSONObject dato = new JSONObject();
+				JSONArray jArray = null;
+				
+				for (WebServiceParameter p : this.getParameters()) {
+					if(p.getName().startsWith("@")){
+						urlString = urlString.replace(p.getName(), p.getValue()
+							.toString());
+					}else{																
+						if (p.getValue() instanceof JSONObject) {
+							dato = (JSONObject) p.getValue();
+							break;
+						}else if(p.getValue() instanceof JSONArray){
+							jArray = (JSONArray) p.getValue();
+							break;
+						}
+						
+						dato.put(p.getName(), p.getValue());
+					}											
+				}
+				
 				HttpPost post = new HttpPost(urlString);
 				
 				post.setHeader("content-type", "application/json");
@@ -346,20 +380,7 @@ public class WebService {
 					post.setHeader(header.getKey(), header.getValue());
 				}
 				
-				JSONObject dato = new JSONObject();
-				JSONArray jArray = null;
 				
-				for (WebServiceParameter p : this.getParameters()) {
-					if (p.getValue() instanceof JSONObject) {
-						dato = (JSONObject) p.getValue();
-						break;
-					}else if(p.getValue() instanceof JSONArray){
-						jArray = (JSONArray) p.getValue();
-						break;
-					}
-					
-					dato.put(p.getName(), p.getValue());
-				}
 												
 //				if(array!=null){
 //					List<NameValuePair> postParameters = new ArrayList<NameValuePair>();

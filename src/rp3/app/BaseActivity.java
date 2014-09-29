@@ -89,7 +89,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		if (ConnectionUtils.isNetAvailable(this)) {
 			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
-			lockRotation();
+			//lockRotation();
 		} else {
 			MessageCollection mc = new MessageCollection();
 			mc.addErrorMessage(getText(
@@ -880,7 +880,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			resetRotation();
+			//resetRotation();
 			MessageCollection messages = (MessageCollection) intent.getExtras()
 					.getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);
 			Bundle bundle = intent.getExtras().getBundle(

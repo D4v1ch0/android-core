@@ -126,7 +126,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		if(ConnectionUtils.isNetAvailable(getActivity())){
 			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
-			((BaseActivity)getActivity()).lockRotation();
+			//((BaseActivity)getActivity()).lockRotation();
 		}else{
 			MessageCollection mc = new MessageCollection();
 			mc.addErrorMessage(getText(R.string.message_error_sync_no_net_available).toString());
@@ -819,14 +819,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void onSyncComplete(Bundle data, MessageCollection messages){	
-		((BaseActivity)getActivity()).resetRotation();
+		//((BaseActivity)getActivity()).resetRotation();
 	}
 	
 	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
 
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
-	    	((BaseActivity)getActivity()).resetRotation();
+	    	//((BaseActivity)getActivity()).resetRotation();
 	    	MessageCollection messages = (MessageCollection)intent.getExtras().getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);	        
 	        Bundle bundle = intent.getExtras().getBundle(SyncAdapter.NOTIFY_EXTRA_DATA);
 	    	onSyncComplete(bundle, messages);

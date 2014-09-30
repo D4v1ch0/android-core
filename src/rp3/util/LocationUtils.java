@@ -37,10 +37,10 @@ public class LocationUtils {
 		return locationClient;
 	}
 
-	public static Location getLocation(Context c) {
+	public static void getLocation(Context c, final OnLocationResultListener callback) {
 		Location location = null;
 		try {
-			LocationManager locationManager = (LocationManager) c
+			final LocationManager locationManager = (LocationManager) c
 					.getSystemService(Context.LOCATION_SERVICE);
 
 			// getting GPS status
@@ -52,21 +52,47 @@ public class LocationUtils {
 					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 			if (!isGPSEnabled && !isNetworkEnabled) {
-				// no network provider is enabled
+				callback.getLocationResult(null);
 			} else {
 
+				LocationListener listener = new LocationListener() {
+
+					@Override
+					public void onStatusChanged(
+							String provider, int status,
+							Bundle extras) {
+					}
+
+					@Override
+					public void onProviderEnabled(
+							String provider) {
+					}
+
+					@Override
+					public void onProviderDisabled(
+							String provider) {
+					}
+
+					@Override
+					public void onLocationChanged(
+							Location location) {
+						callback.getLocationResult(location);
+						locationManager.removeUpdates(this);
+					}
+				};				
+				
 				// First get location from GPS
 				// if GPS Enabled get lat/long using GPS Services
 				if (isGPSEnabled) {
 
 					locationManager.requestLocationUpdates(
-							LocationManager.GPS_PROVIDER, 0, 0,(LocationListener)null);
+							LocationManager.GPS_PROVIDER, 1000, 0,listener);
 
-					if (locationManager != null) {
-						location = locationManager
-								.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-												
-					}
+//					if (locationManager != null) {
+//						location = locationManager
+//								.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//												
+//					}
 
 				}
 
@@ -74,35 +100,12 @@ public class LocationUtils {
 				if (isNetworkEnabled) {
 					if (location == null) {
 						locationManager.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 0, 0,
-								new LocationListener() {
+								LocationManager.NETWORK_PROVIDER, 1000, 0,listener);
 
-									@Override
-									public void onStatusChanged(
-											String provider, int status,
-											Bundle extras) {
-									}
-
-									@Override
-									public void onProviderEnabled(
-											String provider) {
-									}
-
-									@Override
-									public void onProviderDisabled(
-											String provider) {
-									}
-
-									@Override
-									public void onLocationChanged(
-											Location location) {
-									}
-								});
-
-						if (locationManager != null) {
-							location = locationManager
-									.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-						}
+//						if (locationManager != null) {
+//							location = locationManager
+//									.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//						}
 					}
 				}
 
@@ -110,9 +113,7 @@ public class LocationUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		return location;
+		}		
 	}
 
 	// public static void getLocationAsync(Context c, final

@@ -27,7 +27,7 @@ public abstract class PreferenceManager {
 			if(parameter.contains(":")){
 				String[] parts = parameter.split(":");
 				key = parts[0];
-				defaultValue = parts[1];
+				defaultValue = parameter.substring(parameter.indexOf(key) + key.length()+1);
 			}
 			String keyValue = PreferenceManager.getString(key);
 			if(TextUtils.isEmpty(keyValue)){

@@ -16,9 +16,11 @@ public abstract class PreferenceManager {
 	}
 	
 	public static String getResultValue(String value){		
-		
+		 
 		while(value.contains("[@"))
 		{
+			
+			
 			int initial = value.indexOf("[@");			
 			int end = value.indexOf("]");
 			String parameter = value.substring(initial + 2, end);
@@ -26,7 +28,7 @@ public abstract class PreferenceManager {
 			String defaultValue = ""; 
 			if(parameter.contains(":")){
 				String[] parts = parameter.split(":");
-				key = parts[0];
+				key = parts[0]; 
 				defaultValue = parameter.substring(parameter.indexOf(key) + key.length()+1);
 			}
 			String keyValue = PreferenceManager.getString(key);

@@ -122,7 +122,7 @@ public class SlidingPaneLayout extends ViewGroup {
 	 * more content available and provides a "physical" edge to grab to pull it
 	 * closed.
 	 */
-	private static final int DEFAULT_OVERHANG_SIZE = 32; // dp;
+	private static int DEFAULT_OVERHANG_SIZE = 0; // dp;
 
 	/**
 	 * If no fade color is given by default it will fade to 80% gray.

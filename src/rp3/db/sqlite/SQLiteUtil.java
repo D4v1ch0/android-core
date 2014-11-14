@@ -11,6 +11,7 @@ public final class SQLiteUtil {
 		if(c.moveToFirst()){
 			id = c.getLong(0);
 		}
+		c.close();
 		return id;
 	}
 	

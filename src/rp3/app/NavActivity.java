@@ -35,6 +35,8 @@ import android.widget.ListView;
 public class NavActivity extends BaseActivity implements NavSetting {
 
 	private final static String STATE_CURRENTNAV = "currentNav";
+	private final static String STATE_FRAGMENT_LOADED = "isPaneFragmentLoaded";
+	
 	private final static int NAV_MODE_DRAWER = 1;
 	private final static int NAV_MODE_SLIDING_PANE = 2;
 	private static final int PARALLAX_SIZE = 30;
@@ -79,6 +81,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		
 		if(savedInstanceState != null){
 			currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
+			isPaneFragmentLoaded = savedInstanceState.getBoolean(STATE_FRAGMENT_LOADED);
 		}
 	}
 
@@ -113,11 +116,14 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		super.onSaveInstanceState(outState);
 		
 		outState.putLong(STATE_CURRENTNAV, currentNavigationSelectionId);
+		outState.putBoolean(STATE_FRAGMENT_LOADED, isPaneFragmentLoaded);
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
-		super.onRestoreInstanceState(savedInstanceState);			
+		super.onRestoreInstanceState(savedInstanceState);	
+		
+		
 	}
 	
 	public void setPaneContentView(int resID) {

@@ -873,7 +873,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void onSyncComplete(Bundle data, MessageCollection messages) {		
-		resetRotation();
+		
 	}
 
 	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {

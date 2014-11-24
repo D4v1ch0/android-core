@@ -287,6 +287,102 @@ public class DataBase {
 		return CursorUtils.getDate(c, column);
 	}
 	
+	public long queryMinLong(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArgs);		
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getLong(c);		
+	}
+	
+	public int queryMinInt(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getInt(c);
+	}
+	
+	public String queryMinString(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getString(c);
+	}
+	
+	public double queryMinDouble(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getDouble(c);
+	}
+	
+	public Date queryMinDate(String table, String column, String selection, String[] selectionArgs){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArgs);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getDate(c, column);
+	}
+	
+	public long queryMinLong(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getLong(c);
+	}
+	
+	public int queryMinInt(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getInt(c);
+	}
+	
+	public String queryMinString(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getString(c);
+	}
+	
+	public double queryMinDouble(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getDouble(c);
+	}
+	
+	public Date queryMinDate(String table, String column, String selection, String selectionArg){
+		Cursor c = query(table, getMinClauseFrom(column, column), selection, selectionArg);
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getDate(c, column);
+	}
+	
+	public long queryMinLong(String table, String column, String selection, int selectionArg){
+		return queryMinLong(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public int queryMinInt(String table, String column, String selection, int selectionArg){
+		return queryMinInt(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public String queryMinString(String table, String column, String selection, int selectionArg){
+		return queryMinString(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public double queryMinDouble(String table, String column, String selection, int selectionArg){
+		return queryMinDouble(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public long queryMinLong(String table, String column, String selection, long selectionArg){
+		return queryMinLong(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public int queryMinInt(String table, String column, String selection, long selectionArg){
+		return queryMinInt(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public String queryMinString(String table, String column, String selection, long selectionArg){
+		return queryMinString(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public double queryMinDouble(String table, String column, String selection, long selectionArg){
+		return queryMaxDouble(table,column,selection,String.valueOf(selectionArg));
+	}
+	
+	public Date queryMinDate(String table, String column, String selection, long selectionArg){
+		return queryMinDate(table,column,selection,String.valueOf(selectionArg));
+	}
+	
 	public long queryMaxLong(String table, String column, String selection, int selectionArg){
 		return queryMaxLong(table,column,selection,String.valueOf(selectionArg));
 	}
@@ -350,6 +446,29 @@ public class DataBase {
 		Cursor c = query(table, getMaxClauseFrom(column, column));
 		if(!c.moveToFirst()) return null;
 		return CursorUtils.getDate(c, column);
+	}
+	
+	public int queryMinInt(String table, String column){
+		Cursor c = query(table, getMinClauseFrom(column, column));
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getInt(c);
+	}
+	
+	public String queryMinString(String table, String column){
+		Cursor c = query(table, getMinClauseFrom(column, column));
+		if(!c.moveToFirst()) return null;
+		return CursorUtils.getString(c);
+	}
+	
+	public double queryMinDouble(String table, String column){
+		Cursor c = query(table, getMinClauseFrom(column, column));
+		if(!c.moveToFirst()) return 0;
+		return CursorUtils.getDouble(c);
+	}
+	
+	public long queryMinLong(String table, String column){
+		Cursor c = query(table, getMinClauseFrom(column, column));
+		return CursorUtils.getLong(c);
 	}
 	
 	public long insert(String table, ContentValues values){
@@ -447,5 +566,13 @@ public class DataBase {
     		sb.append(" AS " +  alias);
     	}
     	return sb.toString();
-    }  
+    }
+    
+    public String getMinClauseFrom(String columnName, String alias){
+    	StringBuilder sb = new StringBuilder("MIN(" + columnName + ")");
+    	if(alias != null && !TextUtils.isEmpty(alias)){
+    		sb.append(" AS " +  alias);
+    	}
+    	return sb.toString();
+    }
 }

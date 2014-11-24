@@ -732,6 +732,10 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 			AdapterView.OnItemSelectedListener l) {
 		ViewUtils.setViewOnItemSelectedListener(getRootView(), id, l);
 	}
+	
+	public void setTextViewDateText(int id,Date date){
+		ViewUtils.setTextViewDefaultDateText(getRootView(), id, date);
+	}	
 
 	public void setListViewChoiceMode(int id, int choiceMode) {
 		ViewUtils.setListViewChoiceMode(getRootView(), id, choiceMode);

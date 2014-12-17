@@ -1,5 +1,12 @@
 package rp3.data.models;
 
+import java.util.ArrayList;
+
+import android.database.Cursor;
+
+import rp3.db.sqlite.DataBase;
+import rp3.util.CursorUtils;
+
 public class IdentificationType extends rp3.data.entity.EntityBase<IdentificationType> {
 
 	private long id;
@@ -58,6 +65,25 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 	@Override
 	public String getDescription() {		
 		return this.name;
+	}
+	
+	public static ArrayList<IdentificationType> getAll(DataBase db)
+	{
+		Cursor c = db.query(Contract.IdentificationType.TABLE_NAME, new String[]{Contract.IdentificationType._ID, Contract.IdentificationType.COLUMN_NAME,
+												Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY });
+		ArrayList<IdentificationType> list = new ArrayList<IdentificationType>();
+		if(c.moveToFirst())
+		{
+			do
+			{
+				IdentificationType setter = new IdentificationType();
+				setter.id = CursorUtils.getLong(c,Contract.IdentificationType._ID);
+				setter.name = CursorUtils.getString(c,Contract.IdentificationType.COLUMN_NAME);
+				setter.applyNaturalPersonOnly = CursorUtils.getBoolean(c,Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY);
+				list.add(setter);
+			}while(c.moveToNext());
+		}
+		return list;
 	}
 
 	

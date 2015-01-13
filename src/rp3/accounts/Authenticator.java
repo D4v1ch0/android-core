@@ -64,9 +64,20 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
+    	User user = User.getCurrentUser(mContext);
+    	account = user.getAccount();
         final AccountManager am = AccountManager.get(mContext);
         
-        String authToken = am.peekAuthToken(account, authTokenType);       
+        String authToken = am.peekAuthToken(account, authTokenType);     
+        
+        // If we get an authToken - we return it
+        if (!TextUtils.isEmpty(authToken)) {
+            final Bundle result = new Bundle();
+            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+            return result;
+        }
 
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
@@ -86,15 +97,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     e.printStackTrace();
                 }
             }
-        }
-
-        // If we get an authToken - we return it
-        if (!TextUtils.isEmpty(authToken)) {
-            final Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-            return result;
         }
 
         // If we get here, then we couldn't access the user's password - so we

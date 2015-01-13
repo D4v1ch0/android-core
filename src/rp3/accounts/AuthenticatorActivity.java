@@ -2,7 +2,9 @@ package rp3.accounts;
 
 
 import rp3.accounts.User.UserUpdateCallback;
+import rp3.configuration.Configuration;
 import rp3.core.R;
+import rp3.data.Constants;
 import rp3.runtime.Session;
 import rp3.util.ViewUtils;
 
@@ -221,6 +223,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
         
         return isValid;
+    }
+    
+    public void forgotPassword(View v)
+    {
+    	String url = Configuration.getAppConfiguration().get(Constants.KEY_FORGOT_PASSWORD);
+    	Intent i = new Intent(Intent.ACTION_VIEW);
+    	i.setData(Uri.parse(url));
+    	startActivity(i);
     }
     
     public void submit(final String logonName, final String password) {        

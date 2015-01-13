@@ -1,6 +1,8 @@
 package rp3.runtime;
 
 import rp3.accounts.User;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
@@ -27,8 +29,9 @@ public final class Session {
 		user = User.getCurrentUser(getContext());
 		if(user!=null){
 			user.isLogged(false);
-			User.updateAccount(null);
+			//user.invalidateAuthToken();
 		}
+
 	}
 	
 	public static Context getContext(){

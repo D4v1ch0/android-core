@@ -4,6 +4,7 @@ import rp3.accounts.AuthenticatorActivity;
 import rp3.accounts.User;
 import rp3.core.R;
 import rp3.runtime.Session;
+import rp3.util.ConnectionUtils;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +42,11 @@ public class StartActivity extends BaseActivity {
 	protected void onStart() {		
 		super.onStart();
 		
-		if(firstTime){
+		if(!ConnectionUtils.isNetAvailable(this) && Session.IsLogged())
+		{
+			onContinue();
+		}
+		else if(firstTime){
 			firstTime = false;			
 			
 			if(Session.getUser().getAccount() == null){

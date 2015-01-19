@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 public class DefaultServerAuthenticate implements ServerAuthenticate {
+	public static String KEY_FULL_NAME = "Name";
 
 	public Bundle signUp(final String name, final String email, final String pass, String authType){
 		return null;
@@ -31,9 +32,11 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 						
 			JSONObject response = method.getJSONObjectResponse();
 			String authToken = null;
+			String fullName = null;
 			
 			if(!response.getJSONObject("Data").isNull("AuthToken")){
 				authToken = response.getJSONObject("Data").getString("AuthToken");
+				fullName = response.getJSONObject("Data").getString("Name");
 			}					
 						
 			if(!response.isNull("Message"))
@@ -41,6 +44,7 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 			
 			bundle.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 			bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, authType);
+			bundle.putString(KEY_FULL_NAME, fullName);
 			bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, response.getJSONObject("Data").getBoolean("IsValid"));			
     	}
     	catch(Exception e) {
@@ -60,6 +64,8 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 			String token = data.getString(AccountManager.KEY_AUTHTOKEN);
 			String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 			Session.getUser().setAuthToken(authType, token);
+			String fullName = data.getString(KEY_FULL_NAME);
+			Session.getUser().setFullName(fullName);
 			
 			return TextUtils.isEmpty(token);
 		}

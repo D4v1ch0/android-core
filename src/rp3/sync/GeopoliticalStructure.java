@@ -53,6 +53,7 @@ public class GeopoliticalStructure {
 						rp3.data.models.GeopoliticalStructure modelStr = new rp3.data.models.GeopoliticalStructure();						
 						modelStr.setID(str.getLong("GeopoliticalStructureId"));
 						modelStr.setIsoCode(str.getString("IsoCode"));
+						modelStr.setGeopoliticalStructureTypeId(str.getInt("GeopoliticalStructureTypeId"));
 						modelStr.setLatitude( str.isNull("Latitude") ? null : Double.parseDouble(str.getString("Latitude")));
 						modelStr.setLongitude( str.isNull("Longitude") ? null : Double.parseDouble(str.getString("Longitude")));
 						modelStr.setName(str.getString("Name"));

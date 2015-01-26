@@ -39,6 +39,9 @@ public final class Configuration {
 	public static void reinitializeConfiguration(Context c){		
 		initConfiguration(c, null);		
 	}	
+	public static void reinitializeConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass){		
+		initConfiguration(c, dbClass);		
+	}
 
 	public static PreferenceManager getParameters(){
 		return null;

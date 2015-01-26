@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.database.Cursor;
 import rp3.data.entity.EntityBase;
+import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
 import rp3.util.CursorUtils;
 
@@ -16,7 +17,9 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 	private String name;
 	private Double latitude;
 	private Double longitude;
-	private Long parentGeopoliticalStructureId;
+	private long parentGeopoliticalStructureId;
+	private String parents;
+	private GeopoliticalStructure parentGeopoliticalStructure;
 	
 	@Override
 	public long getID() {		
@@ -43,7 +46,6 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 		setValue(Contract.GeopoliticalStructure._ID, this.id);		
 		setValue(Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID, this.geopoliticalStructureTypeId);
 		setValue(Contract.GeopoliticalStructure.COLUMN_ISO_CODE, this.isoCode);
-		setValue(Contract.GeopoliticalStructure.COLUMN_NAME, this.name);
 		setValue(Contract.GeopoliticalStructure.COLUMN_LATITUDE, this.latitude);
 		setValue(Contract.GeopoliticalStructure.COLUMN_LONGITUDE, this.longitude);
 		setValue(Contract.GeopoliticalStructure.COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID, this.parentGeopoliticalStructureId);
@@ -100,61 +102,185 @@ public class GeopoliticalStructure extends EntityBase<GeopoliticalStructure> {
 		this.longitude = longitude;
 	}
 
-	public Long getParentGeopoliticalStructureId() {
+	public long getParentGeopoliticalStructureId() {
 		return parentGeopoliticalStructureId;
 	}
 
-	public void setParentGeopoliticalStructureId(Long parentGeopoliticalStructureId) {
+	public void setParentGeopoliticalStructureId(long parentGeopoliticalStructureId) {
 		this.parentGeopoliticalStructureId = parentGeopoliticalStructureId;
 	}
 	
+	public GeopoliticalStructure getParentGeopoliticalStructure() {
+		return parentGeopoliticalStructure;
+	}
+
+	public void setParentGeopoliticalStructure(
+			GeopoliticalStructure parentGeopoliticalStructure) {
+		this.parentGeopoliticalStructure = parentGeopoliticalStructure;
+	}
+
+	public String getParents() {
+		return parents;
+	}
+
+	public void setParents(String parents) {
+		this.parents = parents;
+	}
+	
+	@Override
+	protected boolean insertDb(DataBase db) {
+		boolean result = super.insertDb(db);
+		if(result)
+		{
+			GeopoliticalStructureExt ext = new GeopoliticalStructureExt();
+			return GeopoliticalStructureExt.insert(db, ext);
+		}
+		return false;
+	};
+	
+	@Override
+	protected boolean updateDb(DataBase db) {
+		boolean result = super.updateDb(db);
+		if(result)
+		{
+			GeopoliticalStructureExt ext = new GeopoliticalStructureExt();
+			return GeopoliticalStructureExt.update(db, ext);
+		}
+		return false;
+	};
+
 	public static List<GeopoliticalStructure> getGeopoliticalStructure(DataBase db, String code){
-		Cursor c = db.query(Contract.GeopoliticalStructure.TABLE_NAME, new String[]{
-		    Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID,
-		    Contract.GeopoliticalStructure.COLUMN_ISO_CODE,
-		    Contract.GeopoliticalStructure.COLUMN_NAME,
-		    Contract.GeopoliticalStructure.COLUMN_LATITUDE,
-		    Contract.GeopoliticalStructure.COLUMN_LONGITUDE,
-			Contract.GeopoliticalStructure.COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID
-		});
+		Cursor c = db.rawQuery(QueryDir.getQuery(Contract.GeopoliticalStructure.QUERY_CITIES_ID),code);
 		
 		List<GeopoliticalStructure> list = new ArrayList<GeopoliticalStructure>();
 		while(c.moveToNext()){
 			GeopoliticalStructure geo = new GeopoliticalStructure();			
-			geo.setGeopoliticalStructureTypeId(CursorUtils.getInt(c, Contract.GeopoliticalStructure.FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID));
 			geo.setIsoCode(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_ISO_CODE));
 			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
-			geo.setLatitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LATITUDE));
-			geo.setLongitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LONGITUDE));
 			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
 		
 			list.add(geo);
 		}
+		c.close();
 		return list;
 	}
 	
 	public static List<GeopoliticalStructure> getGeopoliticalStructureByType(DataBase db, int code){
-		Cursor c = db.query(Contract.GeopoliticalStructure.TABLE_NAME, new String[]{
-		    Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID,
-		    Contract.GeopoliticalStructure.COLUMN_ISO_CODE,
-		    Contract.GeopoliticalStructure.COLUMN_NAME,
-		    Contract.GeopoliticalStructure.COLUMN_LATITUDE,
-		    Contract.GeopoliticalStructure.COLUMN_LONGITUDE,
-			Contract.GeopoliticalStructure.COLUMN_PARENT_GEOPOLITICAL_STRUCTURE_ID
-		}, Contract.GeopoliticalStructure.COLUMN_GEOPOLITICAL_STRUCTURE_TYPE_ID + " = ? ", code);
+		Cursor c = db.rawQuery(QueryDir.getQuery(Contract.GeopoliticalStructure.QUERY_CITIES_TYPE),code);
 		
 		List<GeopoliticalStructure> list = new ArrayList<GeopoliticalStructure>();
 		while(c.moveToNext()){
-			GeopoliticalStructure geo = new GeopoliticalStructure();			
+			GeopoliticalStructure geo = new GeopoliticalStructure();	
+			geo.setID(CursorUtils.getLong(c, Contract.GeopoliticalStructure._ID));
 			geo.setGeopoliticalStructureTypeId(CursorUtils.getInt(c, Contract.GeopoliticalStructure.FIELD_GEOPOLITICAL_STRUCTURE_TYPE_ID));
-			geo.setIsoCode(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_ISO_CODE));
 			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
-			geo.setLatitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LATITUDE));
-			geo.setLongitude(CursorUtils.getDouble(c, Contract.GeopoliticalStructure.FIELD_LONGITUDE));
 			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
 		
 			list.add(geo);
 		}
+		c.close();
 		return list;
+	}
+	
+	public static List<GeopoliticalStructure> getGeopoliticalStructureCities(DataBase db){
+		Cursor c = db.rawQuery(QueryDir.getQuery(Contract.GeopoliticalStructure.QUERY_CITIES));
+		
+		List<GeopoliticalStructure> list = new ArrayList<GeopoliticalStructure>();
+		while(c.moveToNext()){
+			GeopoliticalStructure geo = new GeopoliticalStructure();	
+			geo.setID(CursorUtils.getLong(c, Contract.GeopoliticalStructure._ID));
+			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
+			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
+			geo.setParents(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_PARENTS));
+		
+			list.add(geo);
+		}
+		c.close();
+		return list;
+	}
+	
+	public static List<GeopoliticalStructure> getGeopoliticalStructureSearch(DataBase db, String termSearch){
+		Cursor c = db.rawQuery(QueryDir.getQuery(Contract.GeopoliticalStructure.QUERY_CITIES_SEARCH), "*" + termSearch + "*");
+		
+		List<GeopoliticalStructure> list = new ArrayList<GeopoliticalStructure>();
+		while(c.moveToNext()){
+			GeopoliticalStructure geo = new GeopoliticalStructure();	
+			geo.setID(CursorUtils.getLong(c, Contract.GeopoliticalStructure._ID));
+			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
+			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
+			geo.setParents(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_PARENTS));
+		
+			list.add(geo);
+		}
+		c.close();
+		return list;
+	}
+	
+	public static GeopoliticalStructure getGeopoliticalStructureName(DataBase db, String name){
+		Cursor c = db.rawQuery(QueryDir.getQuery(Contract.GeopoliticalStructure.QUERY_CITIES_NAME), name);
+		
+		GeopoliticalStructure geo = new GeopoliticalStructure();	
+		while(c.moveToNext()){
+			
+			geo.setID(CursorUtils.getLong(c, Contract.GeopoliticalStructure._ID));
+			geo.setName(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_NAME));
+			geo.setParentGeopoliticalStructureId(CursorUtils.getLong(c, Contract.GeopoliticalStructure.FIELD_PARENT_GEOPOLITICAL_STRUCTURE_ID));
+			geo.setParents(CursorUtils.getString(c, Contract.GeopoliticalStructure.FIELD_PARENTS));
+		}
+		c.close();
+		return geo;
+	}
+	
+	public class GeopoliticalStructureExt extends EntityBase<GeopoliticalStructureExt>
+	{
+
+		@Override
+		public long getID() {
+			// TODO Auto-generated method stub
+			return id;
+		}
+
+		@Override
+		public void setID(long id_text) {
+			id = id_text;
+			
+		}
+
+		@Override
+		public boolean isAutoGeneratedId() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public String getTableName() {
+			return Contract.GeopoliticalStructureExt.TABLE_NAME;
+		}
+
+		@Override
+		public void setValues() {
+			setValue(Contract.GeopoliticalStructureExt.COLUMN_ID, id);
+			setValue(Contract.GeopoliticalStructureExt.COLUMN_NAME, name);
+			setValue(Contract.GeopoliticalStructureExt.COLUMN_PARENTS, parents);
+			
+		}
+		
+		@Override
+		public String getWhere() {			
+			return Contract.GeopoliticalStructureExt.COLUMN_ID + " = ?";
+		}
+
+		@Override
+		public Object getValue(String key) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getDescription() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }

@@ -1,0 +1,68 @@
+<sql>  
+    <statement name="GeopoliticalCities">
+        SELECT  tbGeopoliticalStructure._id,
+    	tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructureExt_Name,
+    	tbGeopoliticalStructureExt.Parents AS tbGeopoliticalStructureExt_Parents,
+		tbGeopoliticalStructure.ParentGeopoliticalStructureId
+  		FROM tbGeopoliticalStructure
+  		JOIN tbGeopoliticalStructureExt
+  		ON tbGeopoliticalStructure._id = tbGeopoliticalStructureExt.docid
+    </statement>
+    <statement name="GeopoliticalById">
+        SELECT  tbGeopoliticalStructure._id,
+    	tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructureExt_Name,
+    	tbGeopoliticalStructureExt.Parents AS tbGeopoliticalStructureExt_Parents,
+		tbGeopoliticalStructure.ParentGeopoliticalStructureId
+  		FROM tbGeopoliticalStructure
+  		JOIN tbGeopoliticalStructureExt
+  		ON tbGeopoliticalStructure._id = tbGeopoliticalStructureExt.docid
+  		WHERE tbGeopoliticalStructure._id = ?
+    </statement>
+    <statement name="GeopoliticalByType">
+        SELECT  tbGeopoliticalStructure._id,
+        tbGeopoliticalStructure.GeopoliticalStructureTypeId,
+    	tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructureExt_Name,
+    	tbGeopoliticalStructureExt.Parents AS tbGeopoliticalStructureExt_Parents,
+		tbGeopoliticalStructure.ParentGeopoliticalStructureId
+  		FROM tbGeopoliticalStructure
+  		JOIN tbGeopoliticalStructureExt
+  		ON tbGeopoliticalStructure._id = tbGeopoliticalStructureExt.docid
+  		WHERE tbGeopoliticalStructure.GeopoliticalStructureTypeId = ?
+    </statement>
+    <statement name="GeopoliticalSearch">
+        SELECT  tbGeopoliticalStructure._id,
+    	tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructureExt_Name,
+    	tbGeopoliticalStructureExt.Parents AS tbGeopoliticalStructureExt_Parents,
+		tbGeopoliticalStructure.ParentGeopoliticalStructureId
+  		FROM tbGeopoliticalStructure
+  		JOIN tbGeopoliticalStructureExt
+  		ON tbGeopoliticalStructure._id = tbGeopoliticalStructureExt.docid
+        INNER JOIN ( 
+       	
+       		SELECT 
+        		tbGeopoliticalStructureExt.docid,
+        		matchinfo( tbGeopoliticalStructureExt ) AS Rank
+        		FROM tbGeopoliticalStructureExt
+        		WHERE tbGeopoliticalStructureExt MATCH ?
+        		ORDER BY rank DESC LIMIT 30 OFFSET 0
+       		
+       	 ) AS tbGeopoliticalStructureSearch
+       	ON tbGeopoliticalStructureExt.docid = tbGeopoliticalStructureSearch.docid
+       	WHERE tbGeopoliticalStructure._id NOT IN 
+       	(SELECT  tbGeopoliticalStructure.ParentGeopoliticalStructureId
+       	FROM tbGeopoliticalStructure)
+    </statement>
+    <statement name="GeopoliticalName">
+        SELECT  tbGeopoliticalStructure._id,
+    	tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructureExt_Name,
+    	tbGeopoliticalStructureExt.Parents AS tbGeopoliticalStructureExt_Parents,
+		tbGeopoliticalStructure.ParentGeopoliticalStructureId
+  		FROM tbGeopoliticalStructure
+  		JOIN tbGeopoliticalStructureExt
+  		ON tbGeopoliticalStructure._id = tbGeopoliticalStructureExt.docid
+       	WHERE tbGeopoliticalStructure._id NOT IN 
+       	(SELECT  tbGeopoliticalStructure.ParentGeopoliticalStructureId
+       	FROM tbGeopoliticalStructure)
+       	AND tbGeopoliticalStructureExt.Name = ?
+    </statement>
+</sql>

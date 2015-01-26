@@ -38,11 +38,17 @@
     _id INTEGER PRIMARY KEY,    
     GeopoliticalStructureTypeId INTEGER,
     IsoCode TEXT,
-    Name TEXT,
     Latitude REAL,
     Longitude REAL,
 	ParentGeopoliticalStructureId INTEGER    
     )    
     </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbGeopoliticalStructureExt USING fts4 (
+        Name,
+	    Parents,
+        tokenize=porter
+        );
+    </statement>  
 
 </sql>

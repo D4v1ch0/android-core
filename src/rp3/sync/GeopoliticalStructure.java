@@ -11,6 +11,7 @@ import rp3.content.SyncAdapter;
 import rp3.data.models.Contract;
 import rp3.data.models.GeopoliticalStructureType;
 import rp3.db.sqlite.DataBase;
+import rp3.util.Convert;
 
 public class GeopoliticalStructure {
 
@@ -18,7 +19,9 @@ public class GeopoliticalStructure {
 		WebService webService = new WebService("Core","GetGeopoliticalStructures");
 		try
 		{			
+			long time = Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SyncAdapter.SYNC_EVENT_SUCCESS));
 			webService.addCurrentAuthToken();
+			webService.addParameter("@FecModParameter", time);
 			
 			try {
 				webService.invokeWebService();
@@ -40,24 +43,25 @@ public class GeopoliticalStructure {
 				try {
 					JSONObject type = types.getJSONObject(i);
 					rp3.data.models.GeopoliticalStructureType modelType = new GeopoliticalStructureType();
-					modelType.setName(type.getString("Name"));
-					modelType.setID(type.getLong("GeopoliticalStructureTypeId"));
-					modelType.setLevelStructure(type.getInt("LevelStructure"));
+					modelType.setName(type.getString("N"));
+					modelType.setID(type.getLong("Id"));
+					modelType.setLevelStructure(type.getInt("Lev"));
 					
 					rp3.data.models.GeopoliticalStructureType.insert(db, modelType);
 					
-					JSONArray strs = type.getJSONArray("GeopoliticalStructures");
+					JSONArray strs = type.getJSONArray("Content");
 					
 					for(int j=0; j < strs.length(); j++){
 						JSONObject str = strs.getJSONObject(j);
 						rp3.data.models.GeopoliticalStructure modelStr = new rp3.data.models.GeopoliticalStructure();						
-						modelStr.setID(str.getLong("GeopoliticalStructureId"));
-						modelStr.setIsoCode(str.getString("IsoCode"));
-						modelStr.setGeopoliticalStructureTypeId(str.getInt("GeopoliticalStructureTypeId"));
-						modelStr.setLatitude( str.isNull("Latitude") ? null : Double.parseDouble(str.getString("Latitude")));
-						modelStr.setLongitude( str.isNull("Longitude") ? null : Double.parseDouble(str.getString("Longitude")));
-						modelStr.setName(str.getString("Name"));
-						modelStr.setParentGeopoliticalStructureId(str.isNull("ParentGeopoliticalStructureId")? null : str.getLong("ParentGeopoliticalStructureId") );
+						modelStr.setID(str.getLong("Id"));
+						modelStr.setIsoCode(str.getString("Iso"));
+						modelStr.setGeopoliticalStructureTypeId(str.getInt("TId"));
+						modelStr.setLatitude( str.isNull("La") ? null : Double.parseDouble(str.getString("La")));
+						modelStr.setLongitude( str.isNull("Lo") ? null : Double.parseDouble(str.getString("Lo")));
+						modelStr.setName(str.getString("N"));
+						modelStr.setParents(str.getString("P"));
+						modelStr.setParentGeopoliticalStructureId(str.isNull("PId") ? 0 : str.getLong("PId") );
 						
 						rp3.data.models.GeopoliticalStructure.insert(db, modelStr);
 					}

@@ -311,6 +311,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 			db = DataBaseServiceHelper.getWritableDatabase(context,
 					dataBaseClass);
+
 		}
 		return db;
 	}

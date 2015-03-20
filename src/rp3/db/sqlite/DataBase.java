@@ -49,6 +49,7 @@ public class DataBase {
 	private SQLiteDatabase getDb(){
 		if(db==null){
 			db = dbOpenHelper.getWritableDatabase();
+            //db.enableWriteAheadLogging();
 		}
 		return db;
 	}

@@ -1,5 +1,6 @@
 package rp3.app;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -59,9 +61,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	DialogDatePickerChangeListener, FragmentResultListener {
 	
 	public static final int RESULT_OK = -1;
-	public static final int RESULT_CANCELED = 0;	
-	
-	public BaseFragment()	
+	public static final int RESULT_CANCELED = 0;
+    private FragmentManager mRetainedChildFragmentManager;
+
+    public BaseFragment()
 	{		
 	}
 	
@@ -145,19 +148,19 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public boolean hasFragment(int id){
-		return getChildFragmentManager().findFragmentById(id) != null;
+		return getCurrentChildFragmentManager().findFragmentById(id) != null;
 	}
 	
 	public Fragment getFragment(int id){
-		return getChildFragmentManager().findFragmentById(id);
+		return getCurrentChildFragmentManager().findFragmentById(id);
 	}
 	
 	public boolean hasFragment(String tag){
-		return getChildFragmentManager().findFragmentByTag(tag)!=null;
+		return getCurrentChildFragmentManager().findFragmentByTag(tag)!=null;
 	}
 	
 	public Fragment getFragment(String tag){
-		return getChildFragmentManager().findFragmentByTag(tag);
+		return getCurrentChildFragmentManager().findFragmentByTag(tag);
 	}
 	
 	public void setFragment(int id, Fragment fragment){
@@ -165,13 +168,13 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			fragmentTransaction.replace(id, fragment);
 		}
 		else{
-			getChildFragmentManager().beginTransaction().replace(id, fragment).commit();
+            getCurrentChildFragmentManager().beginTransaction().replace(id, fragment).commit();
 		}
 	}
 	
 	public void beginSetFragment(){
 		inFragmentTransaction = true;
-		fragmentTransaction = getChildFragmentManager().beginTransaction();
+		fragmentTransaction = getCurrentChildFragmentManager().beginTransaction();
 	}	
 	
 	public void endSetFragment(){
@@ -181,7 +184,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void setFragments(int[] ids, Fragment[] fragments){
-		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+		FragmentTransaction ft = getCurrentChildFragmentManager().beginTransaction();
 		for(int i = 0; i < ids.length; i ++)
 			ft.replace(ids[i], fragments[0]);
 		ft.commit();
@@ -297,8 +300,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		if(l == null) l = this;
 		if(f instanceof BaseFragment) ((BaseFragment) f).setFragmentResultCallback(l);
 		
-		FragmentTransaction ft = getChildFragmentManager().beginTransaction();		
-		Fragment prev = getChildFragmentManager().findFragmentByTag(tagName);
+		FragmentTransaction ft = getCurrentChildFragmentManager().beginTransaction();
+		Fragment prev = getCurrentChildFragmentManager().findFragmentByTag(tagName);
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -320,7 +323,14 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		
 	public DataBase getDataBase(){		
 		return ((BaseActivity)getActivity()).getDataBase();  		
-	}	
+	}
+
+    private FragmentManager getCurrentChildFragmentManager() {//!!!Use this instead of getFragmentManager, support library from 20+, has a bug that doesn't retain instance of nested fragments!!!!
+        if(mRetainedChildFragmentManager == null) {
+            mRetainedChildFragmentManager = getChildFragmentManager();
+        }
+        return mRetainedChildFragmentManager;
+    }
 	
 
 	@Override
@@ -337,6 +347,19 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	@Override
 	public void onAttach(Activity activity) {		
 		super.onAttach(activity);
+        if (mRetainedChildFragmentManager != null) {
+            //restore the last retained child fragment manager to the new
+            //created fragment
+            try {
+                Field childFMField = Fragment.class.getDeclaredField("mChildFragmentManager");
+                childFMField.setAccessible(true);
+                childFMField.set(this, mRetainedChildFragmentManager);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 		this.context = activity;					
 	}	
 	

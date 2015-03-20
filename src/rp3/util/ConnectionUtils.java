@@ -17,6 +17,7 @@ public class ConnectionUtils {
 	        NetworkInfo mobileInfo = 
 	                             connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 	        if (wifiInfo.isConnected() || mobileInfo.isConnected()) {
+
 	            return true;
 	        }
 	    }

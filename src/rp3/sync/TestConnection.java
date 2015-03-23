@@ -20,7 +20,8 @@ public class TestConnection {
         boolean gvs = false;
         try
         {
-            webService.addCurrentAuthToken();
+            //webService.addCurrentAuthToken();
+            webService.setTimeOut(15000);
 
             try {
                 webService.invokeWebService();

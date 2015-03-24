@@ -23,37 +23,23 @@ public class IdentificationValidator {
 
     private static boolean ValidateRuc(String number)
     {
-        boolean resp_dato = false;
-        final int prov = Integer.parseInt(number.substring(0, 2));
-        if (!((prov > 0) && (prov <= NUM_PROVINCIAS))) {
-            resp_dato = false;
+        if(number.length() == 13) {
+            if (ValidateRucSociedades(number))
+                return true;
+            else
+                if(ValidateRucNaturales(number))
+                    return true;
+                else
+                    if(ValidateRucEstatal(number))
+                        return true;
+                    else
+                        return false;
+
+
         }
+        else
+            return false;
 
-        int[] d = new int[10];
-        int suma = 0;
-
-        for (int i = 0; i < d.length; i++) {
-            d[i] = Integer.parseInt(number.charAt(i) + "");
-        }
-
-        for (int i = 0; i < d.length - 1; i++) {
-            d[i] = d[i] * coeficientes[i];
-            suma += d[i];
-        }
-
-        int aux, resp;
-
-        aux = suma % constante;
-        resp = constante - aux;
-
-        resp = (aux == 0) ? 0 : resp;
-
-        if (resp == d[9]) {
-            resp_dato = true;
-        } else {
-            resp_dato = false;
-        }
-        return resp_dato;
     }
     private static boolean ValidateCedula(String number)
     {
@@ -101,5 +87,89 @@ public class IdentificationValidator {
     private static boolean ValidateDefault(String number)
     {
         return number.length() == 10;
+    }
+
+    private static boolean ValidateRucSociedades(String number)
+    {
+        boolean resp_dato = false;
+        int prov = Integer.parseInt(number.substring(0, 2));
+        if (!((prov > 0) && (prov <= NUM_PROVINCIAS))) {
+            resp_dato = false;
+        }
+
+        int[] d = new int[10];
+        int suma = 0;
+
+        for (int i = 0; i < d.length; i++) {
+            d[i] = Integer.parseInt(number.charAt(i) + "");
+        }
+
+        for (int i = 0; i < d.length - 1; i++) {
+            d[i] = d[i] * coeficientes[i];
+            suma += d[i];
+        }
+
+        int aux, resp;
+
+        aux = suma % constante;
+        resp = constante - aux;
+
+        resp = (aux == 0) ? 0 : resp;
+
+        if (resp == d[9]) {
+            resp_dato = true;
+        } else {
+            resp_dato = false;
+        }
+
+        return resp_dato;
+    }
+    private static boolean ValidateRucNaturales(String number)
+    {
+        return ValidateCedula(number.substring(0,9));
+    }
+    private static boolean ValidateRucEstatal(String number)
+    {
+        final int prov = Integer.parseInt(number.substring(0, 2));
+        boolean resp = false;
+
+        if (!((prov > 0) && (prov <= NUM_PROVINCIAS))) {
+        resp = false;
+    }
+
+        // boolean val = false;
+        Integer v1, v2, v3, v4, v5, v6, v7, v8, v9;
+        Integer sumatoria;
+        Integer modulo;
+        Integer digito;
+        int[] d = new int[number.length()];
+
+        for (int i = 0; i < d.length; i++) {
+        d[i] = Integer.parseInt(number.charAt(i) + "");
+    }
+
+        v1 = d[0] * 3;
+        v2 = d[1] * 2;
+        v3 = d[2] * 7;
+        v4 = d[3] * 6;
+        v5 = d[4] * 5;
+        v6 = d[5] * 4;
+        v7 = d[6] * 3;
+        v8 = d[7] * 2;
+        v9 = d[8];
+
+        sumatoria = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8;
+        modulo = sumatoria % 11;
+        if (modulo == 0) {
+            return true;
+        }
+        digito = 11 - modulo;
+
+        if (digito.equals(v9)) {
+            resp = true;
+        } else {
+            resp = false;
+        }
+        return resp;
     }
 }

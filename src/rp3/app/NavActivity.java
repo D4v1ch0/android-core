@@ -36,9 +36,10 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 	private final static String STATE_CURRENTNAV = "currentNav";
 	private final static String STATE_FRAGMENT_LOADED = "isPaneFragmentLoaded";
-	
-	private final static int NAV_MODE_DRAWER = 1;
-	private final static int NAV_MODE_SLIDING_PANE = 2;
+	private final static String STATE_TITLE = "activitytitle";
+
+	public final static int NAV_MODE_DRAWER = 1;
+	public final static int NAV_MODE_SLIDING_PANE = 2;
 	private static final int PARALLAX_SIZE = 30;
 	
 	private NavListAdapter navDrawerAdapter;
@@ -54,14 +55,32 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	private SlidingPaneLayout slidingPane;
 	private ArrayList<MenuItem> currentVisibleActionsMenu = new ArrayList<MenuItem>();
 	private boolean isPaneFragmentLoaded = false;
-	private int navMode = NAV_MODE_DRAWER;
-	
+	private boolean isCustomSetNavMode = false;
+    private int navMode = NAV_MODE_DRAWER;
+    private String currentTitle = null;
+    private boolean isSlidingPanelOpen = false;
+
+    public void setNavMode(int mode){
+        if(mode == NAV_MODE_DRAWER || mode == NAV_MODE_SLIDING_PANE){
+            navMode = mode;
+            isCustomSetNavMode = true;
+        }
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		if(Screen.isMinLargeLayoutSize(getApplicationContext())){
-			navMode = NAV_MODE_SLIDING_PANE;
+        if(!isCustomSetNavMode){
+            if(Screen.isMinLargeLayoutSize(getApplicationContext())){
+                navMode = NAV_MODE_SLIDING_PANE;
+            }else {
+                navMode = NAV_MODE_DRAWER;
+            }
+        }
+
+		if(navMode == NAV_MODE_SLIDING_PANE){
+
 			setContentView(R.layout.base_activity_navigation_sliding_pane);
 			// SlidingPaneLayout customization
 			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);
@@ -69,7 +88,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);			
 		}
 		else{
-			navMode = NAV_MODE_DRAWER;
+
 			setContentView(R.layout.base_activity_navigation_drawer);
 		}
 		
@@ -82,10 +101,15 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		if(savedInstanceState != null){
 			currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
 			isPaneFragmentLoaded = savedInstanceState.getBoolean(STATE_FRAGMENT_LOADED);
+            currentTitle = savedInstanceState.getString(STATE_TITLE);
+
+            setTitle(currentTitle);
 		}
 	}
 
-	@Override
+
+
+    @Override
 	protected void onStart() {		
 		super.onStart();
 		if(navSettingCallback==null)
@@ -117,6 +141,8 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		
 		outState.putLong(STATE_CURRENTNAV, currentNavigationSelectionId);
 		outState.putBoolean(STATE_FRAGMENT_LOADED, isPaneFragmentLoaded);
+        outState.putString(STATE_TITLE, currentTitle);
+
 	}
 	
 	@Override
@@ -194,6 +220,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	public void setNavFragment(Fragment fragment, String title){
 		getCurrentFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 		if(title!=null){
+            currentTitle = title;
 			this.setTitle(title);
 		}
 		isPaneFragmentLoaded = true;
@@ -213,13 +240,13 @@ public class NavActivity extends BaseActivity implements NavSetting {
 										// accessibility
 			) {
 				public void onDrawerClosed(View view) {
-					getActionBar().setTitle(getTitle());
+					getActionBar().setTitle(currentTitle);
 					// calling onPrepareOptionsMenu() to show action bar icons
 					invalidateOptionsMenu();
 				}
 	
 				public void onDrawerOpened(View drawerView) {
-					getActionBar().setTitle(getTitle());
+					getActionBar().setTitle(currentTitle);
 					// calling onPrepareOptionsMenu() to hide action bar icons
 					invalidateOptionsMenu();
 				}
@@ -231,17 +258,22 @@ public class NavActivity extends BaseActivity implements NavSetting {
 				
 				@Override
 				public void onPanelSlide(View arg0, float arg1) {
-					
+
 				}
 				
 				@Override
-				public void onPanelOpened(View arg0) {			
-					getActionBar().setTitle(getTitle());
+				public void onPanelOpened(View arg0) {
+                    isSlidingPanelOpen = true;
+
+					getActionBar().setTitle(currentTitle);
+                    invalidateOptionsMenu();
 				}
 				
 				@Override
 				public void onPanelClosed(View arg0) {
-					getActionBar().setTitle(getTitle());
+                    isSlidingPanelOpen = false;
+					getActionBar().setTitle(currentTitle);
+                    invalidateOptionsMenu();
 				}
 			};
 
@@ -313,7 +345,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		if(navMode == NAV_MODE_DRAWER)
 			drawerOpen = drawerLayout.isDrawerOpen(viewDrawer);
 		else
-			drawerOpen  =  slidingPane.isOpen();
+			drawerOpen  =  isSlidingPanelOpen;
 		return drawerOpen;
 	}
 	
@@ -356,8 +388,10 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
+
 		if(navMode == NAV_MODE_DRAWER)
 			actionBarDrawerToggle.onConfigurationChanged(newConfig);
+        setTitle(currentTitle);
 	}
 
 	@Override

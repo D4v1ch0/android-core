@@ -75,13 +75,17 @@ public class GeopoliticalStructureAdapter extends ArrayAdapter<GeopoliticalStruc
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             ArrayList<GeopoliticalStructure> filteredList = (ArrayList<GeopoliticalStructure>) results.values;
-            if(results != null && results.count > 0) {
-                clear();
-                for (GeopoliticalStructure c : filteredList) {
-                    add(c);
+            try {
+                if (results != null && results.count > 0) {
+                    clear();
+                    for (GeopoliticalStructure c : filteredList) {
+                        add(c);
+                    }
+                    notifyDataSetChanged();
                 }
-                notifyDataSetChanged();
             }
+            catch (Exception ex)
+            {}
         }
     };
 }

@@ -10,7 +10,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -19,6 +26,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +53,7 @@ import rp3.runtime.Session;
 import rp3.util.DateTime;
 import android.text.TextUtils;
 import android.util.Xml;
+
 
 public class WebService {
 
@@ -336,11 +345,43 @@ public class WebService {
 
 	
 	private void executeRest() throws JSONException, ClientProtocolException, IOException {
-		String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
-		boolean oAuthEnabled = true;
-		
-		
-			HttpClient httpClient = new DefaultHttpClient();
+        String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
+        boolean oAuthEnabled = true;
+
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
+
+            public void process(
+                    final HttpRequest request,
+                    final HttpContext context) throws HttpException, IOException {
+                if (!request.containsHeader("Accept-Encoding")) {
+                    request.addHeader("Accept-Encoding", "gzip");
+                }
+            }
+        });
+
+        httpClient.addResponseInterceptor(new HttpResponseInterceptor() {
+
+            public void process(
+                    final HttpResponse response,
+                    final HttpContext context) throws HttpException, IOException {
+                HttpEntity entity = response.getEntity();
+                Header ceheader = entity.getContentEncoding();
+                if (ceheader != null) {
+                    HeaderElement[] codecs = ceheader.getElements();
+                    for (int i = 0; i < codecs.length; i++) {
+                        if (codecs[i].getName().equalsIgnoreCase("gzip")) {
+                            response.setEntity(
+                                    new ClientGZipContentCompression.GzipDecompressingEntity(response.getEntity()));
+                            return;
+                        }
+                    }
+                }
+            }
+
+        });
+
 			HttpResponse resp = null;
 
 			if (wsMethod.getWebMethod().equalsIgnoreCase("POST")) {

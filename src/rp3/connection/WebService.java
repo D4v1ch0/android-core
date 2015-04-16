@@ -23,6 +23,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.AbstractHttpEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -39,6 +41,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.w3c.dom.Document;
+import org.w3c.dom.Entity;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
@@ -407,7 +410,9 @@ public class WebService {
 				}
 				
 				HttpPost post = new HttpPost(urlString);
-				
+
+                post.addHeader("Accept-Encoding", "gzip");
+
 				post.setHeader("content-type", "application/json");
 				
 				if(!TextUtils.isEmpty(wsData.getOAuthClientId()) && !TextUtils.isEmpty(wsData.getOAuthClientSecret())){
@@ -430,14 +435,28 @@ public class WebService {
 //					post.setEntity(entityA);
 //				}
 //				else{
-					StringEntity entity;
-					if(jArray!=null){
-						entity = new StringEntity(jArray.toString(), HTTP.UTF_8);
-					}else{
-						entity = new StringEntity(dato.toString(), HTTP.UTF_8);
-					}
+
+                AbstractHttpEntity entity = null;
+                if(wsMethod.getContentEncoding().equalsIgnoreCase("gzip")) {
+                    if (!post.containsHeader("Content-Encoding")) {
+                        post.addHeader("Content-Encoding", "gzip");
+                    }
+                    if (jArray != null) {
+                        entity = new ByteArrayEntity(ClientGZipContentCompression.CompressString(jArray.toString()));
+                    } else {
+                        entity = new ByteArrayEntity(ClientGZipContentCompression.CompressString(dato.toString()));
+                    }
+                }
+                else
+                {
+                    if(jArray!=null){
+                        entity = new StringEntity(jArray.toString(), HTTP.UTF_8);
+                    }else{
+                        entity = new StringEntity(dato.toString(), HTTP.UTF_8);
+                    }
+                }
 					
-					post.setEntity(entity);
+			    post.setEntity(entity);
 //				}																				
 
 				resp = httpClient.execute(post);

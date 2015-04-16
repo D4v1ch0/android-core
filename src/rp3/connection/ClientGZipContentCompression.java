@@ -26,9 +26,13 @@
  */
 package rp3.connection;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -43,6 +47,7 @@ import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 
 /**
  * Demonstration of the use of protocol interceptors to transparently
@@ -122,6 +127,46 @@ public class ClientGZipContentCompression {
         httpclient.getConnectionManager().shutdown();
     }
 
+    public static byte[] CompressString(String data)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GZIPOutputStream gzos = null;
+
+        try {
+            gzos = new GZIPOutputStream(baos);
+            gzos.write(data.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (gzos != null) try { gzos.close(); } catch (IOException ignore) {};
+        }
+
+        byte[] fooGzippedBytes = baos.toByteArray();
+        return  fooGzippedBytes;
+    }
+
+    public static byte[] CompressJSONArray(JSONArray data)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GZIPOutputStream gzos = null;
+
+        try {
+            gzos = new GZIPOutputStream(baos);
+            gzos.write(data.toString().getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (gzos != null) try { gzos.close(); } catch (IOException ignore) {};
+        }
+
+        byte[] fooGzippedBytes = baos.toByteArray();
+        return  fooGzippedBytes;
+    }
+
     static class GzipDecompressingEntity extends HttpEntityWrapper {
 
         public GzipDecompressingEntity(final HttpEntity entity) {
@@ -145,5 +190,4 @@ public class ClientGZipContentCompression {
         }
 
     }
-
 }

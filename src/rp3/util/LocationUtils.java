@@ -16,7 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
 
 public class LocationUtils {
 
@@ -24,16 +25,15 @@ public class LocationUtils {
 		void getLocationResult(Location location);
 	}
 
-	public static LocationClient getLocationClient(BaseActivity activity) {
+	public static GoogleApiClient getLocationClient(BaseActivity activity) {
 		GooglePlayServiceClient client = new GooglePlayServiceClient(activity);
-		LocationClient locationClient = new LocationClient(activity, client,
-				client);
+        GoogleApiClient locationClient = new GoogleApiClient.Builder(activity).addApi(Drive.API).build();
 		return locationClient;
 	}
 
-	public static LocationClient getLocationClient(Context c) {
+	public static GoogleApiClient getLocationClient(Context c) {
 		GooglePlayServiceClient client = new GooglePlayServiceClient();
-		LocationClient locationClient = new LocationClient(c, client, client);
+        GoogleApiClient locationClient = new GoogleApiClient.Builder(c).addApi(Drive.API).build();
 		return locationClient;
 	}
 	

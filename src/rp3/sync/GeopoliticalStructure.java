@@ -5,6 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
@@ -164,4 +167,57 @@ public class GeopoliticalStructure {
 		
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}
+
+    public static List<rp3.data.models.GeopoliticalStructure> executeSearch(String text){
+        WebService webService = null;
+        List<rp3.data.models.GeopoliticalStructure> list = new ArrayList<rp3.data.models.GeopoliticalStructure>();
+        try
+        {
+                webService = new WebService("Core","GetGeopoliticalStructuresSearch");
+                webService.addCurrentAuthToken();
+                webService.setTimeOut(10000);
+                webService.addParameter("@text", text);
+
+
+                try {
+                    webService.invokeWebService();
+                } catch (HttpResponseException e) {
+                    if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return list;
+                    return list;
+                } catch (Exception e) {
+                    return list;
+                }
+
+                JSONArray types = webService.getJSONArrayResponse();
+
+                for(int i=0; i < types.length(); i++){
+
+                    try {
+                        JSONObject type = types.getJSONObject(i);
+                        rp3.data.models.GeopoliticalStructure modelStr = new rp3.data.models.GeopoliticalStructure();
+                        modelStr.setID(type.getLong("GeopoliticalStructureId"));
+                        //modelStr.setIsoCode(type.getString("Iso"));
+                        modelStr.setGeopoliticalStructureTypeId(type.getInt("GeopoliticalStructureTypeId"));
+                        //modelStr.setLatitude(type.isNull("La") ? null : Double.parseDouble(type.getString("La")));
+                        //modelStr.setLongitude(type.isNull("Lo") ? null : Double.parseDouble(type.getString("Lo")));
+                        modelStr.setName(type.getString("Name"));
+                        modelStr.setParents(type.getString("FullName"));
+                        //modelStr.setParentGeopoliticalStructureId(type.isNull("PId") ? 0 : type.getLong("PId"));
+
+                        list.add(modelStr);
+
+
+                    }catch (JSONException e) {
+                    }
+
+
+                }
+
+        }finally{
+            webService.close();
+        }
+
+        return list;
+    }
 }

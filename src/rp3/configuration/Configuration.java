@@ -124,6 +124,10 @@ public final class Configuration {
 											WebServiceDataMethod method = new WebServiceDataMethod();
 											method.setName(methodValues.getAsString("name"));
 											method.setAction(methodValues.getAsString("action"));
+                                            if(methodValues.containsKey("contentEncoding"))
+                                                method.setContentEncoding(methodValues.getAsString("contentEncoding"));
+                                            else
+                                                method.setContentEncoding("");
 											if(methodValues.containsKey("webMethod"))
 												method.setWebMethod(methodValues.getAsString("webMethod"));
 											else

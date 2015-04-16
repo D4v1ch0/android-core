@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
@@ -80,7 +81,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	private String dialogTitle;
 	private String currentFragmentTagName;
 	private FragmentResultListener fragmentResultCallback;
-	LocationClient locationClient;
+	GoogleApiClient locationClient;
 	private boolean enableGooglePlayServices = false;
 	
 	private ProgressDialog progressDialog;
@@ -403,7 +404,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public Location getLastLocation(){		
 		if(GooglePlayServicesUtils.servicesConnected((BaseActivity) this.getActivity())){
-			Location location = locationClient.getLastLocation();
+			Location location = LocationServices.FusedLocationApi.getLastLocation(locationClient);
 			return location;
 		}
 		return null;

@@ -9,7 +9,16 @@ public class WebServiceDataMethod {
 	private String methodId;
 	
 	private String webMethod;
-	
+
+    private String contentEncoding;
+
+    public String getContentEncoding() {
+        return contentEncoding;
+    }
+
+    public void setContentEncoding(String contentEncoding) {
+        this.contentEncoding = contentEncoding;
+    }
 	public String getName() {
 		return name;
 	}

@@ -60,7 +60,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 
 public class BaseActivity extends FragmentActivity implements DataBaseService,
 		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>,
-		DialogDatePickerChangeListener, FragmentResultListener {
+		DialogDatePickerChangeListener, DialogTimePickerChangeListener, FragmentResultListener {
 
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
 	protected Context context;
@@ -217,6 +217,26 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 				asYearMonth);
 		showDialogFragment(f, "datepicker");
 	}
+
+    public void showDialogTimePicker(int id){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int hour, int minute){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, hour, minute);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int interval){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, interval);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int hour, int minute, int interval){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, hour, minute, interval);
+        showDialogFragment(f,"timepicker");
+    }
 
 	public void showDialogFragment(DialogFragment f, String tagName) {
 		showDialogFragment(f, tagName, null);
@@ -902,4 +922,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	public void onFragmentResult(String tagName, int resultCode, Bundle data) {
 	}
 
+    @Override
+    public void onDailogTimePickerChange(int id, int hours, int minutes) {
+
+    }
 }

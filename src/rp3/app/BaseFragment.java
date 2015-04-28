@@ -59,7 +59,7 @@ import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, 
-	DialogDatePickerChangeListener, FragmentResultListener {
+	DialogDatePickerChangeListener, DialogTimePickerChangeListener, FragmentResultListener {
 	
 	public static final int RESULT_OK = -1;
 	public static final int RESULT_CANCELED = 0;
@@ -280,6 +280,26 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		DialogDatePickerFragment f = new DialogDatePickerFragment(id, d, this, asYearMonth);		
 		showDialogFragment(f,"datepicker");
 	}
+
+    public void showDialogTimePicker(int id){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int hour, int minute){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, hour, minute);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int interval){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, interval);
+        showDialogFragment(f,"timepicker");
+    }
+
+    public void showDialogTimePicker(int id, int hour, int minute, int interval){
+        DialogTimePickerFragment f = new DialogTimePickerFragment(id, this, hour, minute, interval);
+        showDialogFragment(f,"timepicker");
+    }
 	
 	public void showDialogFragment(DialogFragment f, String tagName) {				
 		showDialogFragment(f,tagName, null, null);
@@ -868,4 +888,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	@Override
 	public void onFragmentResult(String tagName, int resultCode, Bundle data) {		
 	}
+
+    @Override
+    public void onDailogTimePickerChange(int id, int hours, int minutes) {
+
+    }
 }

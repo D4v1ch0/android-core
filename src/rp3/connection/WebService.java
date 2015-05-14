@@ -27,6 +27,9 @@ import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -351,7 +354,14 @@ public class WebService {
         String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
         boolean oAuthEnabled = true;
 
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+        if (timeOut == null)
+            timeOut = HttpConnection.NET_CONNECT_TIMEOUT_MILLIS;
+
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeOut);
+        HttpConnectionParams.setSoTimeout(httpParameters, timeOut);
+
+        DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
 
         httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
 
@@ -410,6 +420,7 @@ public class WebService {
 				}
 				
 				HttpPost post = new HttpPost(urlString);
+
 
                 post.addHeader("Accept-Encoding", "gzip");
 

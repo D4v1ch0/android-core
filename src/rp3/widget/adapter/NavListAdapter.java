@@ -7,6 +7,7 @@ import rp3.core.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class NavListAdapter extends BaseAdapter {
 
     static class ViewHolder {
 		TextView textView_title;
+        TextView textView_subtitle;
 		TextView textView_count;
 		ImageView imageView_Icon;
 	}
@@ -87,14 +89,19 @@ public class NavListAdapter extends BaseAdapter {
 	            viewHolder.imageView_Icon = (ImageView) convertView.findViewById(R.id.imageView_icon);
 	            viewHolder.textView_title = (TextView) convertView.findViewById(R.id.textView_title);
 	            viewHolder.textView_count = (TextView) convertView.findViewById(R.id.textView_counter);
+                viewHolder.textView_subtitle = (TextView) convertView.findViewById(R.id.textView_subtitle);
 	            
 	            convertView.setTag(viewHolder);               
             }
     		else
     			viewHolder = (ViewHolder)convertView.getTag();
     		
-    		viewHolder.imageView_Icon.setImageResource(navItems.get(position).getIcon());        
+    		viewHolder.imageView_Icon.setImageResource(navItems.get(position).getIcon());
     		viewHolder.textView_title.setText(navItems.get(position).getTitle());
+            if(!TextUtils.isEmpty(navItems.get(position).getSubtitle()))
+                viewHolder.textView_subtitle.setText(navItems.get(position).getSubtitle());
+            else
+                viewHolder.textView_subtitle.setVisibility(View.GONE);
             
     		if(item.getIcon() == 0){
     			viewHolder.imageView_Icon.setVisibility(View.GONE);    			

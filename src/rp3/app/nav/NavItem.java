@@ -14,6 +14,7 @@ public class NavItem {
 	public static final int TYPE_ACTION = 1;
 	
 	private String title;
+    private String subtitle;
 	private int id;	
     private int icon;
     private int resTitleId;
@@ -54,12 +55,27 @@ public class NavItem {
         this.setResTitleId(resTitleId);
         this.icon = icon;
     }
+
+    public NavItem(int id,int resTitleId, int icon, String subtitle){
+        this.setId(id);
+        this.setResTitleId(resTitleId);
+        this.icon = icon;
+        this.subtitle = subtitle;
+    }
+    public NavItem(int id,int resTitleId, int icon, int navItemType, String subtitle){
+        this.setId(id);
+        this.setResTitleId(resTitleId);
+        this.itemType = navItemType;
+        this.icon = icon;
+        this.subtitle = subtitle;
+    }
     
     public NavItem(int id,int resTitleId, int icon, int navItemType){
     	this.setId(id);
     	this.setResTitleId(resTitleId);
     	this.itemType = navItemType;
         this.icon = icon;
+        this.subtitle = subtitle;
     }
      
     public NavItem(int id,int resTitleId, int icon,int navItemType,boolean isCounterVisible, String count){
@@ -77,6 +93,8 @@ public class NavItem {
     	}
         return this.title;
     }
+
+    public String getSubtitle() {return this.subtitle;}
      
     public int getIcon(){
         return this.icon;

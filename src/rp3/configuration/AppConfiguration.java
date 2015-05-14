@@ -5,6 +5,7 @@ import android.content.ContentValues;
 public class AppConfiguration {		
 	
 	public static final String KEY_HELP = "help";
+    public static final String KEY_MAIL = "mail";
 	public static final String KEY_ALLOW_SETTINGS_ON_AUT = "allowSettingsOnAut";
 	public static final String KEY_ALLOW_HELP_ON_AUT = "allowHelpOnAut";	
 	
@@ -31,6 +32,10 @@ public class AppConfiguration {
 	public String getHelpUrl(){
 		return get(KEY_HELP);
 	}
+
+    public String getMail(){
+        return get(KEY_MAIL);
+    }
 	
 	public boolean allowSettingsOnAut(){
 		return "TRUE".equals(get(KEY_ALLOW_SETTINGS_ON_AUT));

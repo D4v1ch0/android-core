@@ -16,7 +16,7 @@
         android:layout_marginLeft="16dp"
         android:textColor="@color/nav_item_text_group"
         android:textSize="@dimen/text_medium_size"/>
- 
+
 	 <View
        	android:id="@+id/divider"	    
 	    android:padding="1dp"

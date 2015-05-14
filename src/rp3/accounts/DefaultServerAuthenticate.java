@@ -41,6 +41,7 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 if (!response.getJSONObject("Data").isNull("AuthToken")) {
                     authToken = response.getJSONObject("Data").getString("AuthToken");
                     fullName = response.getJSONObject("Data").getString("Name");
+                    Session.getUser().setFullName(fullName);
                 }
 
                 if (!response.isNull("Message"))

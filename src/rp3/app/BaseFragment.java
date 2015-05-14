@@ -171,6 +171,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		else{
             getCurrentChildFragmentManager().beginTransaction().replace(id, fragment).commit();
 		}
+
 	}
 	
 	public void beginSetFragment(){

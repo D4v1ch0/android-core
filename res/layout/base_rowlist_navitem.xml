@@ -23,15 +23,27 @@
         android:gravity="center_vertical"
         android:textColor="@color/nav_item_text"
         android:paddingRight="40dp"/>
-     
+
+    <TextView
+        android:id="@+id/textView_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/nav_item_text"
+        android:paddingRight="40dp"
+        android:textSize="@dimen/text_xsmall_size"
+        android:layout_below="@+id/imageView_icon"
+        android:layout_alignLeft="@+id/textView_title"
+        android:layout_alignStart="@+id/textView_title" />
+
     <TextView android:id="@+id/textView_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"       
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"/>
- 
-    <View 
+
+    <View
         android:id="@+id/divider"
 	    android:layout_alignParentBottom="true"
 	    android:layout_width="match_parent"

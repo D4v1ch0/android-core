@@ -42,7 +42,7 @@ public class DataBase {
 	}
 	
 	public DataBase(Context c, SQLiteOpenHelper helper){
-		dbOpenHelper = helper;		
+		dbOpenHelper = helper;
 		this.c = c;
 	}	
 	
@@ -575,5 +575,20 @@ public class DataBase {
     		sb.append(" AS " +  alias);
     	}
     	return sb.toString();
+    }
+
+    public int getVersion()
+    {
+        return db.getVersion();
+    }
+
+    public String getSQLiteVersion()
+    {
+        Cursor cursor = db.rawQuery("select sqlite_version() AS sqlite_version", null);
+        String sqliteVersion = "";
+        while(cursor.moveToNext()){
+            sqliteVersion += cursor.getString(0);
+        }
+        return  sqliteVersion;
     }
 }

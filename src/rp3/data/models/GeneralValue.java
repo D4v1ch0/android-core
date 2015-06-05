@@ -185,6 +185,18 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		
 		return null;
 	}
+
+    public static GeneralValue getGeneralValue(DataBase db, long generalTableId, String code){
+        Cursor c = db.query(Contract.GeneralValue.TABLE_NAME, getSelectColumns()
+                ,  Contract.GeneralValue.COLUMN_CODE + " = ? AND " + Contract.GeneralValue.COLUMN_GENERAL_TABLE_ID + " = ?",
+                new String[] {code + "", generalTableId + ""});
+
+        if(c.moveToFirst()){
+            return getGeneralValue(c);
+        }
+
+        return null;
+    }
 	
 	public static Dictionary<String, String> getDictionary(DataBase db, long generalTableId){
 		List<GeneralValue> gvs = getGeneralValues(db, generalTableId, false);

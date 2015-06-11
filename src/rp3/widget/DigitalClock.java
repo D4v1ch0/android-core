@@ -22,7 +22,7 @@ public class DigitalClock extends TextView {
 
     Calendar mCalendar;
     private final static String m12 = "h:mm aa";
-    private final static String m24 = "k:mm";
+    private final static String m24 = "kk:mm";
 
     private Runnable mTicker;
     private Handler mHandler;

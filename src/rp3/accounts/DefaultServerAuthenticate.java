@@ -59,9 +59,18 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
         }
         else
         {
-            bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, "No hay conexión al servidor");
-            bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
-            bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
+            if(Session.IsLogged())
+            {
+                //bundle.putString(AccountManager.KEY_AUTHTOKEN, Session.getUser().getAuthToken(authType));
+                bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, authType);
+                bundle.putString(KEY_FULL_NAME, Session.getUser().getFullName());
+                bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, true);
+            }
+            else {
+                bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, "No hay conexión al servidor");
+                bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
+                bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
+            }
         }
 		
     	return bundle;	       	    	
@@ -72,7 +81,9 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 		Bundle data = signIn(Session.getUser().getLogonName(), Session.getUser().getPassword(), User.getAccountType());
 		if(data.getBoolean(ServerAuthenticate.KEY_SUCCESS))
 		{
-			String token = data.getString(AccountManager.KEY_AUTHTOKEN);
+            String token = "temp";
+            if(data.containsKey(AccountManager.KEY_AUTHTOKEN))
+			    token = data.getString(AccountManager.KEY_AUTHTOKEN);
 			String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 			Session.getUser().setAuthToken(authType, token);
 			String fullName = data.getString(KEY_FULL_NAME);

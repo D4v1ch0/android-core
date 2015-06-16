@@ -6,11 +6,11 @@ import android.content.IntentSender;
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 public class GooglePlayServiceClient implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
 	BaseActivity activity;
 	SimpleCallback connectedCallback;
@@ -69,8 +69,9 @@ public class GooglePlayServiceClient implements
 			connectedCallback.onExecute(bundle);		
 	}
 
-	@Override
-	public void onDisconnected() {
-	}
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
 
 }

@@ -15,12 +15,15 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 
 public class LocationUtils {
 
+    private static final float ACCURACY = 25;
+    private static final int TIMES = 5;
 	public interface OnLocationResultListener {
 		void getLocationResult(Location location);
 	}
@@ -145,7 +148,7 @@ public class LocationUtils {
 //		});		
 //	}
 
-	public static void getLocation(Context c, final OnLocationResultListener callback) {
+	public static void getLocation(final Context c, final OnLocationResultListener callback) {
 		Location location = null;
 		try {
 			final LocationManager locationManager = (LocationManager) c
@@ -164,6 +167,8 @@ public class LocationUtils {
 			} else {
 
 				LocationListener listener = new LocationListener() {
+                    private int times = 0;
+                    private Location last = null;
 					@Override
 					public void onStatusChanged(
 							String provider, int status,
@@ -183,8 +188,22 @@ public class LocationUtils {
 					@Override
 					public void onLocationChanged(
 							Location location) {
-						callback.getLocationResult(location);
-						locationManager.removeUpdates(this);
+                        //Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                        if(location.getAccuracy() < ACCURACY) {
+                            callback.getLocationResult(location);
+                            locationManager.removeUpdates(this);
+                        }
+                        else {
+                            if(last == null || last.getAccuracy() > location.getAccuracy())
+                            {
+                                last = location;
+                            }
+                            if (times == TIMES) {
+                                callback.getLocationResult(last);
+                                locationManager.removeUpdates(this);
+                            }
+                        }
+                        times++;
 					}
 				};				
 				

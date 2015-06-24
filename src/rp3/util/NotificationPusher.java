@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import rp3.app.NotificationActivity;
 import rp3.app.StartActivity;
 import rp3.core.R;
 
@@ -14,6 +15,10 @@ import rp3.core.R;
  * Created by magno_000 on 16/06/2015.
  */
 public class NotificationPusher {
+
+    public final static String TAG_TITLE = "title";
+    public final static String TAG_MESSAGE = "message";
+
     public static void pushNotification(int id, Context ctx, String message)
     {
         NotificationCompat.Builder mBuilder =
@@ -49,11 +54,13 @@ public class NotificationPusher {
                         .setContentTitle(title)
                         .setContentText(message);
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(ctx, StartActivity.class);
+        Intent resultIntent = new Intent(ctx, NotificationActivity.class);
+        resultIntent.putExtra(TAG_TITLE, title);
+        resultIntent.putExtra(TAG_MESSAGE, message);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
 
-        //stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(NotificationActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(

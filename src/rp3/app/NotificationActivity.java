@@ -18,7 +18,7 @@ public class NotificationActivity extends BaseActivity {
         setContentView(R.layout.activity_notification);
 
         String title = getIntent().getExtras().getString(NotificationPusher.TAG_TITLE);
-        String message = getIntent().getExtras().getString(NotificationPusher.TAG_TITLE);
+        String message = getIntent().getExtras().getString(NotificationPusher.TAG_MESSAGE);
 
         setTextViewText(R.id.title, title);
         setTextViewText(R.id.message, message);

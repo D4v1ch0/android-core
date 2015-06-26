@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.location.LocationServices;
 
 public class LocationUtils {
 
@@ -30,13 +31,13 @@ public class LocationUtils {
 
 	public static GoogleApiClient getLocationClient(BaseActivity activity) {
 		GooglePlayServiceClient client = new GooglePlayServiceClient(activity);
-        GoogleApiClient locationClient = new GoogleApiClient.Builder(activity).addApi(Drive.API).build();
+        GoogleApiClient locationClient = new GoogleApiClient.Builder(activity).addApi(LocationServices.API).build();
 		return locationClient;
 	}
 
 	public static GoogleApiClient getLocationClient(Context c) {
 		GooglePlayServiceClient client = new GooglePlayServiceClient();
-        GoogleApiClient locationClient = new GoogleApiClient.Builder(c).addApi(Drive.API).build();
+        GoogleApiClient locationClient = new GoogleApiClient.Builder(c).addApi(LocationServices.API).build();
 		return locationClient;
 	}
 	
@@ -205,8 +206,8 @@ public class LocationUtils {
                         }
                         times++;
 					}
-				};				
-				
+				};
+
 				// First get location from GPS
 				// if GPS Enabled get lat/long using GPS Services
 				if (isGPSEnabled) {
@@ -217,7 +218,7 @@ public class LocationUtils {
 //					if (locationManager != null) {
 //						location = locationManager
 //								.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//												
+//
 //					}
 
 				}

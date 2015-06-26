@@ -8,6 +8,8 @@ import java.util.List;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import rp3.configuration.PreferenceManager;
@@ -430,6 +432,22 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		}
 		return null;
 	}
+
+    public void getActualLocation(final LocationUtils.OnLocationResultListener callback)
+    {
+        if(GooglePlayServicesUtils.servicesConnected((BaseActivity) this.getActivity())){
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(10000);
+            mLocationRequest.setFastestInterval(5000);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationServices.FusedLocationApi.requestLocationUpdates(locationClient, mLocationRequest, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    callback.getLocationResult(location);
+                }
+            });
+        }
+    }
 	
 //	private void setMenu(){
 //		Menu menu = null;

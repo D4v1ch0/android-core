@@ -513,7 +513,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		if (progressDialog == null)
 			progressDialog = new ProgressDialog(this);
 
-		progressDialog.setTitle(title);
+		//progressDialog.setTitle(title);
 		progressDialog.setMessage(message);
 		progressDialog.setCancelable(cancelable);
 		progressDialog.show();

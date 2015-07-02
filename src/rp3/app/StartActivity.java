@@ -52,8 +52,8 @@ public class StartActivity extends BaseActivity {
 			if(Session.getUser().getAccount() == null){
 				callLoginActivity();
 			}else{
-				if(rp3.runtime.Session.IsLogged()){			
-					onVerifyRequestSignIn();
+				if(rp3.runtime.Session.IsLogged()){
+                    onContinue();
 				}else
 					callLoginActivity();
 			}			

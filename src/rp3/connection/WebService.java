@@ -514,11 +514,11 @@ public class WebService {
 			throw new HttpResponseException(status);
 		case HttpConnection.HTTP_STATUS_UNAUTHORIZED:
 			if(oAuthEnabled){
-				Session.getUser().invalidateAuthToken();						
-				String token = Session.getUser().getAuthToken();		
-				
+                rp3.accounts.Authenticator.getServerAuthenticate().requestSignIn();
+				String token = Session.getUser().getAuthToken();
+
 				if(!TextUtils.isEmpty(token)){
-					uri.setHeader("AuthToken",  token);							
+					uri.setHeader("AuthToken",  token);
 					response = httpClient.execute(uri);
 				}else
 					throw new HttpResponseException(status);

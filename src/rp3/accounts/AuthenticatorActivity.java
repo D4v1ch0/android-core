@@ -3,6 +3,7 @@ package rp3.accounts;
 
 import rp3.accounts.User.UserUpdateCallback;
 import rp3.configuration.Configuration;
+import rp3.configuration.PreferenceManager;
 import rp3.core.R;
 import rp3.data.Constants;
 import rp3.runtime.Session;
@@ -237,49 +238,72 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     	
     	final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting), 
     			getText(R.string.message_please_wait), false);
-        
-    	new AsyncTask<String, Void, Intent>() {
 
-            @Override
-            protected Intent doInBackground(String... params) {
+        String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+        String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+        if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+                PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
+        {
+            Bundle data = new Bundle();
+            data.putString(AccountManager.KEY_ACCOUNT_NAME, PreferenceManager.getString(Constants.KEY_LAST_LOGIN));
+            data.putString(AccountManager.KEY_AUTHTOKEN, PreferenceManager.getString(Constants.KEY_LAST_TOKEN));
+            data.putString(PARAM_USER_PASS, PreferenceManager.getString(Constants.KEY_LAST_PASS));
+            progressDialog.dismiss();
+            final Intent res = new Intent();
+            res.putExtras(data);
+            finishLogin(res);
+        }
+        else {
 
-                Log.d(TAG, "> Started authenticating");
+            new AsyncTask<String, Void, Intent>() {
 
-                String authtoken = null;
-                Bundle data = new Bundle();
-                try {
-                    Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
+                @Override
+                protected Intent doInBackground(String... params) {
 
-                    if(r.getBoolean(ServerAuthenticate.KEY_SUCCESS)){
-                    	authtoken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
-                    	
-                    	data.putString(AccountManager.KEY_ACCOUNT_NAME, logonName);
-                        data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                        data.putString(PARAM_USER_PASS, password);
-                    }else{
-                    	data.putString(KEY_ERROR_MESSAGE, r.getString(ServerAuthenticate.KEY_ERROR_MESSAGE));
-                    }                                                            
+                    Log.d(TAG, "> Started authenticating");
 
-                } catch (Exception e) {
-                	Log.e(TAG, "Exception authenticating:" + e.getMessage());
-                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                    String authtoken = null;
+                    Bundle data = new Bundle();
+                    try {
+                        Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
+
+                        if (r.getBoolean(ServerAuthenticate.KEY_SUCCESS)) {
+                            authtoken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
+
+                            data.putString(AccountManager.KEY_ACCOUNT_NAME, logonName);
+                            data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                            data.putString(PARAM_USER_PASS, password);
+
+                            if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
+                                PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
+                                PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
+                                PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);
+                            }
+                        } else {
+                            data.putString(KEY_ERROR_MESSAGE, r.getString(ServerAuthenticate.KEY_ERROR_MESSAGE));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception authenticating:" + e.getMessage());
+                        data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                    }
+
+                    final Intent res = new Intent();
+                    res.putExtras(data);
+                    return res;
                 }
 
-                final Intent res = new Intent();
-                res.putExtras(data);
-                return res;
-            }
-
-            @Override
-            protected void onPostExecute(Intent intent) {
-                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                	progressDialog.dismiss();                	
-                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
-                } else {
-                    finishLogin(intent);
+                @Override
+                protected void onPostExecute(Intent intent) {
+                    if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    } else {
+                        finishLogin(intent);
+                    }
                 }
-            }
-        }.execute();
+            }.execute();
+        }
     }
 
     private void finishLogin(final Intent intent) {

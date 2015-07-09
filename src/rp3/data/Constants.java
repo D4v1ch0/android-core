@@ -9,4 +9,8 @@ public class Constants {
 	public final static int LOGIN_REQUEST_CODE = 1000;
 	
 	public final static String KEY_FORGOT_PASSWORD = "forgotPassword";
+
+    public final static String KEY_LAST_LOGIN = "lastLogin";
+    public final static String KEY_LAST_PASS = "lastPass";
+    public final static String KEY_LAST_TOKEN = "lastToken";
 }

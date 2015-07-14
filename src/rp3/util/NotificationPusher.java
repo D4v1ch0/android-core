@@ -18,6 +18,7 @@ public class NotificationPusher {
 
     public final static String TAG_TITLE = "title";
     public final static String TAG_MESSAGE = "message";
+    public final static String TAG_FOOTER = "footer";
 
     public static void pushNotification(int id, Context ctx, String message)
     {
@@ -57,6 +58,36 @@ public class NotificationPusher {
         Intent resultIntent = new Intent(ctx, NotificationActivity.class);
         resultIntent.putExtra(TAG_TITLE, title);
         resultIntent.putExtra(TAG_MESSAGE, message);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
+
+        stackBuilder.addParentStack(NotificationActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mBuilder.setAutoCancel(true);
+        mNotificationManager.notify(id, mBuilder.build());
+    }
+
+    public static void pushNotification(int id, Context ctx, String message, String title, String footer)
+    {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(ctx)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(message);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(ctx, NotificationActivity.class);
+        resultIntent.putExtra(TAG_TITLE, title);
+        resultIntent.putExtra(TAG_MESSAGE, message);
+        resultIntent.putExtra(TAG_FOOTER, footer);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
 

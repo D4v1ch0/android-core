@@ -19,9 +19,11 @@ public class NotificationActivity extends BaseActivity {
 
         String title = getIntent().getExtras().getString(NotificationPusher.TAG_TITLE);
         String message = getIntent().getExtras().getString(NotificationPusher.TAG_MESSAGE);
+        String footer = getIntent().getExtras().getString(NotificationPusher.TAG_FOOTER);
 
         setTextViewText(R.id.title, title);
         setTextViewText(R.id.message, message);
+        setTextViewText(R.id.footer, footer);
 
     }
 }

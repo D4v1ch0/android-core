@@ -503,6 +503,8 @@ public class WebService {
 	
 	private void evaluateStatusResponse(HttpResponse response,HttpClient httpClient, HttpUriRequest uri, boolean oAuthEnabled) throws ClientProtocolException, IOException {
 		int status = response.getStatusLine().getStatusCode();
+        if(status != 200)
+            respJSONString = EntityUtils.toString(response.getEntity());
 		switch (status) {
 		case HttpConnection.HTTP_STATUS_BAD_REQUEST:
 			throw new HttpResponseException(status);

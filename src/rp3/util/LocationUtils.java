@@ -38,6 +38,18 @@ public class LocationUtils {
         GoogleApiClient locationClient = new GoogleApiClient.Builder(c).addApi(LocationServices.API).build();
 		return locationClient;
 	}
+
+    public static Location getLastLocation(Context c)
+    {
+        LocationManager locationManager = (LocationManager) c
+                .getSystemService(Context.LOCATION_SERVICE);
+        Location location = null;
+        if (locationManager != null) {
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        return location;
+    }
 	
 	public static Location getLocation(Context c) {
 		Location location = null;

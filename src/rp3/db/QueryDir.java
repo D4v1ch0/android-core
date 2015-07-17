@@ -12,6 +12,7 @@ public class QueryDir {
 
 	public static final String QUERY_DATABASE_STATEMENT_FILE = "sql_db_query";
 	public static final String QUERY_DATABASE_STATEMENT_FILE_CORE = "sql_db_query_ext";
+    public static final String QUERY_DATABASE_STATEMENT_FILE_UPDATES = "sql_db_up";
 	
 	static ArrayList<String> queryNames;
 	static ArrayList<String> queryContents;
@@ -49,6 +50,15 @@ public class QueryDir {
 			queryNames.add(s.getName());
 			queryContents.add(s.getQuery());
 		}
+
+        resourceId = context.getResources().getIdentifier(QUERY_DATABASE_STATEMENT_FILE_UPDATES, "xml", context.getApplicationContext().getPackageName());
+        parser = context.getResources().getXml(resourceId);
+        statements = XmlPull.getStatements(parser);
+
+        for(Statement s: statements){
+            queryNames.add(s.getName());
+            queryContents.add(s.getQuery());
+        }
 		
 		
 	}	

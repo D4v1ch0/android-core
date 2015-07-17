@@ -19,6 +19,8 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 	public static final String CREATE_DATABASE_STATEMENT_FILE = "sql_db_create";
 	public static final String UPGRADE_VERSION_DATABASE_STATEMENT_FILE = "sql_db_upv%s";
 	public static final String DROP_DATABASE_STATEMENT_FILE = "sql_db_drop";
+
+    public static final String TO_VERSION = "ToVersion";
 	
 	protected void executeListStatements(SQLiteDatabase db, List<String> statements) {
 		try
@@ -58,7 +60,7 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase db) {		
+	public void onCreate(SQLiteDatabase db) {
 		int resourceId = getContext().getResources().getIdentifier(getCreateDataBaseFileName(), "xml", getContext().getApplicationContext().getPackageName());		
 		XmlResourceParser parser = getContext().getResources().getXml(resourceId);
 

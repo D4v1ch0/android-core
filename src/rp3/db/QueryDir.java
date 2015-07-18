@@ -7,6 +7,7 @@ import rp3.xml.XmlPull;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.util.Log;
 
 public class QueryDir {
 
@@ -51,13 +52,19 @@ public class QueryDir {
 			queryContents.add(s.getQuery());
 		}
 
-        resourceId = context.getResources().getIdentifier(QUERY_DATABASE_STATEMENT_FILE_UPDATES, "xml", context.getApplicationContext().getPackageName());
-        parser = context.getResources().getXml(resourceId);
-        statements = XmlPull.getStatements(parser);
+        try {
+            resourceId = context.getResources().getIdentifier(QUERY_DATABASE_STATEMENT_FILE_UPDATES, "xml", context.getApplicationContext().getPackageName());
+            parser = context.getResources().getXml(resourceId);
+            statements = XmlPull.getStatements(parser);
 
-        for(Statement s: statements){
-            queryNames.add(s.getName());
-            queryContents.add(s.getQuery());
+            for (Statement s : statements) {
+                queryNames.add(s.getName());
+                queryContents.add(s.getQuery());
+            }
+        }
+        catch(Exception ex)
+        {
+            Log.e("Error: ", "NO FILE " + QUERY_DATABASE_STATEMENT_FILE_UPDATES);
         }
 		
 		

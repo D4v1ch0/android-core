@@ -2,6 +2,7 @@ package rp3.db.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public final class DataBaseServiceHelper {
 
@@ -13,7 +14,8 @@ public final class DataBaseServiceHelper {
 			DataBase db = new DataBase(c,openHelper);
 			return db;
 		} catch (Exception e) {
-			return null;
+            Log.e("Error",e.getMessage());
+            return null;
 		}
 	}
 	

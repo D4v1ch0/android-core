@@ -13,7 +13,9 @@ import rp3.runtime.Session;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -470,4 +472,48 @@ public abstract class ViewUtils {
 		FileUtils.setBitmapFromResourcesAsync(imageView, resID, reqWidth,
 				reqHeight);
 	}
+
+    public static final void setPhoneActionClickListener(final View view, final String phone)
+    {
+        view.setClickable(true);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "tel:" + phone;
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                Uri mUri = Uri.parse("smsto:" + phone);
+                Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                mIntent.putExtra("chat", true);
+                Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
+                view.getContext().startActivity(chooserIntent);
+            }
+        });
+    }
+
+    public static final void setEmailActionClickListener(final View view, final String email)
+    {
+        view.setClickable(true);
+        view.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", email, null));
+                view.getContext().startActivity(Intent.createChooser(intent, "Send Email"));
+            }
+        });
+    }
+
+    public static final void setLinkActionClickListener(final View view, final String url)
+    {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + url));
+                view.getContext().startActivity(browserIntent);
+            }
+        });
+    }
 }

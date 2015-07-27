@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
 
 public abstract class BitmapUtils {
@@ -124,5 +125,13 @@ public abstract class BitmapUtils {
 	    }
 	    return result;
 	}
+
+    public static Bitmap resizeFromScale(Bitmap b, float scale)
+    {
+        int sizeX = Math.round(b.getWidth() * scale);
+        int sizeY = Math.round(b.getHeight() * scale);
+
+        return Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
+    }
 
 }

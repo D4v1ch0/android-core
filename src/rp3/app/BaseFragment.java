@@ -215,6 +215,11 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			getLoadingView().setVisibility(View.GONE);			
 		}
 	}
+
+    public void setContentView(View v)
+    {
+        setContentView(v);
+    }
 	public void setContentView(int resourceId) {
 		this.contentViewResource = resourceId;
 	}

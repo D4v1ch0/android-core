@@ -31,6 +31,9 @@ public class DrawableUtils {
             image = scaleImage(image, scaleFactor * 0.9f, ctx);
         }
 
+        int height = image.getIntrinsicHeight();
+        int width = image.getIntrinsicWidth();
+
         return image;
 
     }

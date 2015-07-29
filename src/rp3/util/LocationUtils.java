@@ -43,15 +43,38 @@ public class LocationUtils {
     {
         LocationManager locationManager = (LocationManager) c
                 .getSystemService(Context.LOCATION_SERVICE);
-        Location location = null;
+        Location locationGps = null;
+        Location locationNet = null;
         if (locationManager != null) {
-            location = locationManager
+            locationGps = locationManager
                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location == null)
-                location = locationManager
-                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            locationNet = locationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
-        return location;
+
+        if(locationGps == null)
+        {
+            if(locationNet == null)
+            {
+                return null;
+            }
+            else
+                return locationNet;
+        }
+        else
+        {
+            if(locationNet == null)
+            {
+                return locationGps;
+            }
+            else
+            {
+                if(locationGps.getTime() > locationNet.getTime())
+                    return locationGps;
+                else
+                    return locationNet;
+            }
+        }
     }
 	
 	public static Location getLocation(Context c) {

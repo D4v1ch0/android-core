@@ -131,7 +131,16 @@ public abstract class BitmapUtils {
         int sizeX = Math.round(b.getWidth() * scale);
         int sizeY = Math.round(b.getHeight() * scale);
 
-        return Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
+        Bitmap newBitmap = null;
+
+        try {
+            newBitmap = Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
+        }
+        catch (OutOfMemoryError ex)
+        {
+            newBitmap = resizeFromScale(b, scale * 0.9f);
+        }
+        return newBitmap;
     }
 
 }

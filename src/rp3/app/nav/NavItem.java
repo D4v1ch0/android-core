@@ -18,6 +18,7 @@ public class NavItem {
 	private int id;	
     private int icon;
     private int resTitleId;
+    private int badge = 0;
     private String count = "0";
     private int itemType = TYPE_NAV;
     private ArrayList<NavItem> navItems;    
@@ -103,7 +104,15 @@ public class NavItem {
     public String getCount(){
         return this.count;
     }
-     
+
+    public int getBadge() {
+        return badge;
+    }
+
+    public void setBadge(int badge) {
+        this.badge = badge;
+    }
+
     public boolean getCounterVisibility(){
         return this.isCounterVisible;
     }

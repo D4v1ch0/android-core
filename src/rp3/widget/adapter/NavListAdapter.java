@@ -24,6 +24,7 @@ public class NavListAdapter extends BaseAdapter {
 		TextView textView_title;
         TextView textView_subtitle;
 		TextView textView_count;
+		TextView textView_badge;
 		ImageView imageView_Icon;
 	}
     
@@ -82,14 +83,19 @@ public class NavListAdapter extends BaseAdapter {
     		if (convertView == null) {    		
                 LayoutInflater mInflater = (LayoutInflater)
                         context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-                         
-	            convertView = mInflater.inflate(R.layout.base_rowlist_navitem, null);
+
+				if(navItems.get(position).getBadge() == 0)
+	            	convertView = mInflater.inflate(R.layout.base_rowlist_navitem, null);
+				else
+					convertView = mInflater.inflate(R.layout.base_rowlist_navitem_badge, null);
 	            
 	            viewHolder = new ViewHolder();
 	            viewHolder.imageView_Icon = (ImageView) convertView.findViewById(R.id.imageView_icon);
 	            viewHolder.textView_title = (TextView) convertView.findViewById(R.id.textView_title);
 	            viewHolder.textView_count = (TextView) convertView.findViewById(R.id.textView_counter);
                 viewHolder.textView_subtitle = (TextView) convertView.findViewById(R.id.textView_subtitle);
+				if(navItems.get(position).getBadge() != 0)
+					viewHolder.textView_badge = (TextView) convertView.findViewById(R.id.textView_badge);
 	            
 	            convertView.setTag(viewHolder);               
             }
@@ -98,6 +104,8 @@ public class NavListAdapter extends BaseAdapter {
     		
     		viewHolder.imageView_Icon.setImageResource(navItems.get(position).getIcon());
     		viewHolder.textView_title.setText(navItems.get(position).getTitle());
+			if(viewHolder.textView_badge != null)
+				viewHolder.textView_badge.setText(navItems.get(position).getBadge() + "");
             if(!TextUtils.isEmpty(navItems.get(position).getSubtitle()))
                 viewHolder.textView_subtitle.setText(navItems.get(position).getSubtitle());
             else

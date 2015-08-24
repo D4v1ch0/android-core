@@ -185,7 +185,7 @@ public class LocationUtils {
 //		});		
 //	}
 
-	public static void getLocation(final Context c, final OnLocationResultListener callback) {
+	public static void getLocation(final Context c, final float accuracy, final OnLocationResultListener callback) {
 		Location location = null;
 		try {
 			final LocationManager locationManager = (LocationManager) c
@@ -226,7 +226,7 @@ public class LocationUtils {
 					public void onLocationChanged(
 							Location location) {
                         //Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
-                        if(location.getAccuracy() < ACCURACY) {
+                        if(location.getAccuracy() < accuracy) {
                             callback.getLocationResult(location);
                             locationManager.removeUpdates(this);
                         }
@@ -277,6 +277,10 @@ public class LocationUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
+	}
+
+	public static void getLocation(final Context c,  final OnLocationResultListener callback) {
+		getLocation(c, ACCURACY, callback);
 	}
 
 	// public static void getLocationAsync(Context c, final

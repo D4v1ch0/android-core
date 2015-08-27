@@ -352,7 +352,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 		
 	public DataBase getDataBase(){		
-		return ((BaseActivity)getActivity()).getDataBase();  		
+		return ((BaseActivity)getActivity()).getDataBase();
 	}
 
     private FragmentManager getCurrentChildFragmentManager() {//!!!Use this instead of getFragmentManager, support library from 20+, has a bug that doesn't retain instance of nested fragments!!!!

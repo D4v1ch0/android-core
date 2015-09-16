@@ -12,6 +12,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import rp3.configuration.Configuration;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.content.SyncAdapter;
@@ -20,6 +21,7 @@ import rp3.data.Message;
 import rp3.data.MessageCollection;
 import rp3.data.entity.OnEntityCheckerListener;
 import rp3.db.sqlite.DataBase;
+import rp3.db.sqlite.DataBaseServiceHelper;
 import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
@@ -351,8 +353,17 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			fragmentResultCallback.onFragmentResult(getFragmentTagName(), resultCode, data);
 	}
 		
-	public DataBase getDataBase(){		
-		return ((BaseActivity)getActivity()).getDataBase();
+	public DataBase getDataBase(){
+		try {
+			return ((BaseActivity)getActivity()).getDataBase();
+		}
+		catch (Exception ex)
+		{
+			return DataBaseServiceHelper.getWritableDatabase(getContext(),
+					Configuration.getDataBaseConfiguration()
+							.getDataBaseClass());
+		}
+
 	}
 
     private FragmentManager getCurrentChildFragmentManager() {//!!!Use this instead of getFragmentManager, support library from 20+, has a bug that doesn't retain instance of nested fragments!!!!

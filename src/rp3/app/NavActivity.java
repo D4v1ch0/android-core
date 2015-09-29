@@ -445,11 +445,11 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	}
 	
 	public void setNavHeaderViewText(int id, int value){
-		ViewUtils.setTextViewText(viewContentHeader,id, getText(value).toString());
+		ViewUtils.setTextViewText(viewContentHeader, id, getText(value).toString());
 	}
 	
 	public void setNavHeaderViewText(int id, String value){
-		ViewUtils.setTextViewText(viewContentHeader,id, value);
+		ViewUtils.setTextViewText(viewContentHeader, id, value);
 	}
 	
 	public void setNavHeaderViewIcon(int id, Drawable icon){
@@ -467,5 +467,11 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			viewContentHeader.findViewById(R.id.nav_header).setVisibility(View.VISIBLE);
 		else
 			viewContentHeader.findViewById(R.id.nav_header).setVisibility(View.GONE);
+	}
+
+	public void updateBadgeNavItem(int id, int badge)
+	{
+		navDrawerAdapter.getNavItemById(id).setBadge(badge);
+		navDrawerAdapter.notifyDataSetChanged();
 	}
 }

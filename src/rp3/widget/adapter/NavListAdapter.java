@@ -50,6 +50,15 @@ public class NavListAdapter extends BaseAdapter {
     public NavItem getNavItem(int position){
     	return navItems.get(position);
     }
+	public NavItem getNavItemById(int id){
+		NavItem selected = null;
+		for(NavItem nav : navItems)
+		{
+			if(id == nav.getId())
+				selected = nav;
+		}
+		return selected;
+	}
  
     @Override
     public long getItemId(int position) {

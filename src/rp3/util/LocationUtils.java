@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -244,6 +245,18 @@ public class LocationUtils {
 					}
 				};
 
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.NETWORK_PROVIDER, 1000, 0,listener);
+
+//						if (locationManager != null) {
+//							location = locationManager
+//									.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//						}
+					}
+				}
 				// First get location from GPS
 				// if GPS Enabled get lat/long using GPS Services
 				if (isGPSEnabled) {
@@ -259,11 +272,68 @@ public class LocationUtils {
 
 				}
 
+
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+
+	public static void getLocationReference(final Context c, final OnLocationResultListener callback) {
+		Location location = null;
+		try {
+			final LocationManager locationManager = (LocationManager) c
+					.getSystemService(Context.LOCATION_SERVICE);
+
+			// getting GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			// getting network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				callback.getLocationResult(null);
+			} else {
+
+				LocationListener listener = new LocationListener() {
+					private int times = 0;
+					private Location last = null;
+					@Override
+					public void onStatusChanged(
+							String provider, int status,
+							Bundle extras) {
+					}
+
+					@Override
+					public void onProviderEnabled(
+							String provider) {
+					}
+
+					@Override
+					public void onProviderDisabled(
+							String provider) {
+					}
+
+					@Override
+					public void onLocationChanged(
+							Location location) {
+						//Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+
+						callback.getLocationResult(location);
+						locationManager.removeUpdates(this);
+
+					}
+				};
+
 				// First get location from Network Provider
 				if (isNetworkEnabled) {
 					if (location == null) {
 						locationManager.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 1000, 0,listener);
+								LocationManager.NETWORK_PROVIDER, 3000, 0,listener);
 
 //						if (locationManager != null) {
 //							location = locationManager
@@ -271,12 +341,28 @@ public class LocationUtils {
 //						}
 					}
 				}
+				// First get location from GPS
+				// if GPS Enabled get lat/long using GPS Services
+				if (isGPSEnabled) {
+
+					locationManager.requestLocationUpdates(
+							LocationManager.GPS_PROVIDER, 3000, 0,listener);
+
+//					if (locationManager != null) {
+//						location = locationManager
+//								.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//					}
+
+				}
+
+
 
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	public static void getLocation(final Context c,  final OnLocationResultListener callback) {

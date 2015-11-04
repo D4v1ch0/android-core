@@ -355,7 +355,12 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		
 	public DataBase getDataBase(){
 		try {
-			return ((BaseActivity)getActivity()).getDataBase();
+			if(((BaseActivity)getActivity()).getDataBase() != null)
+				return ((BaseActivity)getActivity()).getDataBase();
+			else
+				return DataBaseServiceHelper.getWritableDatabase(this.getContext(),
+						Configuration.getDataBaseConfiguration()
+								.getDataBaseClass());
 		}
 		catch (Exception ex)
 		{

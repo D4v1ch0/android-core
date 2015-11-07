@@ -321,7 +321,7 @@ public class LocationUtils {
 					@Override
 					public void onLocationChanged(
 							Location location) {
-						//Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+						Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
 						callback.getLocationResult(location);
 						locationManager.removeUpdates(this);

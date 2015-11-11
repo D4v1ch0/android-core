@@ -1,6 +1,8 @@
 package rp3.util;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -283,70 +285,81 @@ public class LocationUtils {
 
 	public static void getLocationReference(final Context c, final OnLocationResultListener callback) {
 		Location location = null;
-		try {
-			final LocationManager locationManager = (LocationManager) c
-					.getSystemService(Context.LOCATION_SERVICE);
+		location = getLastLocation(c);
+		long timeLoc = location.getTime();
+		long ahora = Calendar.getInstance().getTimeInMillis();
+		long seconds = (ahora - timeLoc)/1000;
+		//Toast.makeText(c, seconds + " segundos", Toast.LENGTH_LONG).show();
+		if(seconds <= 30)
+		{
+			callback.getLocationResult(location);
+			//Toast.makeText(c, "From last location", Toast.LENGTH_LONG).show();
+		}
+		else {
+			try {
+				final LocationManager locationManager = (LocationManager) c
+						.getSystemService(Context.LOCATION_SERVICE);
 
-			// getting GPS status
-			boolean isGPSEnabled = locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+				// getting GPS status
+				boolean isGPSEnabled = locationManager
+						.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-			// getting network status
-			boolean isNetworkEnabled = locationManager
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+				// getting network status
+				boolean isNetworkEnabled = locationManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-			if (!isGPSEnabled && !isNetworkEnabled) {
-				callback.getLocationResult(null);
-			} else {
+				if (!isGPSEnabled && !isNetworkEnabled) {
+					callback.getLocationResult(null);
+				} else {
 
-				LocationListener listener = new LocationListener() {
-					private int times = 0;
-					private Location last = null;
-					@Override
-					public void onStatusChanged(
-							String provider, int status,
-							Bundle extras) {
-					}
+					LocationListener listener = new LocationListener() {
+						private int times = 0;
+						private Location last = null;
 
-					@Override
-					public void onProviderEnabled(
-							String provider) {
-					}
+						@Override
+						public void onStatusChanged(
+								String provider, int status,
+								Bundle extras) {
+						}
 
-					@Override
-					public void onProviderDisabled(
-							String provider) {
-					}
+						@Override
+						public void onProviderEnabled(
+								String provider) {
+						}
 
-					@Override
-					public void onLocationChanged(
-							Location location) {
-						Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+						@Override
+						public void onProviderDisabled(
+								String provider) {
+						}
 
-						callback.getLocationResult(location);
-						locationManager.removeUpdates(this);
+						@Override
+						public void onLocationChanged(
+								Location location) {
+							//Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
-					}
-				};
+							callback.getLocationResult(location);
+							locationManager.removeUpdates(this);
 
-				// First get location from Network Provider
-				if (isNetworkEnabled) {
-					if (location == null) {
-						locationManager.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 3000, 0,listener);
+						}
+					};
+
+					// First get location from Network Provider
+					if (isNetworkEnabled) {
+							locationManager.requestLocationUpdates(
+									LocationManager.NETWORK_PROVIDER, 3000, 0, listener);
 
 //						if (locationManager != null) {
 //							location = locationManager
 //									.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 //						}
-					}
-				}
-				// First get location from GPS
-				// if GPS Enabled get lat/long using GPS Services
-				if (isGPSEnabled) {
 
-					locationManager.requestLocationUpdates(
-							LocationManager.GPS_PROVIDER, 3000, 0,listener);
+					}
+					// First get location from GPS
+					// if GPS Enabled get lat/long using GPS Services
+					if (isGPSEnabled) {
+
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 3000, 0, listener);
 
 //					if (locationManager != null) {
 //						location = locationManager
@@ -354,14 +367,14 @@ public class LocationUtils {
 //
 //					}
 
+					}
+
+
 				}
 
-
-
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

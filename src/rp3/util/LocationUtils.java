@@ -289,9 +289,12 @@ public class LocationUtils {
 		long timeLoc = location.getTime();
 		long ahora = Calendar.getInstance().getTimeInMillis();
 		long seconds = (ahora - timeLoc)/1000;
-		//Toast.makeText(c, seconds + " segundos", Toast.LENGTH_LONG).show();
+		Toast.makeText(c, seconds + " segundos", Toast.LENGTH_LONG).show();
 		if(seconds <= 30)
 		{
+			if(location.getAccuracy() < 100)
+				location.setAccuracy(100);
+
 			callback.getLocationResult(location);
 			//Toast.makeText(c, "From last location", Toast.LENGTH_LONG).show();
 		}

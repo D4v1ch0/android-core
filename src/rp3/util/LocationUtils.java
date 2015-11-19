@@ -16,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class LocationUtils {
 
     private static final float ACCURACY = 25;
     private static final int TIMES = 5;
+	private boolean isPositioned = false;
+	CountDownTimer count1;
 	public interface OnLocationResultListener {
 		void getLocationResult(Location location);
 	}
@@ -283,13 +286,17 @@ public class LocationUtils {
 		}		
 	}
 
-	public static void getLocationReference(final Context c, final OnLocationResultListener callback) {
+	public void getLocationReference(final Context c, final OnLocationResultListener callback) {
+		isPositioned = false;
 		Location location = null;
 		location = getLastLocation(c);
-		long timeLoc = location.getTime();
-		long ahora = Calendar.getInstance().getTimeInMillis();
-		long seconds = (ahora - timeLoc)/1000;
-		Toast.makeText(c, seconds + " segundos", Toast.LENGTH_LONG).show();
+		long seconds = 35;
+		if(location != null) {
+			long timeLoc = location.getTime();
+			long ahora = Calendar.getInstance().getTimeInMillis();
+			seconds = (ahora - timeLoc) / 1000;
+		}
+		//Toast.makeText(c, seconds + " segundos", Toast.LENGTH_LONG).show();
 		if(seconds <= 30)
 		{
 			if(location.getAccuracy() < 100)
@@ -299,6 +306,7 @@ public class LocationUtils {
 			//Toast.makeText(c, "From last location", Toast.LENGTH_LONG).show();
 		}
 		else {
+
 			try {
 				final LocationManager locationManager = (LocationManager) c
 						.getSystemService(Context.LOCATION_SERVICE);
@@ -315,7 +323,7 @@ public class LocationUtils {
 					callback.getLocationResult(null);
 				} else {
 
-					LocationListener listener = new LocationListener() {
+						final LocationListener listener = new LocationListener() {
 						private int times = 0;
 						private Location last = null;
 
@@ -340,11 +348,45 @@ public class LocationUtils {
 								Location location) {
 							//Toast.makeText(c, "Tiempo: " + times + " Precision: " + location.getAccuracy() + " Latitud:" + location.getLatitude() + " Longitud:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
-							callback.getLocationResult(location);
-							locationManager.removeUpdates(this);
+							if(!isPositioned)
+							{
+								//Toast.makeText(c,"On Location", Toast.LENGTH_SHORT).show();
+								count1.cancel();
+								callback.getLocationResult(location);
+								locationManager.removeUpdates(this);
+							}
+							isPositioned = true;
+						}
+
+					};
+
+					count1 = new CountDownTimer(2000, 100) {
+						@Override
+						public void onTick(long millisUntilFinished) {
 
 						}
-					};
+
+						@Override
+						public void onFinish() {
+							if(!isPositioned)
+							{
+								//Toast.makeText(c,"On Timer", Toast.LENGTH_SHORT).show();
+								isPositioned = true;
+								locationManager.removeUpdates(listener);
+								Location last = getLastLocation(c);
+								if(last == null)
+								{
+									last = new Location(LocationManager.GPS_PROVIDER);
+									last.setLatitude(0);
+									last.setLongitude(0);
+									last.setAccuracy(100);
+								}
+								callback.getLocationResult(last);
+							}
+							isPositioned = true;
+
+						}
+					}.start();
 
 					// First get location from Network Provider
 					if (isNetworkEnabled) {

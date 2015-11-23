@@ -360,7 +360,7 @@ public class LocationUtils {
 
 					};
 
-					count1 = new CountDownTimer(2000, 100) {
+					count1 = new CountDownTimer(6000, 100) {
 						@Override
 						public void onTick(long millisUntilFinished) {
 

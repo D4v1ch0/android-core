@@ -6,11 +6,14 @@ import rp3.db.QueryDir;
 import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
+
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.text.TextUtils;
 
 public class DataBase {
@@ -41,15 +44,17 @@ public class DataBase {
 		return DataBaseServiceHelper.getDataBaseInstance(Session.getContext(), dbClass);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public DataBase(Context c, SQLiteOpenHelper helper){
 		dbOpenHelper = helper;
+		dbOpenHelper.setWriteAheadLoggingEnabled(true);
 		this.c = c;
 	}	
 	
 	private SQLiteDatabase getDb(){
 		if(db==null){
 			db = dbOpenHelper.getWritableDatabase();
-            //db.enableWriteAheadLogging();
+            db.enableWriteAheadLogging();
 		}
 		return db;
 	}

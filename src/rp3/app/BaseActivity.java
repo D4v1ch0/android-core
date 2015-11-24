@@ -366,6 +366,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if(context == null)
+			context = this;
 		if (savedInstanceState != null)
 			isRestoreInstance = true;
 	}
@@ -408,6 +410,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	protected void onResume() {
 		super.onResume();
 		try {
+			if(context == null)
+				context = this;
 			registerReceiver(syncFinishedReceiver, new IntentFilter(
 					SyncAdapter.SYNC_FINISHED));
 		} catch (IllegalArgumentException e) {

@@ -352,8 +352,9 @@ public class LocationUtils {
 							{
 								//Toast.makeText(c,"On Location", Toast.LENGTH_SHORT).show();
 								count1.cancel();
-								callback.getLocationResult(location);
 								locationManager.removeUpdates(this);
+								callback.getLocationResult(location);
+
 							}
 							isPositioned = true;
 						}
@@ -381,6 +382,8 @@ public class LocationUtils {
 									last.setLongitude(0);
 									last.setAccuracy(100);
 								}
+								if(last.getAccuracy() < 100)
+									last.setAccuracy(100);
 								callback.getLocationResult(last);
 							}
 							isPositioned = true;

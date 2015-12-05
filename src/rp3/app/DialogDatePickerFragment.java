@@ -59,6 +59,8 @@ public class DialogDatePickerFragment extends DialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {		
 		// Create a new instance of DatePickerDialog and return it
 		DatePickerDialog dp = new DatePickerDialog(getActivity(), this, year, month, day);
+		dp.setTitle("");
+		dp.updateDate(year, month, day);
 		if(asYearMonth){
 			ViewUtils.setDatePickerDialogAsYearMonth(dp);
 			dp.getDatePicker().setCalendarViewShown(false);

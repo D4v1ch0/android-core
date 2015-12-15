@@ -506,7 +506,12 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 			return super.onCreateView(inflater, container, savedInstanceState);
 	}
 	
-	public void onFragmentCreateView(View rootView, Bundle savedInstanceState){		
+	public void onFragmentCreateView(View rootView, Bundle savedInstanceState){
+		if(getDataBase() == null)
+		{
+			rp3.configuration.Configuration.reinitializeConfiguration(this.getContext(),Configuration.getDataBaseConfiguration()
+					.getDataBaseClass());
+		}
 	}
 	
 	/*Inline Dialog Confirmation*/

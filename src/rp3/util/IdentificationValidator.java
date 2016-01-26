@@ -126,7 +126,7 @@ public class IdentificationValidator {
     }
     private static boolean ValidateRucNaturales(String number)
     {
-        return ValidateCedula(number.substring(0,9));
+        return ValidateCedula(number.substring(0,10));
     }
     private static boolean ValidateRucEstatal(String number)
     {

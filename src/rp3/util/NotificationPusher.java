@@ -112,29 +112,21 @@ public class NotificationPusher {
 
     public static void pushNotification(int id, Context ctx, String message, String title, Class activity)
     {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(title)
-                        .setContentText(message);
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(ctx, activity);
+        NotificationManager notificationManager = (NotificationManager) ctx
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification(R.drawable.ic_launcher, message, 0);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
+        Intent notificationIntent = new Intent(ctx, activity);
 
-        stackBuilder.addParentStack(activity);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        mBuilder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-        NotificationManager mNotificationManager =
-                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        mBuilder.setAutoCancel(true);
-        mNotificationManager.notify(id, mBuilder.build());
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent intent = PendingIntent.getActivity(ctx, 0,
+                notificationIntent, 0);
+
+        notification.setLatestEventInfo(ctx, title, message, intent);
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(id, notification);
     }
+
 }

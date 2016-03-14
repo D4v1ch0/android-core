@@ -235,6 +235,25 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 		return gv;
 	}
 
+	public static List<GeneralValue> getGeneralValues(DataBase db, long generalTableId, String codeException){
+		List<GeneralValue> gv = new ArrayList<GeneralValue>();
+
+
+		Cursor c = db.query(Contract.GeneralValue.TABLE_NAME, getSelectColumns()
+				,  Contract.GeneralValue.COLUMN_GENERAL_TABLE_ID + " = ? AND " + Contract.GeneralValue.COLUMN_CODE + " NOT IN (?)",
+				new String[] {generalTableId + "", codeException},
+				null,null,
+				null);
+
+		if(c.moveToFirst()){
+			do{
+				gv.add(getGeneralValue(c));
+			}while(c.moveToNext());
+		}
+
+		return gv;
+	}
+
 	private static String[] getSelectColumns(){
 		return new String[] {Contract.GeneralValue._ID,
 		Contract.GeneralValue.COLUMN_CODE,

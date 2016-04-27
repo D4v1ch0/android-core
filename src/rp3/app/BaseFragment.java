@@ -509,7 +509,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState){
 		if(getDataBase() == null)
 		{
-			rp3.configuration.Configuration.reinitializeConfiguration(this.getContext(),Configuration.getDataBaseConfiguration()
+			rp3.configuration.Configuration.reinitializeConfiguration(this.getContext(), Configuration.getDataBaseConfiguration()
 					.getDataBaseClass());
 		}
 	}
@@ -537,25 +537,52 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void showDialogProgress(int title, int message){
-		showDialogProgress(getText(title).toString(), getText(message).toString(), false);
+		showDialogProgress(getText(title).toString(), getText(message).toString(), false, ProgressDialog.STYLE_SPINNER);
 	}
 	
 	public void showDialogProgress(int title, int message, boolean cancelable){
-		showDialogProgress(getText(title).toString(), getText(message).toString(), cancelable);
+		showDialogProgress(getText(title).toString(), getText(message).toString(), cancelable, ProgressDialog.STYLE_SPINNER);
+	}
+
+	public void showDialogProgress(int title, int message, boolean cancelable, int style){
+		showDialogProgress(getText(title).toString(), getText(message).toString(), cancelable, style);
 	}
 	
 	public void showDialogProgress(String title, String message){
-		showDialogProgress(title, message, false);
+		showDialogProgress(title, message, false, ProgressDialog.STYLE_SPINNER);
 	}
 	
-	public void showDialogProgress(String title, String message, boolean cancelable){
+	public void showDialogProgress(String title, String message, boolean cancelable, int style){
 		if(progressDialog==null) progressDialog = new ProgressDialog(getContext());
 		
 		progressDialog.setTitle(title);
 		progressDialog.setMessage(message);				
 		progressDialog.setCancelable(cancelable);
+		progressDialog.setProgressStyle(style);
 		progressDialog.show();
 	}
+
+
+	public void setDialogProgressTitle(String title) {
+		progressDialog.setTitle(title);
+	}
+	public void setDialogProgressMessage(String message)
+	{
+		progressDialog.setMessage(message);
+	}
+
+	public void setDialogProgressMax(int max)
+	{
+		if(progressDialog != null)
+			progressDialog.setMax(max);
+	}
+
+	public void setDialogProgressNumber(int progressNumber)
+	{
+		if(progressDialog != null)
+			progressDialog.setProgress(progressNumber);
+	}
+
 	
 	public void closeDialogProgress(){
 		try{

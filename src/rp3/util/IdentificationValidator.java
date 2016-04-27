@@ -24,7 +24,7 @@ public class IdentificationValidator {
     private static boolean ValidateRuc(String number)
     {
         if(number.length() == 13) {
-            if (ValidateRucSociedades(number))
+            /*if (ValidateRucSociedades(number))
                 return true;
             else
                 if(ValidateRucNaturales(number))
@@ -33,7 +33,8 @@ public class IdentificationValidator {
                     if(ValidateRucEstatal(number))
                         return true;
                     else
-                        return false;
+                        return false;*/
+            return true;
 
 
         }
@@ -49,7 +50,7 @@ public class IdentificationValidator {
 
             if (number.length() == 10) // ConstantesApp.LongitudCedula
             {
-                int tercerDigito = Integer.parseInt(number.substring(2, 3));
+                /*int tercerDigito = Integer.parseInt(number.substring(2, 3));
                 if (tercerDigito < 6) {
                 // Coeficientes de validación cédula
                 // El decimo digito se lo considera dígito verificador
@@ -72,7 +73,8 @@ public class IdentificationValidator {
                     }
                 } else {
                     cedulaCorrecta = false;
-                }
+                }*/
+                cedulaCorrecta = true;
             } else {
                 cedulaCorrecta = false;
             }

@@ -1,83 +1,89 @@
 package rp3.util;
 
+import rp3.data.Constants;
+import rp3.data.models.GeneralValue;
+import rp3.db.sqlite.DataBase;
+
 public class IdentificationValidator {
 
     private static final int NUM_PROVINCIAS = 24;
     // public static String rucPrueba = “1790011674001″;
     private static int[] coeficientes = { 4, 3, 2, 7, 6, 5, 4, 3, 2 };
     private static int constante = 11;
-    public static boolean ValidateIdentification(String number, int type)
+    public static boolean ValidateIdentification(DataBase db, String number, int type)
     {
-        switch (type)
-        {
-            case 1:
-                return ValidateRuc(number);
-            case 2:
-                return ValidateCedula(number);
-            case 3:
-                return ValidateDefault(number);
-            default:
-                return ValidateDefault(number);
+        GeneralValue validator = GeneralValue.getGeneralValue(db, Constants.GENERAL_TABLE_IDENTIFICATION, type + "");
+        if(validator == null)
+            return true;
+        else {
+            if(number.length() == Integer.parseInt(validator.getValue())) {
+                if(validator.getReference1().equalsIgnoreCase("1")) {
+                    switch (type) {
+                        case 1:
+                            return ValidateRuc(number);
+                        case 2:
+                            return ValidateCedula(number);
+                        case 3:
+                            return ValidateDefault(number);
+                        default:
+                            return ValidateDefault(number);
+                    }
+                }
+                else {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
-    private static boolean ValidateRuc(String number)
-    {
-        if(number.length() == 13) {
-            /*if (ValidateRucSociedades(number))
-                return true;
-            else
-                if(ValidateRucNaturales(number))
-                    return true;
-                else
-                    if(ValidateRucEstatal(number))
-                        return true;
-                    else
-                        return false;*/
+    private static boolean ValidateRuc(String number) {
+
+        if (ValidateRucSociedades(number))
             return true;
-
-
-        }
+        else if (ValidateRucNaturales(number))
+            return true;
+        else if (ValidateRucEstatal(number))
+            return true;
         else
             return false;
 
+
     }
-    private static boolean ValidateCedula(String number)
-    {
+    private static boolean ValidateCedula(String number) {
         boolean cedulaCorrecta = false;
 
         try {
 
-            if (number.length() == 10) // ConstantesApp.LongitudCedula
-            {
-                /*int tercerDigito = Integer.parseInt(number.substring(2, 3));
-                if (tercerDigito < 6) {
+
+            int tercerDigito = Integer.parseInt(number.substring(2, 3));
+            if (tercerDigito < 6) {
                 // Coeficientes de validación cédula
                 // El decimo digito se lo considera dígito verificador
-                    int[] coefValCedula = { 2, 1, 2, 1, 2, 1, 2, 1, 2 };
-                    int verificador = Integer.parseInt(number.substring(9,10));
-                    int suma = 0;
-                    int digito = 0;
-                    for (int i = 0; i < (number.length() - 1); i++) {
-                        digito = Integer.parseInt(number.substring(i, i + 1))* coefValCedula[i];
-                        suma += ((digito % 10) + (digito / 10));
-                    }
+                int[] coefValCedula = {2, 1, 2, 1, 2, 1, 2, 1, 2};
+                int verificador = Integer.parseInt(number.substring(9, 10));
+                int suma = 0;
+                int digito = 0;
+                for (int i = 0; i < (number.length() - 1); i++) {
+                    digito = Integer.parseInt(number.substring(i, i + 1)) * coefValCedula[i];
+                    suma += ((digito % 10) + (digito / 10));
+                }
 
-                    if ((suma % 10 == 0) && (suma % 10 == verificador)) {
-                        cedulaCorrecta = true;
-                    }
-                    else if ((10 - (suma % 10)) == verificador) {
-                        cedulaCorrecta = true;
-                    } else {
-                        cedulaCorrecta = false;
-                    }
+                if ((suma % 10 == 0) && (suma % 10 == verificador)) {
+                    cedulaCorrecta = true;
+                } else if ((10 - (suma % 10)) == verificador) {
+                    cedulaCorrecta = true;
                 } else {
                     cedulaCorrecta = false;
-                }*/
-                cedulaCorrecta = true;
+                }
             } else {
                 cedulaCorrecta = false;
             }
+            cedulaCorrecta = true;
+
         } catch (NumberFormatException nfe) {
             cedulaCorrecta = false;
         } catch (Exception err) {

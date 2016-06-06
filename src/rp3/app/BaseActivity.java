@@ -524,7 +524,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void closeDialogProgress() {
-		progressDialog.dismiss();
+		if(progressDialog != null)
+			progressDialog.dismiss();
 	}
 
 	public void showDialogConfirmation(int id, int message) {

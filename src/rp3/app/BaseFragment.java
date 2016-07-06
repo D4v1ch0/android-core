@@ -357,10 +357,13 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		try {
 			if(((BaseActivity)getActivity()).getDataBase() != null)
 				return ((BaseActivity)getActivity()).getDataBase();
-			else
-				return DataBaseServiceHelper.getWritableDatabase(this.getContext(),
-						Configuration.getDataBaseConfiguration()
-								.getDataBaseClass());
+			else {
+				Session.Start(this.getContext());
+				rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());
+				Configuration.reinitializeConfiguration(this.getContext(), Configuration.getDataBaseConfiguration()
+						.getDataBaseClass());
+				return ((BaseActivity)getActivity()).getDataBase();
+			}
 		}
 		catch (Exception ex)
 		{

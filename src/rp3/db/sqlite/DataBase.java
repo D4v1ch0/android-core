@@ -13,6 +13,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -72,6 +73,21 @@ public class DataBase {
 	
 	public void beginTransaction(){
 		getDb().beginTransaction();
+	}
+
+	public void beginTransactionNonExclusive()
+	{
+		getDb().beginTransactionNonExclusive();
+	}
+
+	public SQLiteStatement compileStatement(String sql)
+	{
+		return getDb().compileStatement(sql);
+	}
+
+	public void setTransactionSuccessful()
+	{
+		getDb().setTransactionSuccessful();
 	}
 	
 	public void commitTransaction(){

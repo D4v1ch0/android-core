@@ -320,20 +320,31 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public DataBase getDataBase() {
-		if (db == null) {
-			if (context == null){
-				context = this;
-						//Session.getContext();
+		try {
+			if(db != null)
+				return db;
+			else {
+				Session.Start(this);
+				rp3.configuration.Configuration.TryInitializeConfiguration(this);
+				Configuration.reinitializeConfiguration(this, Configuration.getDataBaseConfiguration()
+						.getDataBaseClass());
+				if (context == null) {
+					context = this;
+				}
+				if (dataBaseClass == null)
+					dataBaseClass = Configuration.getDataBaseConfiguration()
+							.getDataBaseClass();
+				db = DataBaseServiceHelper.getWritableDatabase(context,
+						dataBaseClass);
+				return db;
 			}
-			if (dataBaseClass == null)
-				dataBaseClass = Configuration.getDataBaseConfiguration()
-						.getDataBaseClass();
-
-			db = DataBaseServiceHelper.getWritableDatabase(context,
-					dataBaseClass);
-
 		}
-		return db;
+		catch (Exception ex)
+		{
+			return DataBaseServiceHelper.getWritableDatabase(this,
+					Configuration.getDataBaseConfiguration()
+							.getDataBaseClass());
+		}
 	}
 
 	public void closeDataBase() {

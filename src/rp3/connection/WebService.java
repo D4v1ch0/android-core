@@ -422,13 +422,15 @@ public class WebService {
 				HttpPost post = new HttpPost(urlString);
 
 
-                post.addHeader("Accept-Encoding", "gzip");
-
+                post.addHeader("Accept-Encoding", "gzip, deflate");
+				post.addHeader("X-Requested-With", "XMLHttpRequest");
+				post.addHeader("Accept-Language", "es-419,es;q=0.8");
+				post.addHeader("Accept", "*/*");
 				post.setHeader("content-type", "application/json");
 				
 				if(!TextUtils.isEmpty(wsData.getOAuthClientId()) && !TextUtils.isEmpty(wsData.getOAuthClientSecret())){
 					post.setHeader("ClientId", wsData.getOAuthClientId());
-					post.setHeader("ClientSecret", wsData.getOAuthClientSecret());	
+					post.setHeader("ClientSecret", wsData.getOAuthClientSecret());
 					
 					oAuthEnabled = true;
 				}
@@ -448,7 +450,7 @@ public class WebService {
 //				else{
 
                 AbstractHttpEntity entity = null;
-                if(wsMethod.getContentEncoding().equalsIgnoreCase("gzip")) {
+                /*if(wsMethod.getContentEncoding().equalsIgnoreCase("gzip")) {
                     if (!post.containsHeader("Content-Encoding")) {
                         post.addHeader("Content-Encoding", "gzip");
                     }
@@ -459,13 +461,13 @@ public class WebService {
                     }
                 }
                 else
-                {
+                {*/
                     if(jArray!=null){
                         entity = new StringEntity(jArray.toString(), HTTP.UTF_8);
                     }else{
                         entity = new StringEntity(dato.toString(), HTTP.UTF_8);
                     }
-                }
+                //}
 					
 			    post.setEntity(entity);
 //				}																				
@@ -494,7 +496,7 @@ public class WebService {
 				
 				resp = httpClient.execute(get);
 				evaluateStatusResponse(resp, httpClient, get, oAuthEnabled);
-							
+
 			}
 
 			respJSONString = EntityUtils.toString(resp.getEntity());

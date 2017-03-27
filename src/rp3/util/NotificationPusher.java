@@ -124,7 +124,14 @@ public class NotificationPusher {
         PendingIntent intent = PendingIntent.getActivity(ctx, 0,
                 notificationIntent, 0);
 
-        notification.setLatestEventInfo(ctx, title, message, intent);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                ctx);
+        notification = builder.setContentIntent(intent)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setAutoCancel(true).setContentTitle(title)
+                .setContentText(message).build();
+
+        //notification.setLatestEventInfo(ctx, title, message, intent);
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(id, notification);
     }

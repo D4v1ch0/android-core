@@ -95,7 +95,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		viewContentHeader = (ViewGroup)findViewById(R.id.nav_header);
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		getActionBar().setHomeButtonEnabled(true);
 		
 		if(savedInstanceState != null){
@@ -318,7 +318,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {		
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
 		if(navMode ==  NAV_MODE_DRAWER){
 	        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -336,7 +336,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
                 return true;
         }
 		}
-		
+
 		return super.onMenuItemSelected(featureId, item);
 	}
 	

@@ -578,6 +578,41 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 
+	public void showDialogConfirmation(final int id, int message, int title, boolean cancelable) {
+		currentDialogId = id;
+
+		if (getRootView().findViewById(R.id.action_group) != null)
+			setViewVisibility(R.id.action_group, View.GONE);
+
+		if (getRootView().findViewById(R.id.base_confirmation_dialog) != null) {
+			setInlineDialog();
+			setViewVisibility(R.id.base_confirmation_dialog, View.VISIBLE);
+			setTextViewText(R.id.textView_dialog_message, getText(message)
+					.toString());
+		} else {
+			Builder dialog = new AlertDialog.Builder(this)
+					.setTitle(title)
+					.setMessage(message)
+					.setPositiveButton(R.string.confirmation_positive,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface arg0,
+													int arg1) {
+									onPositiveConfirmation(id);
+								}
+							})
+					.setNegativeButton(R.string.confirmation_negative,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface arg0,
+													int arg1) {
+									onNegativeConfirmation(id);
+								}
+							}).setCancelable(cancelable);
+			dialog.show();
+		}
+	}
+
 	public void showDialogMessage(int messageResID) {
 		showDialogMessage(new Message(getText(messageResID).toString()), null);
 	}

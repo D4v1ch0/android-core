@@ -20,7 +20,6 @@ import rp3.util.ViewUtils;
 public class DialogTimePickerFragment extends DialogFragment implements
         TimePickerDialog.OnTimeSetListener {
 
-    @SuppressLint("ValidFragment")
     public DialogTimePickerFragment(int id, DialogTimePickerChangeListener l){
         // Use the current date as the default date in the picker
         this.id = id;

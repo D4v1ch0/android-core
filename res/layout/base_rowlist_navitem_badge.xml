@@ -27,7 +27,6 @@
             android:textColor="#FFFFFF"
             android:paddingLeft="3dp" android:paddingRight="3dp"
             android:layout_margin="0dp"
-            android:layout_alignBottom="@+id/rlayout"
             android:id="@+id/textView_badge"
             android:text="50" />
 

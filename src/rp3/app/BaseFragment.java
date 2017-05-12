@@ -729,6 +729,21 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		.setCancelable(true);
 		dialog.show();
 	}
+
+	public void showDialogMessage(String dialogTitle, String message){
+		Builder dialog = new AlertDialog.Builder(getContext())
+				.setTitle(dialogTitle)
+				.setMessage(message)
+				.setPositiveButton(R.string.action_accept, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+					}
+				})
+				.setCancelable(true);
+		dialog.show();
+	}
 	
 	public void hideDialogConfirmation(){
 		if(getRootView().findViewById(R.id.base_confirmation_dialog)!=null)

@@ -450,7 +450,7 @@ public class WebService {
 //				else{
 
                 AbstractHttpEntity entity = null;
-                /*if(wsMethod.getContentEncoding().equalsIgnoreCase("gzip")) {
+                if(wsMethod.getContentEncoding().equalsIgnoreCase("gzip")) {
                     if (!post.containsHeader("Content-Encoding")) {
                         post.addHeader("Content-Encoding", "gzip");
                     }
@@ -461,13 +461,13 @@ public class WebService {
                     }
                 }
                 else
-                {*/
+                {
                     if(jArray!=null){
                         entity = new StringEntity(jArray.toString(), HTTP.UTF_8);
                     }else{
                         entity = new StringEntity(dato.toString(), HTTP.UTF_8);
                     }
-                //}
+                }
 					
 			    post.setEntity(entity);
 //				}																				

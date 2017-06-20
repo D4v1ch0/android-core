@@ -9,8 +9,10 @@ import rp3.sync.TestConnection;
 import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class DefaultServerAuthenticate implements ServerAuthenticate {
+    private static final String TAG = DefaultServerAuthenticate.class.getSimpleName();
 	public static String KEY_FULL_NAME = "Name";
 
 	public Bundle signUp(final String name, final String email, final String pass, String authType){
@@ -18,8 +20,8 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 	}
 	
     public Bundle signIn(final String user, final String pass, String authType) {
-    	
-    	WebService method = new WebService();
+        Log.d(TAG,"signIn:"+user+" "+pass+" "+authType);
+        WebService method = new WebService();
         Bundle bundle = new Bundle();
         if(TestConnection.executeSync()) {
             method.setConfigurationName("Core", "SignIn");

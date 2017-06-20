@@ -308,7 +308,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private void finishLogin(final Intent intent) {
 
-        User user = Session.getUser();        
+        final User user = Session.getUser();
         
         user.setLogonName(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));        
         user.setPassword(intent.getStringExtra(PARAM_USER_PASS));
@@ -322,7 +322,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 			    String authtokenType = mAuthTokenType;
 			    			       
 			    Session.getUser().setAuthToken(authtokenType, authtoken);
-			    
+			    Log.d(TAG,"finishLogin...:"+user.toString());
 			    setAccountAuthenticatorResult(intent.getExtras());
 			    setResult(RESULT_OK, intent);
 			    finish();

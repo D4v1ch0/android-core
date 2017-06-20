@@ -58,11 +58,12 @@ import rp3.data.DictionaryEntry;
 import rp3.runtime.Session;
 import rp3.util.DateTime;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml;
 
 
 public class WebService {
-
+	private static final String TAG = WebService.class.getSimpleName();
 	
 	
 	public static final String TYPE_SOAP = "SOAP";
@@ -344,7 +345,7 @@ public class WebService {
 			}			
 						
 		}finally {
-			
+			Log.d(TAG,"respSoap:"+respSoap.toString());
 		}
 	}
 		
@@ -500,7 +501,7 @@ public class WebService {
 			}
 
 			respJSONString = EntityUtils.toString(resp.getEntity());
-		
+		Log.d(TAG,"respJSONString:"+respJSONString);
 	}	
 	
 	private void evaluateStatusResponse(HttpResponse response,HttpClient httpClient, HttpUriRequest uri, boolean oAuthEnabled) throws ClientProtocolException, IOException {
@@ -537,8 +538,10 @@ public class WebService {
 	public void invokeWebService() throws HttpResponseException, IOException,
 			XmlPullParserException, JSONException {		
 		if (wsData.getType().equalsIgnoreCase(TYPE_SOAP)) {
+			Log.d(TAG,"TYPE_SOAP...");
 			executeSoap();
 		} else if (wsData.getType().equalsIgnoreCase(TYPE_REST)) {
+			Log.d(TAG,"TYPE_REST...");
 			executeRest();
 		}
 	}

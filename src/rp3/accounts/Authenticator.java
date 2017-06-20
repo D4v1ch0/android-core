@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 public class Authenticator extends AbstractAccountAuthenticator {
 
+    private static final String TAG = Authenticator.class.getSimpleName();
     private final Context mContext;
 
     private static ServerAuthenticate sServerAuthenticate;
@@ -138,5 +139,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         return null;
     }
+
+
         
 }

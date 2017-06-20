@@ -67,6 +67,5 @@ public class QueryDir {
             Log.e("Error: ", "NO FILE " + QUERY_DATABASE_STATEMENT_FILE_UPDATES);
         }
 		
-		
 	}	
 }

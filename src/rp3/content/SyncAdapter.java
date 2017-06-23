@@ -69,7 +69,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 		i.putExtra(NOTIFY_EXTRA_DATA, data);
 		getContext().sendBroadcast(i);
 	}
-	
+	//proof
 	public void putData(String key, String value){
 		data.putString(key, value);
 	}

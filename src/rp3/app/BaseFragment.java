@@ -557,7 +557,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void showDialogProgress(String title, String message, boolean cancelable, int style){
 		if(progressDialog==null) progressDialog = new ProgressDialog(getContext());
-		
+
 		progressDialog.setTitle(title);
 		progressDialog.setMessage(message);				
 		progressDialog.setCancelable(cancelable);
@@ -1022,7 +1022,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
 	    	//((BaseActivity)getActivity()).resetRotation();
-	    	MessageCollection messages = (MessageCollection)intent.getExtras().getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);	        
+			MessageCollection messages = (MessageCollection)intent.getExtras().getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);
 	        Bundle bundle = intent.getExtras().getBundle(SyncAdapter.NOTIFY_EXTRA_DATA);
 	    	onSyncComplete(bundle, messages);
 	    }

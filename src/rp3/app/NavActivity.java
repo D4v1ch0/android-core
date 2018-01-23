@@ -218,7 +218,8 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	}
 
 	public void setNavFragment(Fragment fragment, String title){
-		getCurrentFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+		getCurrentFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commitAllowingStateLoss();
+
 		if(title!=null){
             currentTitle = title;
 			this.setTitle(title);

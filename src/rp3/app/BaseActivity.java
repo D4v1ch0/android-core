@@ -39,10 +39,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -62,6 +64,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>,
 		DialogDatePickerChangeListener, DialogTimePickerChangeListener, FragmentResultListener {
 
+	private static final String TAG = BaseActivity.class.getSimpleName();
 	protected Class<? extends SQLiteOpenHelper> dataBaseClass;
 	protected Context context;
 	private DataBase db;
@@ -96,10 +99,26 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 					R.string.message_error_sync_no_net_available).toString());
 			onSyncComplete(new Bundle(), mc);
 		}
-	}	
+	}
+
+	public interface CallbackSync{
+		void onSyncComplete(Bundle bundle,MessageCollection messageCollection);
+	}
+	public static void requestSyncMain(Bundle settingsBundle,Context context,CallbackSync callbackSync) {
+		if (ConnectionUtils.isNetAvailable(context)) {
+			PreferenceManager.close();
+			SyncUtils.requestSync(settingsBundle);
+			//lockRotation();
+		} else {
+			MessageCollection mc = new MessageCollection();
+			mc.addErrorMessage(context.getResources().getString(
+					R.string.message_error_sync_no_net_available).toString());
+			callbackSync.onSyncComplete(new Bundle(), mc);
+		}
+	}
 	
 	public void lockRotation(){
-		backupRequestOrientation = getRequestedOrientation();		
+		backupRequestOrientation = getRequestedOrientation();
 		setRequestedOrientation(Screen.getRequestOrientationFromCurrentScreen());
 	}
 	
@@ -150,9 +169,12 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void setFragment(int id, Fragment fragment) {
+		Log.d(TAG,"setFragment...");
 		if (inFragmentTransaction) {
+			Log.d(TAG,"inFragmentTransaction==true...");
 			fragmentTransaction.replace(id, fragment);
 		} else {
+			Log.d(TAG,"inFragmentTransaction==false...");
 			getCurrentFragmentManager().beginTransaction()
 					.replace(id, fragment).commit();
 		}
@@ -402,6 +424,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Log.d(TAG,"onPause...");
 		// Sync Handler		
 
 		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_PAUSE)
@@ -411,6 +434,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onDestroy() {		
 		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
 		try {
 			unregisterReceiver(syncFinishedReceiver);
 		} catch (IllegalArgumentException e) {
@@ -420,6 +444,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d(TAG,"onResume...");
 		try {
 			if(context == null)
 				context = this;
@@ -432,6 +457,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onStop() {
 		super.onStop();
+		Log.d(TAG,"onStop...");
 		if (closeResourceOn == Constants.CLOSE_RESOURCES_ON_STOP)
 			closeDataBaseResources();
 	}
@@ -658,6 +684,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void hideDialogConfirmation() {
+		Log.d(TAG,"hideDialogConfirmation...");
 		if (getRootView().findViewById(R.id.base_confirmation_dialog) != null)
 			setViewVisibility(R.id.base_confirmation_dialog, View.GONE);
 		if (getRootView().findViewById(R.id.action_group) != null)
@@ -928,6 +955,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	@Override
 	public void onBackPressed() {
+		Log.d(TAG,"onBackPressed...");
 		if (getRootView().findViewById(R.id.base_confirmation_dialog) != null
 				&& getRootView().findViewById(R.id.base_confirmation_dialog)
 						.getVisibility() == View.VISIBLE) {
@@ -957,11 +985,13 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			//resetRotation();
+			Log.d(TAG,"syncFinishedReceiver...");
 			MessageCollection messages = (MessageCollection) intent.getExtras()
 					.getParcelable(SyncAdapter.NOTIFY_EXTRA_MESSAGES);
 			Bundle bundle = intent.getExtras().getBundle(
 					SyncAdapter.NOTIFY_EXTRA_DATA);
 			onSyncComplete(bundle, messages);
+
 		}
 	};
 
@@ -977,4 +1007,21 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
     public void onDailogTimePickerChange(int id, int hours, int minutes) {
 
     }
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+
+
 }

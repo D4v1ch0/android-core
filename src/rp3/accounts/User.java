@@ -317,16 +317,16 @@ public class User {
 		try {
 			bnd = future.getResult();
 		} catch (OperationCanceledException e) {
-			Log.e("User Token: OperationCanceledException", e.getMessage());
+			Log.e("User Token:","OperationCanceledException:"+ e.getMessage());
 		} catch (AuthenticatorException e) {
-			Log.e("User Token: AuthenticatorException", e.getMessage());
+			Log.e("User Token: ","AuthenticatorException:" + e.getMessage());
 		} catch (IOException e) {
-			Log.e("User Token: IOException", e.getMessage());
+			Log.e("User Token:","IOException:"+ e.getMessage());
 		}
 
 		final String authtoken = bnd
 				.getString(AccountManager.KEY_AUTHTOKEN);				
-		
+		Log.d("User Token:","AuthToken:"+authtoken);
 		return authtoken;
 	}
 	
@@ -340,5 +340,21 @@ public class User {
 	public interface UserUpdateCallback
 	{
 		public void onUserFinishUpdate(Bundle bundle);
+	}
+
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"accountManager=" + accountManager +
+				", userId=" + userId +
+				", logonName='" + logonName + '\'' +
+				", fullName='" + fullName + '\'' +
+				", password='" + password + '\'' +
+				", logged=" + logged +
+				", current=" + current +
+				", account=" + account +
+				", context=" + context +
+				'}';
 	}
 }

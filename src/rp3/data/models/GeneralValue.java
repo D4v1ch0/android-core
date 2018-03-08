@@ -24,7 +24,23 @@ public class GeneralValue extends EntityBase<GeneralValue> implements Identifiab
 	private String reference4;
 	private String reference5;
 	private int order;
-	
+
+	@Override
+	public String toString() {
+		return "GeneralValue{" +
+				"id=" + id +
+				", code='" + code + '\'' +
+				", value='" + value + '\'' +
+				", generalTableId=" + generalTableId +
+				", reference1='" + reference1 + '\'' +
+				", reference2='" + reference2 + '\'' +
+				", reference3='" + reference3 + '\'' +
+				", reference4='" + reference4 + '\'' +
+				", reference5='" + reference5 + '\'' +
+				", order=" + order +
+				'}';
+	}
+
 	@Override
 	public long getID() {		
 		return id;

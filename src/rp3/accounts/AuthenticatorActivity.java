@@ -71,17 +71,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.activity_authenticator);
-        
-        if(getActionBar()!=null)
-        	getActionBar().hide();     
-        
+        Log.d(TAG,"onCreate...");
+        if(getActionBar()!=null){
+            Log.d(TAG,"getActionBar()!=null...");
+            getActionBar().hide();
+        }
+
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);            
-        
-        if (mAuthTokenType == null)
+
+        if (mAuthTokenType == null){
             mAuthTokenType = User.getAccountType();
+        }
+
 
         if (accountName != null) {
         	setLogonName(accountName);
@@ -91,13 +94,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             public void onClick(View v) {
             	if(validate()){
+                    Log.d(TAG,"validate is true...");
             		submit(getLogonName(), getPassword());
             	}
             }
         });
         
         if(findViewById(R.id.button_help)!=null){
-        	if(!rp3.configuration.Configuration.getAppConfiguration().allowHelpOnAut()){            	
+            Log.d(TAG,"button_help!=null...");
+        	if(!rp3.configuration.Configuration.getAppConfiguration().allowHelpOnAut()){
+                Log.d(TAG,"!rp3.configuration.Configuration.getAppConfiguration().allowHelpOnAut()...");
         		findViewById(R.id.button_help).setVisibility(View.GONE);        		        	
         	}
         	
@@ -143,6 +149,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
     
     public void onHelpAction(){
+        Log.d(TAG,"onHelpAction...");
     	String url = rp3.configuration.Configuration.getAppConfiguration().getHelpUrl();
     	if(!TextUtils.isEmpty(url)){    	
     		if (!url.startsWith("http://") && !url.startsWith("https://"))
@@ -239,9 +246,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     	final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting), 
     			getText(R.string.message_please_wait), false);
 
+    	//region Others
+
         String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
         String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-        if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+        /*if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
                 PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
         {
             Bundle data = new Bundle();
@@ -253,33 +262,39 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             res.putExtras(data);
             finishLogin(res);
         }
-        else {
+        else {*/
 
+        //endregion
+        try{
+            Log.d(TAG,"Iniciar AsyncTask...");
             new AsyncTask<String, Void, Intent>() {
 
                 @Override
                 protected Intent doInBackground(String... params) {
 
-                    Log.d(TAG, "> Started authenticating");
+                    Log.d(TAG, "> Started authenticating in AsyncTask...");
 
                     String authtoken = null;
                     Bundle data = new Bundle();
                     try {
+                        Log.d(TAG,"LogonName:"+ logonName+" Password:"+password);
                         Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
 
                         if (r.getBoolean(ServerAuthenticate.KEY_SUCCESS)) {
+                            Log.d(TAG,"ServerAuthenticate.KEY_SUCCESS)...");
                             authtoken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
 
                             data.putString(AccountManager.KEY_ACCOUNT_NAME, logonName);
                             data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
                             data.putString(PARAM_USER_PASS, password);
 
-                            if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
-                                PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
-                                PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
-                                PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);
-                            }
+                            //if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
+                            PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
+                            PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
+                            PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);
+                            //}
                         } else {
+                            Log.d(TAG,"serverAuthetincate Key Success is false...");
                             data.putString(KEY_ERROR_MESSAGE, r.getString(ServerAuthenticate.KEY_ERROR_MESSAGE));
                         }
 
@@ -303,7 +318,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     }
                 }
             }.execute();
+        }catch (Exception e){
+            Log.d(TAG,"Exception...");
+            System.out.print(e);
+            e.printStackTrace();
         }
+
+        //}
     }
 
     private void finishLogin(final Intent intent) {

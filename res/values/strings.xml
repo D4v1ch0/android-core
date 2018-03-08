@@ -41,8 +41,9 @@
     <string name="message_title_synchronizing">Sincronizando</string> 
     <string name="message_title_updating">Actualizando</string>
     <string name="message_title_loading">Cargando</string>
-    <string name="message_title_query">Consultando</string> 
-    
+    <string name="message_title_query">Consultando</string>
+
+    <string name="generic_show_message_service">"Asegurese de tener conexión a Internet, Sincronize ó reinicie sesión porfavor."</string>
     <string name="message_error_sync_connection_http_error">Problemas con el Servidor, intenta más tarde</string>
     <string name="message_error_sync_connection_server_fail">No se pudo conectar con el servidor. Intenta más tarde</string>
     <string name="message_error_sync_general_error">Se detecto un problema al intentar actualizar los datos</string>

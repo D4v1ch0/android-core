@@ -20,10 +20,11 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 	}
 	
     public Bundle signIn(final String user, final String pass, String authType) {
-        Log.d(TAG,"signIn:"+user+" "+pass+" "+authType);
+        Log.d(TAG,"signIn:logonName:"+user+" Pass:"+pass+" AauthType:"+authType);
         WebService method = new WebService();
         Bundle bundle = new Bundle();
         if(TestConnection.executeSync()) {
+            Log.d(TAG,"TestConnection:True...");
             method.setConfigurationName("Core", "SignIn");
             method.setAuthTokenType(authType);
 
@@ -41,9 +42,12 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 String fullName = null;
 
                 if (!response.getJSONObject("Data").isNull("AuthToken")) {
+                    Log.d(TAG,"!response.getJSONObject(\"Data\").NoisNull...");
                     authToken = response.getJSONObject("Data").getString("AuthToken");
                     fullName = response.getJSONObject("Data").getString("Name");
                     Session.getUser().setFullName(fullName);
+                }else{
+                    Log.d(TAG,"response.getJSONObject(\"Data\").isNull....");
                 }
 
                 if (!response.isNull("Message"))
@@ -54,6 +58,8 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 bundle.putString(KEY_FULL_NAME, fullName);
                 bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, response.getJSONObject("Data").getBoolean("IsValid"));
             } catch (Exception e) {
+                Log.d(TAG,"Exception...");
+                System.out.print(e);
                 bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, e.getMessage());
                 bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
                 bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
@@ -61,14 +67,17 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
         }
         else
         {
+            Log.d(TAG,"TestConnection:False...");
             if(Session.IsLogged())
             {
+                Log.d(TAG,"Session.IsLogged()...");
                 //bundle.putString(AccountManager.KEY_AUTHTOKEN, Session.getUser().getAuthToken(authType));
                 bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, authType);
                 bundle.putString(KEY_FULL_NAME, Session.getUser().getFullName());
                 bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, true);
             }
             else {
+                Log.d(TAG,"Session.NotIsLogged()...");
                 bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, "No hay conexión al servidor");
                 bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
                 bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);

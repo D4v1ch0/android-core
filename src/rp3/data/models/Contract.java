@@ -10,6 +10,11 @@ public class Contract {
 		
 		public static final String COLUMN_NAME = "Name";
 		public static final String COLUMN_APPLY_NATURAL_PERSON_ONLY = "ApplyNaturalPersonOnly";
+		public static final String COLUMN_USE_CUSTOM_VALIDATOR= "UseCustomValidator";
+		public static final String COLUMN_LENGHT = "Length";
+		public static final String COLUMN_MASK_TYPE= "MaskType";
+		public static final String COLUMN_MASK = "Mask";
+		public static final String COLUMN_REG_EX_VALIDATOR= "RegExValidator";
 		
 		public static final String FIELD_NAME = COLUMN_NAME;
 		public static final String FIELD_APPLY_NATURAL_PERSON_ONLY = COLUMN_APPLY_NATURAL_PERSON_ONLY;

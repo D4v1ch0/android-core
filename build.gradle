@@ -1,23 +1,23 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'libs')
     compile 'com.google.android.gms:play-services-location:10.2.1'
     compile 'com.google.android.gms:play-services-maps:10.2.1'
     compile 'com.google.android.gms:play-services-drive:10.2.1'
     compile 'com.google.android.gms:play-services-base:10.2.1'
-    compile "com.android.support:support-v4:25.3.0"
+    compile 'com.android.support:support-v4:25.3.0'
     compile 'com.google.android.gms:play-services-gcm:10.2.1'
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.google.code.gson:gson:2.7'
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
-    android.enforceUniquePackageName = false
+    buildToolsVersion '26.0.3'
+    //android.enforceUniquePackageName = false
     useLibrary 'org.apache.http.legacy'
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -41,8 +41,13 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
-
     aaptOptions {
         ignoreAssetsPattern "!values-b+sr+Latn"
+    }
+    buildTypes {
+        release {
+            debuggable true
+
+        }
     }
 }

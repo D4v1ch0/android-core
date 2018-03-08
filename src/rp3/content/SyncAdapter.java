@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
 
 public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
     
@@ -52,11 +53,13 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
 		messages.clear();		
-		if(extras != null)
+		if(extras != null){
 			data = extras;
-		else
+			Log.d(TAG,data.toString());
+		}
+		else{
 			data = new Bundle();
-			
+		}
 		PreferenceManager.close();
 		Session.Start(this.getContext());
 		rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());		
@@ -115,6 +118,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_http_error).toString());
 			break;
 		case SYNC_EVENT_AUTH_ERROR:
+			messages.addErrorMessage(getContext().getText(R.string.generic_show_message_service).toString());
 			break;
 		case SYNC_EVENT_SUCCESS:
 			break;
@@ -123,5 +127,6 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			break;
 		}
 	}
+	//Holaaa
     
 }

@@ -14,12 +14,13 @@
 	<dimen name="action_bar_subtitle_top_margin">-4dp</dimen>
 	<dimen name="action_bar_subtitle_bottom_margin">3dip</dimen>	
 	
-	<dimen name="text_input_size">18sp</dimen>
+	<dimen name="text_input_size">28sp</dimen>
 	<dimen name="text_xsmall_size">12sp</dimen>
 	<dimen name="text_medium_size">18sp</dimen>
     <dimen name="text_medium_small_size">16sp</dimen>
 	<dimen name="text_large_size">22sp</dimen>
 	<dimen name="text_small_size">14sp</dimen>
+	<dimen name="text_normal">5sp</dimen>
     <dimen name="text_xxsmall_size">10sp</dimen>
 	
 </resources>

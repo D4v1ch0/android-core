@@ -21,6 +21,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
+
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +36,7 @@ import android.widget.ListView;
 @SuppressLint("NewApi")
 public class NavActivity extends BaseActivity implements NavSetting {
 
+	private static final String TAG = NavActivity.class.getSimpleName();
 	private final static String STATE_CURRENTNAV = "currentNav";
 	private final static String STATE_FRAGMENT_LOADED = "isPaneFragmentLoaded";
 	private final static String STATE_TITLE = "activitytitle";
@@ -41,7 +44,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	public final static int NAV_MODE_DRAWER = 1;
 	public final static int NAV_MODE_SLIDING_PANE = 2;
 	private static final int PARALLAX_SIZE = 30;
-	
+
 	private NavListAdapter navDrawerAdapter;
 	private ListView listViewDrawer;
 	private View viewDrawer;
@@ -54,7 +57,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	private DrawerLayout drawerLayout;
 	private SlidingPaneLayout slidingPane;
 	private ArrayList<MenuItem> currentVisibleActionsMenu = new ArrayList<MenuItem>();
-	private boolean isPaneFragmentLoaded = false;
+	public boolean isPaneFragmentLoaded = false;
 	private boolean isCustomSetNavMode = false;
     private int navMode = NAV_MODE_DRAWER;
     private String currentTitle = null;
@@ -71,6 +74,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
         if(!isCustomSetNavMode){
             if(Screen.isMinLargeLayoutSize(getApplicationContext())){
                 navMode = NAV_MODE_SLIDING_PANE;
@@ -85,19 +89,19 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			// SlidingPaneLayout customization
 			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);
 			slidingPane.setParallaxDistance(PARALLAX_SIZE);
-			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);			
+			slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
 		}
 		else{
 
 			setContentView(R.layout.base_activity_navigation_drawer);
 		}
-		
+
 		viewContentHeader = (ViewGroup)findViewById(R.id.nav_header);
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		getActionBar().setHomeButtonEnabled(true);
-		
+
 		if(savedInstanceState != null){
 			currentNavigationSelectionId = savedInstanceState.getLong(STATE_CURRENTNAV);
 			isPaneFragmentLoaded = savedInstanceState.getBoolean(STATE_FRAGMENT_LOADED);
@@ -110,8 +114,9 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 
     @Override
-	protected void onStart() {		
+	protected void onStart() {
 		super.onStart();
+		Log.d(TAG,"onStart...");
 		if(navSettingCallback==null)
 		{
 			setNavSettingListener(this);
@@ -123,7 +128,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			}
 		}
 	}
-	
+
 	public void setSlindigEnabled(boolean enabled){
 		if(navMode == NAV_MODE_DRAWER){
 			if(!enabled)
@@ -134,24 +139,24 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			slidingPane.setSlidingEnabled(enabled);
 		}
 	}
-	
+
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {		
+	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 		outState.putLong(STATE_CURRENTNAV, currentNavigationSelectionId);
 		outState.putBoolean(STATE_FRAGMENT_LOADED, isPaneFragmentLoaded);
         outState.putString(STATE_TITLE, currentTitle);
 
 	}
-	
+
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
-		super.onRestoreInstanceState(savedInstanceState);	
-		
-		
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+
 	}
-	
+
 	public void setPaneContentView(int resID) {
 
 		FrameLayout content = (FrameLayout) findViewById(R.id.content_frame);
@@ -178,43 +183,43 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 		listViewDrawer = (ListView) findViewById(R.id.listView_navigationDrawer);
 		navDrawerAdapter = new NavListAdapter(this, resultNavItems);
-		listViewDrawer.setAdapter(navDrawerAdapter);		
+		listViewDrawer.setAdapter(navDrawerAdapter);
 		viewDrawer = findViewById(R.id.viewDrawer);
-		
+
 		if(navMode == NAV_MODE_DRAWER){
 			drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 			setDrawerToggle();
 		}else{
-			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);	
-		}				
-		 		
-		
+			slidingPane = (SlidingPaneLayout) findViewById(R.id.drawer_layout);
+		}
+
+
 		listViewDrawer.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long id) {
-				
+
 				if(navMode == NAV_MODE_DRAWER){
 					drawerLayout.closeDrawer(Gravity.LEFT);
 				}else{
 					slidingPane.closePane();
 				}
-				
+
 				NavItem item = resultNavItems.get(position);
 				if(item.getNavItemType() == NavItem.TYPE_NAV){
 					currentNavigationSelectionId = id;
-				}else{										
-					int beforePosition = getNavItemPosition(currentNavigationSelectionId);					
+				}else{
+					int beforePosition = getNavItemPosition(currentNavigationSelectionId);
 					listViewDrawer.setSelection(beforePosition);
 					listViewDrawer.setItemChecked(beforePosition, true);
 				}
-				
-				NavActivity.this.navSettingCallback.onNavItemSelected(item);				
+
+				NavActivity.this.navSettingCallback.onNavItemSelected(item);
 			}
 		});
 	}
-	
-	public void onNavItemSelected(NavItem item) {		
+
+	public void onNavItemSelected(NavItem item) {
 	}
 
 	public void setNavFragment(Fragment fragment, String title){
@@ -225,11 +230,11 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		}
 		isPaneFragmentLoaded = true;
 	}
-	
+
 	public void setFragmentContent(Fragment fragment){
 		setNavFragment(fragment, null);
 	}
-	
+
 	private void setDrawerToggle() {
 		if(navMode == NAV_MODE_DRAWER){
 			actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -244,7 +249,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 					// calling onPrepareOptionsMenu() to show action bar icons
 					invalidateOptionsMenu();
 				}
-	
+
 				public void onDrawerOpened(View drawerView) {
 					getActionBar().setTitle(currentTitle);
 					// calling onPrepareOptionsMenu() to hide action bar icons
@@ -255,12 +260,12 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		}
 		else{
 			PanelSlideListener panelSlideListener = new  PanelSlideListener() {
-				
+
 				@Override
 				public void onPanelSlide(View arg0, float arg1) {
 
 				}
-				
+
 				@Override
 				public void onPanelOpened(View arg0) {
                     isSlidingPanelOpen = true;
@@ -268,7 +273,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 					getActionBar().setTitle(currentTitle);
                     invalidateOptionsMenu();
 				}
-				
+
 				@Override
 				public void onPanelClosed(View arg0) {
                     isSlidingPanelOpen = false;
@@ -279,8 +284,8 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 			slidingPane.setPanelSlideListener(panelSlideListener);
 		}
-	}	
-	
+	}
+
 	public void reset(){
 		long navGo = currentNavigationSelectionId;
 		currentNavigationSelectionId = -999999999;
@@ -294,23 +299,24 @@ public class NavActivity extends BaseActivity implements NavSetting {
 				int position = 0;
 						//currentNavigationSelectionId;
 				position = getNavItemPosition(sel);
-				
+
 				NavItem item = resultNavItems.get(position);
 				if(item.getNavItemType() == NavItem.TYPE_NAV){
 					listViewDrawer.setSelection(position);
-					listViewDrawer.setItemChecked(position, true);	
+					listViewDrawer.setItemChecked(position, true);
 				}
-																
-				onNavItemSelected(item);								
+
+				onNavItemSelected(item);
 			}
 		}
 	}
-	
+
 	private int getNavItemPosition(long id){
 		int position = 0;
 		for (NavItem item : resultNavItems) {
 			if (item.getId() == id) {
 				position = resultNavItems.indexOf(item);
+				Log.d(TAG,"position en getNavItemPosition:"+position);
 				break;
 			}
 		}
@@ -339,7 +345,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 		return super.onMenuItemSelected(featureId, item);
 	}
-	
+
 	public boolean isNavOpen(){
 		boolean drawerOpen = false;
 		if(navMode == NAV_MODE_DRAWER)
@@ -348,12 +354,12 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			drawerOpen  =  isSlidingPanelOpen;
 		return drawerOpen;
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// if nav drawer is opened, hide the action items
 		boolean drawerOpen = isNavOpen();
-		
+
 		if (!drawerOpen) {
 			for (MenuItem item : currentVisibleActionsMenu)
 				item.setVisible(true);
@@ -370,7 +376,7 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	/**
 	 * When using the ActionBarDrawerToggle, you must call it during
 	 * onPostCreate() and onConfigurationChanged()...
@@ -396,23 +402,23 @@ public class NavActivity extends BaseActivity implements NavSetting {
 
 	@Override
 	public void navConfig(List<NavItem> navItems, NavActivity currentActivity) {
-		
+
 	}
-	
+
 	public void setNavHeaderTitle(int title){
 		setNavHeaderTitle(getText(title).toString());
 	}
-	
+
 	public void setNavHeaderTitle(String title){
 		if(!TextUtils.isEmpty(title)){
 			ViewUtils.setTextViewText(viewContentHeader,R.id.nav_header_title, title);
 		}
 	}
-	
+
 	public void setNavHeaderSubtitle(int subtitle){
 		setNavHeaderSubtitle(getText(subtitle).toString());
 	}
-	
+
 	public void setNavHeaderSubtitle(String subtitle){
 		if(!TextUtils.isEmpty(subtitle)){
 			ViewUtils.setViewVisibility(viewContentHeader,R.id.nav_header_subtitle, View.VISIBLE);
@@ -422,46 +428,46 @@ public class NavActivity extends BaseActivity implements NavSetting {
 			ViewUtils.setViewVisibility(viewContentHeader,R.id.nav_header_subtitle, View.GONE);
 		}
 	}
-	
+
 	public void setNavHeaderIcon(int icon){
 		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageResource(icon);
 	}
-	
+
 	public void setNavHeaderIcon(Drawable icon){
 		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageDrawable(icon);
 	}
-	
+
 	public void setNavHeaderIcon(Bitmap icon){
 		ImageView imageView = (ImageView)viewContentHeader.findViewById(R.id.nav_header_icon);
 		imageView.setImageBitmap(icon);
 	}
-	
+
 	public void setNavHeaderLayout(int layout){
 		View viewInsert = getLayoutInflater().inflate(layout, null);
 		viewContentHeader.removeAllViews();
 		viewContentHeader.addView(viewInsert);
 	}
-	
+
 	public void setNavHeaderViewText(int id, int value){
 		ViewUtils.setTextViewText(viewContentHeader, id, getText(value).toString());
 	}
-	
+
 	public void setNavHeaderViewText(int id, String value){
 		ViewUtils.setTextViewText(viewContentHeader, id, value);
 	}
-	
+
 	public void setNavHeaderViewIcon(int id, Drawable icon){
 		ImageView imageView = (ImageView)viewContentHeader.findViewById(id);
 		imageView.setImageDrawable(icon);
 	}
-	
+
 	public void setNavHeaderViewIcon(int id, Bitmap icon){
 		ImageView imageView = (ImageView)viewContentHeader.findViewById(id);
 		imageView.setImageBitmap(icon);
 	}
-	
+
 	public void showNavHeader(boolean show){
 		if(show)
 			viewContentHeader.findViewById(R.id.nav_header).setVisibility(View.VISIBLE);
@@ -474,4 +480,29 @@ public class NavActivity extends BaseActivity implements NavSetting {
 		navDrawerAdapter.getNavItemById(id).setBadge(badge);
 		navDrawerAdapter.notifyDataSetChanged();
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 }

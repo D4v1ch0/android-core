@@ -13,10 +13,12 @@ import rp3.util.Convert;
 import rp3.util.Format;
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
+
 import rp3.data.Identifiable;
 
 public abstract class EntityBase<T> implements Identifiable {
-		
+	private static final String TAG = "EntityBase";
 	public final static int ACTION_INSERT = -1;
 	public final static int ACTION_UPDATE = -2;
 	public final static int ACTION_APPROVE = -3;
@@ -201,8 +203,11 @@ public abstract class EntityBase<T> implements Identifiable {
 	}
 	
 	protected boolean executeInsert(DataBase db){
-		if(isValid())
+		if(isValid()){
+			Log.d(TAG,"isValid()...");
 			return insertDb(db);
+		}
+
 		return false;
 	}
 	
@@ -225,11 +230,15 @@ public abstract class EntityBase<T> implements Identifiable {
 	protected void executeValidate(){
 		initializeMessages();		
 		if(onEntityCheckerListener!=null){
+			Log.d(TAG,"onEntityCheckerListener!=null...");
 			validate();
 			
-			if(isValid())
+			if(isValid()){
+				Log.d(TAG,"isValid...");
 				onEntityCheckerListener.onEntityValidationSuccess((T)this);
+			}
 			else{
+				Log.d(TAG,"!onEntityCheckerListener!=null...");
 				MessageCollection mc = new MessageCollection();
 				for(Message m: getMessages().getMessages()){
 					if(m.getMessageType() == Message.ERROR_TYPE){
@@ -237,6 +246,7 @@ public abstract class EntityBase<T> implements Identifiable {
 						mc.addMessage(m);
 					}
 				}
+				Log.d(TAG,"MessageCollection:"+mc.toString());
 				onEntityCheckerListener.onEntityValidationFailed(mc, (T)this);
 			}
 		}
@@ -267,6 +277,7 @@ public abstract class EntityBase<T> implements Identifiable {
 	
 	protected boolean executeUpdate(DataBase db){
 		if(isValid()){
+			Log.d(TAG,"isValidad ExecuteUPDATE...");
 			return updateDb(db);
 		}		 
 		return false;	

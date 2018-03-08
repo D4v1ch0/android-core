@@ -62,7 +62,7 @@ public class NotificationPusher {
         resultIntent.putExtra(TAG_MESSAGE, message);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
-
+        //stackBuilder.addNextIntentWithParentStack(resultIntent);
         stackBuilder.addParentStack(NotificationActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

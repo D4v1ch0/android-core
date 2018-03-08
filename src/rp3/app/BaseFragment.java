@@ -48,6 +48,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,7 +66,8 @@ import android.widget.ExpandableListView.OnChildClickListener;
 
 public class BaseFragment extends DialogFragment implements LoaderCallbacks<Cursor>, OnEntityCheckerListener<Object>, 
 	DialogDatePickerChangeListener, DialogTimePickerChangeListener, FragmentResultListener {
-	
+
+	private static final String TAG = BaseFragment.class.getSimpleName();
 	public static final int RESULT_OK = -1;
 	public static final int RESULT_CANCELED = 0;
     private FragmentManager mRetainedChildFragmentManager;
@@ -97,6 +99,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	public void tryEnableGooglePlayServices(boolean enableGooglePlayServices){		
 		this.enableGooglePlayServices = enableGooglePlayServices;
+		Log.d(TAG,"tryEnableGooglePlayServices...");
 		if(this.enableGooglePlayServices){
 			this.enableGooglePlayServices = 
 					GooglePlayServicesUtil.isGooglePlayServicesAvailable(Session.getContext()) == ConnectionResult.SUCCESS;
@@ -110,10 +113,12 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	void setIsDialog(boolean isDialog){
+		Log.d(TAG,"setIsDialog...");
 		this.isDialog = isDialog;		
 	}
 	
 	void setDialogTitle(String title){
+		Log.d(TAG,"setDialogTitle...");
 		if(getDialog()!=null)
 			getDialog().setTitle(title);
 		dialogTitle = title;
@@ -121,6 +126,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	void setFragmentTagName(String tagName){
 		currentFragmentTagName = tagName;
+		Log.d(TAG,"setFragmentTagName...");
 	}
 	
 	public String getFragmentTagName(){
@@ -132,6 +138,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void requestSync(Bundle settingsBundle){
+		Log.d(TAG,"requestSync...");
 		if(ConnectionUtils.isNetAvailable(getActivity())){
 			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
@@ -144,7 +151,8 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public <D> void executeLoader(int id, Bundle args, LoaderCallbacks<D> callback){
-		Loader<Object> loader = this.getLoaderManager().getLoader(id); 
+		Loader<Object> loader = this.getLoaderManager().getLoader(id);
+		Log.d(TAG,"executeLoader...");
 		if(loader==null){
 			this.getLoaderManager().initLoader(id, args, callback);
 		}
@@ -170,10 +178,13 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void setFragment(int id, Fragment fragment){
+		Log.d(TAG,"setFragment...");
 		if(inFragmentTransaction){
+			Log.d(TAG,"inFragmentTransaction true...");
 			fragmentTransaction.replace(id, fragment);
 		}
 		else{
+			Log.d(TAG,"inFragmentTransaction false...");
             getCurrentChildFragmentManager().beginTransaction().replace(id, fragment).commit();
 		}
 
@@ -207,6 +218,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	}
 	
 	public void showDefaultLoading(){
+		Log.d(TAG,"showDefaultLoading...");
 		if(getLoadingView()!=null){
 			getLoadingView().setVisibility(View.VISIBLE);			
 		}
@@ -220,22 +232,27 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 
     public void setContentView(View v)
     {
+		Log.d(TAG,"setContentView view ...");
         setContentView(v);
     }
 	public void setContentView(int resourceId) {
 		this.contentViewResource = resourceId;
+		Log.d(TAG,"setContentView resourceId...");
 	}
 	
 	public void setContentView(int layoutResID, int menuResID){
 		setContentView(layoutResID);
 		menuResource = menuResID;
+		Log.d(TAG,"setContentView int layoutResID, int menuResID...");
 	}
 	
 	public void finishActivity(){
 		this.getActivity().finish();
+		Log.d(TAG,"finishActivity...");
 	}
 	
 	public void finish(){
+		Log.d(TAG,"finish...");
 		if(isDialog)
 			dismiss();
 		else			
@@ -245,9 +262,10 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		Log.d(TAG,"onCreateOptionsMenu...");
 		if(menuResource!=0) inflater.inflate(menuResource, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-		onAfterCreateOptionsMenu(menu);				
+		onAfterCreateOptionsMenu(menu);
 	}
 	
 	public void onAfterCreateOptionsMenu(Menu menu){		
@@ -415,6 +433,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	@Override
 	public void onResume() {		
 		super.onResume();
+		Log.d(TAG,"...");
 		try {
 			getActivity().registerReceiver(syncFinishedReceiver, new IntentFilter(SyncAdapter.SYNC_FINISHED));			
 		} catch(IllegalArgumentException e) {			
@@ -446,7 +465,7 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 		try {
 			getActivity().unregisterReceiver(syncFinishedReceiver);			
 		} catch(IllegalArgumentException e) {
-			
+			Log.d(TAG,"onDestroy...:"+e.getMessage());
 		}
 	}
 	
@@ -590,7 +609,9 @@ public class BaseFragment extends DialogFragment implements LoaderCallbacks<Curs
 	public void closeDialogProgress(){
 		try{
 			progressDialog.dismiss();
-		}catch(Exception ex){}
+		}catch(Exception ex){
+			Log.d(TAG,"closeDialogProgress ex:"+ex.getMessage());
+		}
 	}
 	
 	public void showDialogConfirmation(int id, int message){

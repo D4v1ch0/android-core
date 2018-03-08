@@ -64,6 +64,7 @@ public class QueryDir {
         }
         catch(Exception ex)
         {
+			ex.printStackTrace();
             Log.e("Error: ", "NO FILE " + QUERY_DATABASE_STATEMENT_FILE_UPDATES);
         }
 		

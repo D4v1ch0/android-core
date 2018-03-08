@@ -12,14 +12,27 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 	private long id;
 	private String name;
 	private boolean applyNaturalPersonOnly;
+	private boolean useCustomValidator;
+	private int lenght;
+	private int maskType;
+	private String mask;
+	private String regExValidator;
 	
-	
+	//region Encapsulamiento
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isUseCustomValidator() {
+		return useCustomValidator;
+	}
+
+	public void setUseCustomValidator(boolean useCustomValidator) {
+		this.useCustomValidator = useCustomValidator;
 	}
 
 	public boolean isApplyNaturalPersonOnly() {
@@ -29,6 +42,42 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 	public void setApplyNaturalPersonOnly(boolean applyNaturalPersonOnly) {
 		this.applyNaturalPersonOnly = applyNaturalPersonOnly;
 	}
+
+	public int getLenght() {
+		return lenght;
+	}
+
+	public void setLenght(int lenght) {
+		this.lenght = lenght;
+	}
+
+	public int getMaskType() {
+		return maskType;
+	}
+
+	public void setMaskType(int maskType) {
+		this.maskType = maskType;
+	}
+
+	public String getMask() {
+		return mask;
+	}
+
+	public void setMask(String mask) {
+		this.mask = mask;
+	}
+
+	public String getRegExValidator() {
+		return regExValidator;
+	}
+
+	public void setRegExValidator(String regExValidator) {
+		this.regExValidator = regExValidator;
+	}
+
+	//endregion
+
+	//region BD
 
 	@Override
 	public long getID() {		
@@ -55,6 +104,11 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 		setValue(Contract.IdentificationType._ID, id);
 		setValue(Contract.IdentificationType.COLUMN_NAME, this.name);
 		setValue(Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY, this.applyNaturalPersonOnly);
+		setValue(Contract.IdentificationType.COLUMN_USE_CUSTOM_VALIDATOR, this.useCustomValidator);
+		setValue(Contract.IdentificationType.COLUMN_LENGHT, this.lenght);
+		setValue(Contract.IdentificationType.COLUMN_MASK_TYPE, this.maskType);
+		setValue(Contract.IdentificationType.COLUMN_MASK, this.mask);
+		setValue(Contract.IdentificationType.COLUMN_REG_EX_VALIDATOR, this.regExValidator);
 	}
 
 	@Override
@@ -66,11 +120,19 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 	public String getDescription() {		
 		return this.name;
 	}
-	
+
+	//endregion
+
 	public static ArrayList<IdentificationType> getAll(DataBase db)
 	{
-		Cursor c = db.query(Contract.IdentificationType.TABLE_NAME, new String[]{Contract.IdentificationType._ID, Contract.IdentificationType.COLUMN_NAME,
-												Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY });
+		Cursor c = db.query(Contract.IdentificationType.TABLE_NAME, new String[]
+				{Contract.IdentificationType._ID, Contract.IdentificationType.COLUMN_NAME,
+						Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY ,
+						Contract.IdentificationType.COLUMN_USE_CUSTOM_VALIDATOR,
+						Contract.IdentificationType.COLUMN_LENGHT,
+						Contract.IdentificationType.COLUMN_MASK_TYPE,
+						Contract.IdentificationType.COLUMN_MASK,
+						Contract.IdentificationType.COLUMN_REG_EX_VALIDATOR});
 		ArrayList<IdentificationType> list = new ArrayList<IdentificationType>();
 		if(c.moveToFirst())
 		{
@@ -80,12 +142,28 @@ public class IdentificationType extends rp3.data.entity.EntityBase<Identificatio
 				setter.id = CursorUtils.getLong(c,Contract.IdentificationType._ID);
 				setter.name = CursorUtils.getString(c,Contract.IdentificationType.COLUMN_NAME);
 				setter.applyNaturalPersonOnly = CursorUtils.getBoolean(c,Contract.IdentificationType.COLUMN_APPLY_NATURAL_PERSON_ONLY);
+				setter.useCustomValidator = CursorUtils.getBoolean(c,Contract.IdentificationType.COLUMN_USE_CUSTOM_VALIDATOR);
+				setter.lenght = CursorUtils.getInt(c,Contract.IdentificationType.COLUMN_LENGHT);
+				setter.maskType = CursorUtils.getInt(c,Contract.IdentificationType.COLUMN_MASK_TYPE);
+				setter.mask = CursorUtils.getString(c,Contract.IdentificationType.COLUMN_MASK);
+				setter.regExValidator = CursorUtils.getString(c,Contract.IdentificationType.COLUMN_REG_EX_VALIDATOR);
 				list.add(setter);
 			}while(c.moveToNext());
 		}
 		return list;
 	}
 
-	
-	
+	@Override
+	public String toString() {
+		return "IdentificationType{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", applyNaturalPersonOnly=" + applyNaturalPersonOnly +
+				", useCustomValidator=" + useCustomValidator +
+				", lenght=" + lenght +
+				", maskType=" + maskType +
+				", mask='" + mask + '\'' +
+				", regExValidator='" + regExValidator + '\'' +
+				'}';
+	}
 }

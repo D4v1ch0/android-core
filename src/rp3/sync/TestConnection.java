@@ -1,5 +1,7 @@
 package rp3.sync;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,7 @@ import rp3.db.sqlite.DataBase;
  * Created by magno_000 on 18/03/2015.
  */
 public class TestConnection {
+    private static final String TAG = TestConnection.class.getSimpleName();
     public static boolean executeSync(){
         WebService webService = new WebService("Core","GetConnection");
         boolean gvs = false;
@@ -26,6 +29,8 @@ public class TestConnection {
             try {
                 webService.invokeWebService();
             } catch (HttpResponseException e) {
+                Log.d(TAG,"HttpResponseException:"+e.getMessage());
+                System.out.print(e);
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return false;
                 return false;

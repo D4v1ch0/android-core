@@ -65,15 +65,19 @@ public abstract class DataBaseOpenHelper extends SQLiteOpenHelper  {
 		XmlResourceParser parser = getContext().getResources().getXml(resourceId);
 
 		List<String> statements = XmlPull.getTextElements(parser, "statement");		
-		
-		int resourseExtId = getContext().getResources().getIdentifier(CREATE_DATABASE_EXT_STATEMENT_FILE, "xml", getContext().getApplicationContext().getPackageName());
-		XmlResourceParser parserExt = getContext().getResources().getXml(resourseExtId);
-		
-		List<String> statementsExt = XmlPull.getTextElements(parserExt, "statement");
-		if(statementsExt.size()>0)
-			statements.addAll(statementsExt);
-		
-		executeListStatements(db, statements);
+		try{
+			int resourseExtId = getContext().getResources().getIdentifier(CREATE_DATABASE_EXT_STATEMENT_FILE, "xml", getContext().getApplicationContext().getPackageName());
+			XmlResourceParser parserExt = getContext().getResources().getXml(resourseExtId);
+
+			List<String> statementsExt = XmlPull.getTextElements(parserExt, "statement");
+			if(statementsExt.size()>0)
+				statements.addAll(statementsExt);
+
+			executeListStatements(db, statements);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 	
 	@Override

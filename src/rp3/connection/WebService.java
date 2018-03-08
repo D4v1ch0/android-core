@@ -83,15 +83,18 @@ public class WebService {
 	
 	public WebService() {
 		headers = new Dictionary<String, String>();
+		Log.d(TAG,"WebService..."+headers.toString());
 	}
 
 	public WebService(String wsConfigurationName, String methodName) {
 		headers = new Dictionary<String, String>();
+		Log.d(TAG,"WebService...headers:"+headers.toString());
 		setConfigurationName(wsConfigurationName, methodName);
 	}
 
 	public void setConfigurationName(String wsConfigurationName,
 			String methodName) {
+		Log.d(TAG,"setConfigurationName..."+wsConfigurationName+" "+methodName);
 		this.wsConfigurationName = wsConfigurationName;
 		wsData = Configuration.getWebServiceConfiguration().get(
 				this.wsConfigurationName);
@@ -100,42 +103,53 @@ public class WebService {
 
 	public void setTimeOut(int timeOut) {
 		this.timeOut = timeOut;
+		Log.d(TAG,"setTimeOut:"+timeOut);
 	}
 	
 	public void setHeader(String name, String value){
 		headers.set(name, value);
+		Log.d(TAG,"setHeader:"+name+" "+value);
 	}
 	
 	public void addCurrentAuthToken(){
+		Log.d(TAG,"addCurrentAuthToken:"+Session.getUser().getAuthToken()+" "+Session.getUser().getAuthTokenType());
 		setAuthToken(Session.getUser().getAuthToken());
 		setAuthTokenType(Session.getUser().getAuthTokenType());
 	}
 	
 	public void setAuthToken(String authToken){	
 		setHeader("AuthToken", authToken);
+		Log.d(TAG,"setAuthToken:"+authToken);
 	}
 	
 	public void setAuthTokenType(String authTokenType){		
 		setHeader("AuthTypeToken", authTokenType);
+		Log.d(TAG,"setAuthTokenType:"+authTokenType);
 	}	
 
 	public List<WebServiceParameter> getParameters() {
 		if (parameters == null)
+		{
+			Log.d(TAG,"parameters == null...");
 			parameters = new ArrayList<WebServiceParameter>();
+		}
 		return parameters;
 	}
 
 	public void addParameter(String name, Object value) {
+		Log.d(TAG,"addParameter..."+name+" "+value.toString());
 		getParameters().add(
 				new WebServiceParameter(name, value, value.getClass()));
 	}
 
 	public void addParameter(String name, Object value, Object valueType) {
+		Log.d(TAG,"addParameter..."+name+" "+value.toString()+" "+valueType.toString());
 		getParameters().add(
 				new WebServiceParameter(name, value, valueType, true));
 	}
 
 	public void addStringParameter(String name, String value) {
+		Log.d(TAG,"addStringParameter..."+name+" "+value);
 		getParameters().add(new WebServiceParameter(name, value, String.class));
 	}
 
@@ -145,11 +159,13 @@ public class WebService {
 	}
 
 	public void addIntParameter(String name, int value) {
+		Log.d(TAG,"addIntParameter..."+name+" "+value);
 		getParameters()
 				.add(new WebServiceParameter(name, value, Integer.class));
 	}
 
 	public void addLongParameter(String name, long value) {
+		Log.d(TAG,"addLongParameter..."+name+" "+value);
 		getParameters().add(new WebServiceParameter(name, value, Long.class));
 	}
 
@@ -167,6 +183,7 @@ public class WebService {
 	
 	public void setParameter(String name, Object value){
 		boolean exists = false;
+		Log.d(TAG,"setParameter..."+name+" "+value.toString());
 		for(WebServiceParameter p : getParameters()){
 			if(p.getName().equals(name)){
 				exists = true;
@@ -211,9 +228,12 @@ public class WebService {
 	}
 
 	public String getStringResponse() {
+		Log.d(TAG,"getStringResponse...");
 		if (wsData.getType().equalsIgnoreCase(TYPE_SOAP)) {
+			Log.d(TAG,"wsData.getType().equalsIgnoreCase(TYPE_SOAP)...");
 			return getSoapPrimitiveResponse().getValue().toString();
 		} else if (wsData.getType().equalsIgnoreCase(TYPE_REST)) {
+			Log.d(TAG,"wsData.getType().equalsIgnoreCase(TYPE_REST)...");
 			return respJSONString;
 		}
 		return null;
@@ -353,6 +373,7 @@ public class WebService {
 	
 	private void executeRest() throws JSONException, ClientProtocolException, IOException {
         String urlString = wsData.getUrl() + "/" + wsMethod.getAction();
+		Log.d(TAG,"executeRest UrlString:" + urlString);
         boolean oAuthEnabled = true;
 
         if (timeOut == null)
@@ -399,7 +420,7 @@ public class WebService {
 			HttpResponse resp = null;
 
 			if (wsMethod.getWebMethod().equalsIgnoreCase("POST")) {
-				
+				Log.d(TAG,"Methodo POST...");
 				JSONObject dato = new JSONObject();
 				JSONArray jArray = null;
 				
@@ -478,6 +499,7 @@ public class WebService {
 				evaluateStatusResponse(resp, httpClient, post, oAuthEnabled);
 				
 			} else {
+				Log.d(TAG,"Methodo GET...");
 				for (WebServiceParameter p : this.getParameters()) {
 					urlString = urlString.replace(p.getName(), p.getValue()
 							.toString());
@@ -501,10 +523,14 @@ public class WebService {
 			}
 
 			respJSONString = EntityUtils.toString(resp.getEntity());
+		Log.d(TAG,"urlString:"+urlString);
+		Log.d(TAG,"ClientId, wsData.getOAuthClientId()):" + wsData.getOAuthClientId());
+		Log.d(TAG,"ClientSecret, wsData.getOAuthClientSecret()" + wsData.getOAuthClientSecret());
 		Log.d(TAG,"respJSONString:"+respJSONString);
 	}	
 	
 	private void evaluateStatusResponse(HttpResponse response,HttpClient httpClient, HttpUriRequest uri, boolean oAuthEnabled) throws ClientProtocolException, IOException {
+		Log.d(TAG,"evaluateStatusResponse...");
 		int status = response.getStatusLine().getStatusCode();
         if(status != 200)
             respJSONString = EntityUtils.toString(response.getEntity());
@@ -519,6 +545,7 @@ public class WebService {
 			throw new HttpResponseException(status);
 		case HttpConnection.HTTP_STATUS_UNAUTHORIZED:
 			if(oAuthEnabled){
+				Log.d(TAG,"oAuthEnabled...");
                 rp3.accounts.Authenticator.getServerAuthenticate().requestSignIn();
 				String token = Session.getUser().getAuthToken();
 
@@ -529,7 +556,10 @@ public class WebService {
 					throw new HttpResponseException(status);
 			}
 			else			
+			{
+				Log.d(TAG,"!oAuthEnabled..."+status);
 				throw new HttpResponseException(status);
+			}
 		default:
 			break;
 		}
@@ -548,6 +578,9 @@ public class WebService {
 	
 	public void close(){
 		if(responseFile!=null)
+		{
+			Log.d(TAG,"responseFile!=null...");
 			responseFile.delete();
+		}
 	}
 }

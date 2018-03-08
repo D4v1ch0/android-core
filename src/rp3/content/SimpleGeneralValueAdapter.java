@@ -26,6 +26,7 @@ public class SimpleGeneralValueAdapter extends BaseAdapter {
 	
 	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId){
 		this(c,db,generalTableId,false,null);
+
 	}
 	
 	public SimpleGeneralValueAdapter(Context c, DataBase db, long generalTableId, boolean includeNullItem){
@@ -100,7 +101,7 @@ public class SimpleGeneralValueAdapter extends BaseAdapter {
 			convertView = inflater.inflate(layoutResID, null);
 			
 			holder = new ViewHolder();			
-			holder.textView_content = (TextView)convertView.findViewById(R.id.textView_content);
+			holder.textView_content = (TextView)convertView.findViewById(R.id.tvGeneralSelectedd);
 			
 			convertView.setTag(holder);
 			

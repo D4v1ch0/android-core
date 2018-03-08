@@ -3,7 +3,12 @@
     CREATE TABLE tbIdentificationType(
     _id INTEGER PRIMARY KEY,
     Name TEXT,
-    ApplyNaturalPersonOnly INTEGER
+    ApplyNaturalPersonOnly INTEGER,
+        UseCustomValidator INTEGER,
+        Length INTEGER,
+        MaskType INTEGER,
+        Mask TEXT,
+        RegExValidator TEXT
     )
     </statement>
     <statement>

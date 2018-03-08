@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
 
+import rp3.core.R;
 import rp3.util.ViewUtils;
 
 /**
@@ -56,7 +57,9 @@ public class DialogTimePickerFragment extends DialogFragment implements
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Create a new instance of DatePickerDialog and return it
-        TimePickerDialog tp = new TimePickerDialog(getActivity(), this, hour, minute, true);
+        TimePickerDialog tp = new TimePickerDialog(getActivity(),R.style.TimePicker,this,hour,minute,true);
+        //TimePickerDialog tp = new TimePickerDialog(getActivity(), this, hour, minute, true);
+
         if(interval > 1){
             //Ingresar aqui intervalo
         }

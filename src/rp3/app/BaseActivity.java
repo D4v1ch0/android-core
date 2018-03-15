@@ -22,6 +22,8 @@ import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.Screen;
 import rp3.util.ViewUtils;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -89,6 +91,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 
 	
 	public void requestSync(Bundle settingsBundle) {
+		Log.d(TAG,"requestSync...");
 		if (ConnectionUtils.isNetAvailable(this)) {
 			PreferenceManager.close();
 			SyncUtils.requestSync(settingsBundle);
@@ -104,6 +107,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	public interface CallbackSync{
 		void onSyncComplete(Bundle bundle,MessageCollection messageCollection);
 	}
+
+	//region Others methods view
 	public static void requestSyncMain(Bundle settingsBundle,Context context,CallbackSync callbackSync) {
 		if (ConnectionUtils.isNetAvailable(context)) {
 			PreferenceManager.close();
@@ -117,11 +122,13 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		}
 	}
 	
+	@SuppressLint("WrongConstant")
 	public void lockRotation(){
 		backupRequestOrientation = getRequestedOrientation();
 		setRequestedOrientation(Screen.getRequestOrientationFromCurrentScreen());
 	}
 	
+	@SuppressLint("WrongConstant")
 	public void resetRotation(){
 		setRequestedOrientation(backupRequestOrientation);
 	}
@@ -264,8 +271,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		showDialogFragment(f, tagName, null);
 	}
 
-	public void showDialogFragment(DialogFragment f, String tagName,
-			String title) {
+	public void showDialogFragment(DialogFragment f, String tagName, String title) {
 		showDialogFragment(f, tagName, title, null);
 	}
 
@@ -274,8 +280,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 				.toString(), null);
 	}
 
-	public void showDialogFragment(DialogFragment f, String tagName, int title,
-			FragmentResultListener l) {
+	public void showDialogFragment(DialogFragment f, String tagName, int title, FragmentResultListener l) {
 		showDialogFragment(f, tagName, Session.getContext().getText(title)
 				.toString(), l);
 	}
@@ -302,6 +307,9 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		f.show(ft, tagName);
 	}
 
+	//endregion
+
+	//region Methods more
 	private ProgressBar getLoadingView() {
 		if (loadingView == null) {
 			if (getRootView() != null) {
@@ -340,6 +348,8 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 		dataBaseClass = dataBase;
 		context = c;
 	}
+
+	//endregion
 
 	public DataBase getDataBase() {
 		try {
@@ -399,6 +409,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PreferenceManager.close();
 		if(context == null)
 			context = this;
 		if (savedInstanceState != null)
@@ -977,7 +988,7 @@ public class BaseActivity extends FragmentActivity implements DataBaseService,
 	}
 
 	public void onSyncComplete(Bundle data, MessageCollection messages) {		
-		
+		Log.d(TAG,"onSyncComplete...");
 	}
 
 	private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {

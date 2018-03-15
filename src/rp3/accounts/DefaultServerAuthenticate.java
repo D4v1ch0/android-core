@@ -42,10 +42,12 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 String fullName = null;
 
                 if (!response.getJSONObject("Data").isNull("AuthToken")) {
+                    Log.d(TAG,"Autenicacion server:"+response.getJSONObject("Data").toString());
                     Log.d(TAG,"!response.getJSONObject(\"Data\").NoisNull...");
                     authToken = response.getJSONObject("Data").getString("AuthToken");
                     fullName = response.getJSONObject("Data").getString("Name");
                     Session.getUser().setFullName(fullName);
+                    //Session.getUser().setAuthToken(AccountManager.KEY_AUTHTOKENauthToken);
                 }else{
                     Log.d(TAG,"response.getJSONObject(\"Data\").isNull....");
                 }

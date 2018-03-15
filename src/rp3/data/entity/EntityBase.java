@@ -204,7 +204,7 @@ public abstract class EntityBase<T> implements Identifiable {
 	
 	protected boolean executeInsert(DataBase db){
 		if(isValid()){
-			Log.d(TAG,"isValid()...");
+			//Log.d(TAG,"isValid()...");
 			return insertDb(db);
 		}
 
@@ -234,7 +234,7 @@ public abstract class EntityBase<T> implements Identifiable {
 			validate();
 			
 			if(isValid()){
-				Log.d(TAG,"isValid...");
+				//Log.d(TAG,"isValid...");
 				onEntityCheckerListener.onEntityValidationSuccess((T)this);
 			}
 			else{
@@ -277,7 +277,7 @@ public abstract class EntityBase<T> implements Identifiable {
 	
 	protected boolean executeUpdate(DataBase db){
 		if(isValid()){
-			Log.d(TAG,"isValidad ExecuteUPDATE...");
+			//Log.d(TAG,"isValidad ExecuteUPDATE...");
 			return updateDb(db);
 		}		 
 		return false;	

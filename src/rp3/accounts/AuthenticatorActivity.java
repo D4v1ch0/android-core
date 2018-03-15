@@ -50,7 +50,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static Intent newIntent(Context c){		
     	final Intent intent = new Intent(c, AuthenticatorActivity.class);                        
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, Session.getUser().getLogonName());
-        
         return intent;
 	}
     
@@ -77,6 +76,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             Log.d(TAG,"getActionBar()!=null...");
             getActionBar().hide();
         }
+
 
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);            
@@ -250,7 +250,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
         String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-        /*if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+        if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
                 PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
         {
             Bundle data = new Bundle();
@@ -260,9 +260,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             progressDialog.dismiss();
             final Intent res = new Intent();
             res.putExtras(data);
-            finishLogin(res);
+            finishLogin(res,1);
         }
-        else {*/
+        else {
 
         //endregion
         try{
@@ -278,6 +278,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     Bundle data = new Bundle();
                     try {
                         Log.d(TAG,"LogonName:"+ logonName+" Password:"+password);
+                        PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
                         Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
 
                         if (r.getBoolean(ServerAuthenticate.KEY_SUCCESS)) {
@@ -314,7 +315,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         progressDialog.dismiss();
                         Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                     } else {
-                        finishLogin(intent);
+                        finishLogin(intent,2);
                     }
                 }
             }.execute();
@@ -324,31 +325,42 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             e.printStackTrace();
         }
 
-        //}
+        }
     }
 
-    private void finishLogin(final Intent intent) {
-
+    private void finishLogin(final Intent intent,int i) {
+        Log.d(TAG,"finishLogin...");
         final User user = Session.getUser();
-        
-        user.setLogonName(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));        
+        user.setLogonName(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
         user.setPassword(intent.getStringExtra(PARAM_USER_PASS));
         user.isLogged(true);
+        if(i==1){
+            Log.d(TAG,"es el mismo...");
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
+            Session.getUser().setAuthToken(authtokenType, authtoken);
+            setResult(RESULT_OK, intent);
+            finish();
+        }else{
+            Log.d(TAG,"es otro...");
+            User.updateAccount(new UserUpdateCallback() {
+
+                @Override
+                public void onUserFinishUpdate(Bundle bundle) {
+                    String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                    String authtokenType = mAuthTokenType;
+
+                    Session.getUser().setAuthToken(authtokenType, authtoken);
+                    Log.d(TAG,"finishLogin...:"+user.toString());
+                    setAccountAuthenticatorResult(intent.getExtras());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
+
         
-        User.updateAccount(new UserUpdateCallback() {
-			
-			@Override
-			public void onUserFinishUpdate(Bundle bundle) {
-				String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-			    String authtokenType = mAuthTokenType;
-			    			       
-			    Session.getUser().setAuthToken(authtokenType, authtoken);
-			    Log.d(TAG,"finishLogin...:"+user.toString());
-			    setAccountAuthenticatorResult(intent.getExtras());
-			    setResult(RESULT_OK, intent);
-			    finish();
-			}
-		});                      
+
     }
     
     private ServerAuthenticate getServerAuthenticate(){

@@ -20,7 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class User {
-
+	private static final String TAG = "UserAccountSession";
 	public static final String USER_DATA_USERID = "userid";
 	public static final String USER_DATA_ISLOGGED = "islogged";
 	public static final String USER_DATA_FULLNAME = "fullName";
@@ -253,16 +253,26 @@ public class User {
         
        
         if(deleteAccount){
+        	Log.d(TAG,"Eliminar account...");
         	mAccountManager.removeAccount(account, callback, null);
         }else if(addingAccount){
+        	Log.d(TAG,"Agregar account...");
         	finishUserUpdate(user, mAccountManager, true);
-        	if(userUpdateCallback!=null)
-        		userUpdateCallback.onUserFinishUpdate(null);
+        	if(userUpdateCallback!=null){
+        		Log.d(TAG,"userUpdateCallback!=null...");
+				userUpdateCallback.onUserFinishUpdate(null);
+			}else{
+				Log.d(TAG,"userUpdateCallback==null...");
+			}
+
         }else if(updateAccount){
+        	Log.d(TAG,"Update account...");
         	finishUserUpdate(user, mAccountManager, false); 
         	if(userUpdateCallback!=null)
         		userUpdateCallback.onUserFinishUpdate(null);
-        }                                   
+        }else{
+
+		}
     }
 
 	private static void finishUserUpdate(User user, AccountManager mAccountManager, boolean addAccount){		

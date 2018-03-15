@@ -60,7 +60,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 		else{
 			data = new Bundle();
 		}
-		PreferenceManager.close();
+		//PreferenceManager.close();
 		Session.Start(this.getContext());
 		rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());		
 	}

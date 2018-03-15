@@ -19,8 +19,6 @@ public abstract class PreferenceManager {
 		 
 		while(value.contains("[@"))
 		{
-			
-			
 			int initial = value.indexOf("[@");			
 			int end = value.indexOf("]");
 			String parameter = value.substring(initial + 2, end);
@@ -48,9 +46,13 @@ public abstract class PreferenceManager {
 	
 	
 	public static SharedPreferences getPreferences(){
-		if(preferences == null)
-			preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(), 
-					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+		if(preferences == null){
+			/*preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(),
+					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);*/
+			preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(),
+					Context.MODE_PRIVATE| Context.MODE_MULTI_PROCESS);
+		}
+
 			//preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(Session.getContext());
 		
 		return preferences;

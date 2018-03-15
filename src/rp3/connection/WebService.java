@@ -112,7 +112,9 @@ public class WebService {
 	}
 	
 	public void addCurrentAuthToken(){
-		Log.d(TAG,"addCurrentAuthToken:"+Session.getUser().getAuthToken()+" "+Session.getUser().getAuthTokenType());
+		Log.d(TAG,"addCurrentAuthToken...");
+		Log.d(TAG,"AuthToken:"+Session.getUser().getAuthToken());
+		Log.d(TAG,"AuthTokenType:"+Session.getUser().getAuthTokenType());
 		setAuthToken(Session.getUser().getAuthToken());
 		setAuthTokenType(Session.getUser().getAuthTokenType());
 	}

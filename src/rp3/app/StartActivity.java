@@ -23,20 +23,20 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StartActivity extends BaseActivity {	
+public class StartActivity extends BaseActivity {
 
 	private static final String TAG = StartActivity.class.getSimpleName()+"Base";
 	public static final int REQUEST_LOGIN_ACTIVITY = 1;
-	
+
 	public static final String STATE_FIRST_LOAD = "firstload";
-	
+
 	private boolean firstTime = true;
 
 	private List<String> permissionsAll;
 	private static final int MY_PERMISSIONS=100;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {		
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG,"onCreate...");
 		try{
@@ -53,18 +53,18 @@ public class StartActivity extends BaseActivity {
 		}
 
 	}
-	
+
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {		
+	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		Log.d(TAG,"onSaveInstanceState...");
 		outState.putBoolean(STATE_FIRST_LOAD, firstTime);
 	}
-	
+
 	@Override
-	protected void onStart() {		
+	protected void onStart() {
 		super.onStart();
-		
+
 		if(!ConnectionUtils.isNetAvailable(this) && Session.IsLogged())
 		{
 			Log.d(TAG,"!ConnectionUtils.isNetAvailable(this) && Session.IsLogged()");
@@ -130,20 +130,20 @@ public class StartActivity extends BaseActivity {
 			}
 		}*/
 	}
-	
+
 	public void callLoginActivity(){
 		if(!onCallLoginActivity()){
 			Log.d(TAG,"!onCallLoginActivity()...");
-			Intent intent  = AuthenticatorActivity.newIntent(getApplicationContext(), Session.getUser().getLogonName(), 
+			Intent intent  = AuthenticatorActivity.newIntent(getApplicationContext(), Session.getUser().getLogonName(),
 					User.getAccountType(),
 					null);
 			Log.d(TAG,"REQUEST_LOGIN_ACTIVITY...");
 			startActivityForResult(intent, REQUEST_LOGIN_ACTIVITY);
 		}
 	}
-	
+
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {		
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG,"onActivityResult...");
 		switch(requestCode){
@@ -194,39 +194,39 @@ public class StartActivity extends BaseActivity {
 			}
 		}
 	}
-	
+
 	public boolean onCallLoginActivity(){
 		Log.d(TAG,"onCallLoginActivity...");
 		return false;
-	}		
-	
+	}
+
 	public void onVerifyRequestSignIn(){
-		
+
 		new AsyncTask<String, Void, Boolean>() {
 
-            @Override
-            protected Boolean doInBackground(String... params) {
+			@Override
+			protected Boolean doInBackground(String... params) {
 
-                return rp3.accounts.Authenticator.getServerAuthenticate().requestSignIn();
-            }
+				return rp3.accounts.Authenticator.getServerAuthenticate().requestSignIn();
+			}
 
-            @Override
-            protected void onPostExecute(Boolean response) {
-            	if(response)
-            		callLoginActivity();
-            	else
-            		onContinue();
-            }
-        }.execute();        
+			@Override
+			protected void onPostExecute(Boolean response) {
+				if(response)
+					callLoginActivity();
+				else
+					onContinue();
+			}
+		}.execute();
 	}
-		
+
 	public void onContinue(){
 		Log.d(TAG,"onContinue desde el starApp...");
-	}	
-			
+	}
+
 	public void setImage(int resID){
 		Log.d(TAG,"setImage...");
-		ImageView img = (ImageView)this.findViewById(R.id.imageView_icon);	
+		ImageView img = (ImageView)this.findViewById(R.id.imageView_icon);
 		img.setImageResource(resID);
 	}
 

@@ -526,9 +526,9 @@ public class WebService {
 
 			respJSONString = EntityUtils.toString(resp.getEntity());
 		Log.d(TAG,"urlString:"+urlString);
-		Log.d(TAG,"ClientId, wsData.getOAuthClientId()):" + wsData.getOAuthClientId());
-		Log.d(TAG,"ClientSecret, wsData.getOAuthClientSecret()" + wsData.getOAuthClientSecret());
-		Log.d(TAG,"respJSONString:"+respJSONString);
+		//Log.d(TAG,"ClientId, wsData.getOAuthClientId()):" + wsData.getOAuthClientId());
+		//Log.d(TAG,"ClientSecret, wsData.getOAuthClientSecret()" + wsData.getOAuthClientSecret());
+		Log.d(TAG,"WS respString:"+respJSONString);
 	}	
 	
 	private void evaluateStatusResponse(HttpResponse response,HttpClient httpClient, HttpUriRequest uri, boolean oAuthEnabled) throws ClientProtocolException, IOException {
@@ -554,8 +554,10 @@ public class WebService {
 				if(!TextUtils.isEmpty(token)){
 					uri.setHeader("AuthToken",  token);
 					response = httpClient.execute(uri);
-				}else
+				}
+				else{
 					throw new HttpResponseException(status);
+				}
 			}
 			else			
 			{

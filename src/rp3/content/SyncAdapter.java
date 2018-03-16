@@ -110,6 +110,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}		
 	
 	public void addDefaultMessage(int syncEvent){
+		Log.d(TAG,"syncdEvent:"+syncEvent);
 		switch (syncEvent) {
 		case SYNC_EVENT_CONNECTION_FAILED:
 			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_server_fail).toString());

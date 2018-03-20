@@ -12,7 +12,8 @@ public class Constants {
 	
 	public final static String KEY_FORGOT_PASSWORD = "forgotPassword";
 
-    public final static String KEY_LAST_LOGIN = "lastLogin";
-    public final static String KEY_LAST_PASS = "lastPass";
-    public final static String KEY_LAST_TOKEN = "lastToken";
+    public final static String KEY_LAST_LOGIN = "lastLogin1";
+    public final static String KEY_LAST_PASS = "lastPass1";
+    public final static String KEY_LAST_TOKEN = "lastToken1";
+    public final static String KEY_LOGIN_SESSION = "keyLoginSessionAunaMkf";
 }

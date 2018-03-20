@@ -4,6 +4,7 @@ import rp3.accounts.User;
 import rp3.runtime.Session;
 import android.content.ContentResolver;
 import android.os.Bundle;
+import android.util.Log;
 
 public class SyncUtils {		
 	
@@ -21,7 +22,8 @@ public class SyncUtils {
          * Request the sync for the default account, authority, and
          * manual sync settings
          */
-        ContentResolver.requestSync(Session.getUser().getAccount(), User.getAuthority(), settingsBundle);
+		Log.d("SyncdUtils","ContentResolver.requestSync...");
+		ContentResolver.requestSync(Session.getUser().getAccount(), User.getAuthority(), settingsBundle);
 	}
 	
 }

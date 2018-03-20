@@ -31,14 +31,25 @@ public final class Session {
 		user = User.getCurrentUser(getContext());
 		Log.d(TAG,"logGout:"+user.toString());
 		if(user!=null){
+			Log.d(TAG,"Logout:user!=null...");
 			user.isLogged(false);
 			//user.invalidateAuthToken();
+		}else{
+			Log.d(TAG,"user==null");
 		}
 
 	}
 	
+	public static Context getContext(Context context1){
+		if(context==null){
+			return  context1;
+		}else{
+			return context;
+		}
+	}
 	public static Context getContext(){
-		return context;
+			return context;
+
 	}
 	
 	public static boolean IsLogged(){				

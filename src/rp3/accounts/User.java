@@ -44,7 +44,10 @@ public class User {
 	
 	User(Context c) {
 		context = c;
-		accountManager = AccountManager.get(context);
+		if(accountManager==null){
+			Log.d(TAG,"accountManager==null...");
+			accountManager = AccountManager.get(context);
+		}
 	}
 
 	// @Override
@@ -130,6 +133,7 @@ public class User {
 	}		
 
 	private static void initializeAuthenticatorParams(Context c) {
+		Log.d(TAG,"initializeAuthenticatorParams...");
 		int resourceAuthId = c.getResources().getIdentifier("authenticator", "xml",
 				c.getApplicationContext().getPackageName());
 		XmlResourceParser parserAuth = c.getResources().getXml(resourceAuthId);
@@ -156,8 +160,10 @@ public class User {
 							"contentAuthority");
 			
 		} catch (XmlPullParserException e) {
+			Log.d(TAG,"XmlPullParserException...");
 			e.printStackTrace();
 		} catch (IOException e) {
+			Log.d(TAG,"IOException...");
 			e.printStackTrace();
 		}			
 	}
@@ -182,6 +188,7 @@ public class User {
 	// }
 
 	public static User getCurrentUser(Context c) {
+		Log.d(TAG,"getCurrentUser...");
 		User user = new User(c);
 		
 		Account account = getDefaultAccount(c);
@@ -293,16 +300,28 @@ public class User {
 		final Account availableAccounts[] = AccountManager.get(c)
 				.getAccountsByType(getAccountType());
 		if (availableAccounts.length > 0)
+		{
+			Log.d(TAG,"availableAccounts.length:"+availableAccounts.length);
 			return availableAccounts[0];
-		else
+		}else{
+			Log.d(TAG,"availableAccounts.length==0");
 			return null;
+		}
 	}
 
+	//Nunca validar
+
+	//
+
 	public String getUserData(Account account, String key) {
+		Log.d(TAG,"getUserData...");
+		Log.d(TAG,"Account:"+account.toString());
+		Log.d(TAG,"Key:"+key);
 		return accountManager.getUserData(account, key);
 	}
 
 	public void invalidateAuthToken() {
+		Log.d(TAG,"invalidateAuthToken...");
 		AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
 		mAccountManager.invalidateAuthToken(Session.getUser().getAuthTokenType(), Session.getUser().getAuthToken());
 	}
@@ -351,7 +370,6 @@ public class User {
 	{
 		public void onUserFinishUpdate(Bundle bundle);
 	}
-
 
 	@Override
 	public String toString() {

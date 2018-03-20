@@ -8,6 +8,7 @@ import rp3.sync.TestConnection;
 
 import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -94,17 +95,23 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
 		Bundle data = signIn(Session.getUser().getLogonName(), Session.getUser().getPassword(), User.getAccountType());
 		if(data.getBoolean(ServerAuthenticate.KEY_SUCCESS))
 		{
+		    Log.d(TAG,"data.getBoolean(ServerAuthenticate.KEY_SUCCESS==True...");
             String token = "temp";
-            if(data.containsKey(AccountManager.KEY_AUTHTOKEN))
-			    token = data.getString(AccountManager.KEY_AUTHTOKEN);
+            if(data.containsKey(AccountManager.KEY_AUTHTOKEN)){
+                Log.d(TAG,"data.containsKey(AccountManager.KEY_AUTHTOKEN is true...");
+                token = data.getString(AccountManager.KEY_AUTHTOKEN);
+            }else{
+                Log.d(TAG,"data.containsKey(AccountManager.KEY_AUTHTOKEN is false...");
+            }
+
 			String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 			Session.getUser().setAuthToken(authType, token);
 			String fullName = data.getString(KEY_FULL_NAME);
 			Session.getUser().setFullName(fullName);
-			
 			return TextUtils.isEmpty(token);
 		}
 		else{
+            Log.d(TAG,"data.getBoolean(ServerAuthenticate.KEY_SUCCESS==False...");
 			Session.getUser().invalidateAuthToken();
 			return true;
 		}

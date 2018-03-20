@@ -10,13 +10,21 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.text.ParseException;
 
 public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
     
-	public static final String TAG = "SyncAdapter";
+	public static final String TAG = "AbstractThreadedSync";
 	
 	public static final String ARG_SYNC_TYPE = "ARG_SYNC_TYPE";
 	
@@ -52,21 +60,39 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
-		messages.clear();		
-		if(extras != null){
-			data = extras;
-			Log.d(TAG,data.toString());
+		try{
+			try{
+				Log.i(TAG, "try onPerformSync");
+				if(messages!=null)
+					messages=new MessageCollection();
+				messages.clear();
+				if(extras != null){
+					Log.d(TAG,"extras != null...");
+					data = extras;
+					Log.d(TAG,data.toString());
+				}
+				else{
+					Log.d(TAG,"extras == null...");
+					data = new Bundle();
+				}
+				//PreferenceManager.close();
+				Session.Start(this.getContext());
+				rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());
+			}finally {
+				Log.d(TAG,"finally onPerformSync...");
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "Error reading from network: " + e.toString());
+			syncResult.stats.numIoExceptions++;
+			e.printStackTrace();
 		}
-		else{
-			data = new Bundle();
-		}
-		//PreferenceManager.close();
-		Session.Start(this.getContext());
-		rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());		
+		Log.d(TAG, "Network synchronization complete");
+
 	}
 			
 	
 	public void notifySyncFinish(){
+    	Log.d(TAG,"notifySyncFinish...");
 		Intent i = new Intent(SYNC_FINISHED);				
 		i.putExtra(NOTIFY_EXTRA_MESSAGES, messages);
 		i.putExtra(NOTIFY_EXTRA_DATA, data);
@@ -126,6 +152,26 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 		default:
 			messages.addErrorMessage(getContext().getText(R.string.message_error_sync_general_error).toString());
 			break;
+		}
+	}
+
+	public void addDefaultMessageAuna(int syncEvent,String resource){
+		Log.d(TAG,"syncdEvent:"+syncEvent+" Mensaje:"+resource);
+		switch (syncEvent) {
+			case SYNC_EVENT_CONNECTION_FAILED:
+				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_server_fail).toString());
+				break;
+			case SYNC_EVENT_HTTP_ERROR:
+				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_connection_http_error).toString());
+				break;
+			case SYNC_EVENT_AUTH_ERROR:
+				messages.addErrorMessage(getContext().getText(R.string.generic_show_message_service).toString());
+				break;
+			case SYNC_EVENT_SUCCESS:
+				break;
+			default:
+				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_general_error_auna).toString());
+				break;
 		}
 	}
 	//Holaaa

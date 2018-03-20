@@ -28,7 +28,7 @@ public class StartActivity extends BaseActivity {
 	private static final String TAG = StartActivity.class.getSimpleName()+"Base";
 	public static final int REQUEST_LOGIN_ACTIVITY = 1;
 
-	public static final String STATE_FIRST_LOAD = "firstload";
+	public static final String STATE_FIRST_LOAD = "firstload1";
 
 	private boolean firstTime = true;
 
@@ -58,7 +58,7 @@ public class StartActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		Log.d(TAG,"onSaveInstanceState...");
-		outState.putBoolean(STATE_FIRST_LOAD, firstTime);
+		//outState.putBoolean(STATE_FIRST_LOAD, firstTime);
 	}
 
 	@Override
@@ -77,8 +77,18 @@ public class StartActivity extends BaseActivity {
 				callLoginActivity();
 			}else{
 				Log.d(TAG,"getAccount != null...");
-				if(rp3.runtime.Session.IsLogged()){
+				Log.d(TAG,"Session:"+Session.getUser().toString());
+				System.out.print(Session.getUser());
+				//if(Session.getUser().isLogged()){
+				String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
+				Log.d(TAG,"Esta logeado:"+session);
+				if(session.equalsIgnoreCase("true")){
 					Log.d(TAG,"Session is Logged...");
+					Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+					String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+					String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+					Log.d(TAG,"LogonName:"+logonName);
+					Log.d(TAG,"Password:"+passowrd);
 					if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
 							PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
 						Log.d(TAG,"Usuario y clave temporales son iguales al logeado...");

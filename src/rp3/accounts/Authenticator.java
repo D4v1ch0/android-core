@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Authenticator extends AbstractAccountAuthenticator {
@@ -87,11 +88,15 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 try {
                     
                     Bundle r = sServerAuthenticate.signIn(account.name, password, authTokenType);
-                    if(r.getBoolean(ServerAuthenticate.KEY_SUCCESS, false))      {              
-                    	authToken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
+                    if(r.getBoolean(ServerAuthenticate.KEY_SUCCESS, false))      {
+                        Log.d(TAG,"r.getBoolean(ServerAuthenticate.KEY_SUCCESS is true...");
+                        authToken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
+                        Log.d(TAG,"AuthToken:"+authToken);
+                        Log.d(TAG,"AuthTokenType:"+authTokenType);
                     	Session.getUser().setAuthToken(authTokenType, authToken);
                     }
                     else{
+                        Log.d(TAG,"r.getBoolean(ServerAuthenticate.KEY_SUCCESS is false...");
                     	//Toast.makeText(Session.getContext(), r.getInt(ServerAuthenticate.KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {

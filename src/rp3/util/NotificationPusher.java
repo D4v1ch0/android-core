@@ -112,28 +112,33 @@ public class NotificationPusher {
 
     public static void pushNotification(int id, Context ctx, String message, String title, Class activity)
     {
-        NotificationManager notificationManager = (NotificationManager) ctx
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_launcher, message, 0);
+        try{
+            NotificationManager notificationManager = (NotificationManager) ctx
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notification = new Notification(R.drawable.ic_launcher, message, 0);
 
-        Intent notificationIntent = new Intent(ctx, activity);
+            Intent notificationIntent = new Intent(ctx, activity);
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent intent = PendingIntent.getActivity(ctx, 0,
-                notificationIntent, 0);
+            PendingIntent intent = PendingIntent.getActivity(ctx, 0,
+                    notificationIntent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                ctx);
-        notification = builder.setContentIntent(intent)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setAutoCancel(true).setContentTitle(title)
-                .setContentText(message).build();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                    ctx);
+            notification = builder.setContentIntent(intent)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setAutoCancel(true).setContentTitle(title)
+                    .setContentText(message).build();
 
-        //notification.setLatestEventInfo(ctx, title, message, intent);
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(id, notification);
+            //notification.setLatestEventInfo(ctx, title, message, intent);
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+            notificationManager.notify(id, notification);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }

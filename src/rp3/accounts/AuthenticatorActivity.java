@@ -243,38 +243,43 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit(final String logonName, final String password) {
 
-        final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting),
-                getText(R.string.message_please_wait), false);
+        try {
+            final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting),
+                    getText(R.string.message_please_wait), false);
 
-        //region Others
+            //region Others
 
-        String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
-        String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-        if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
-                PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
-        {
-            Bundle data = new Bundle();
-            data.putString(AccountManager.KEY_ACCOUNT_NAME, PreferenceManager.getString(Constants.KEY_LAST_LOGIN));
-            data.putString(AccountManager.KEY_AUTHTOKEN, PreferenceManager.getString(Constants.KEY_LAST_TOKEN));
-            data.putString(PARAM_USER_PASS, PreferenceManager.getString(Constants.KEY_LAST_PASS));
-            progressDialog.dismiss();
-            final Intent res = new Intent();
-            res.putExtras(data);
-            finishLogin(res,1);
-        }
-        else {
-            loginStart(logonName,password,progressDialog);
-            //endregion
-            try{
-                Log.d(TAG,"Iniciar AsyncTask...");
-
-            }catch (Exception e){
-                Log.d(TAG,"Exception...");
-                System.out.print(e);
-                e.printStackTrace();
+            String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+            String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+            if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+                    PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
+            {
+                Bundle data = new Bundle();
+                data.putString(AccountManager.KEY_ACCOUNT_NAME, PreferenceManager.getString(Constants.KEY_LAST_LOGIN));
+                data.putString(AccountManager.KEY_AUTHTOKEN, PreferenceManager.getString(Constants.KEY_LAST_TOKEN));
+                data.putString(PARAM_USER_PASS, PreferenceManager.getString(Constants.KEY_LAST_PASS));
+                progressDialog.dismiss();
+                final Intent res = new Intent();
+                res.putExtras(data);
+                finishLogin(res,1);
             }
+            else {
+                loginStart(logonName,password,progressDialog);
+                //endregion
+                try{
+                    Log.d(TAG,"Iniciar AsyncTask...");
 
+                }catch (Exception e){
+                    Log.d(TAG,"Exception...");
+                    System.out.print(e);
+                    e.printStackTrace();
+                }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private void loginStart(final String logonName, final String password, final ProgressDialog progressDialog){
@@ -336,54 +341,57 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private void finishLogin(final Intent intent,int i) {
         Log.d(TAG,"finishLogin...");
-        final User user = Session.getUser();
-        user.setLogonName(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
-        user.setPassword(intent.getStringExtra(PARAM_USER_PASS));
-        user.isLogged(true);
-        if(i==1){
-            Log.d(TAG,"es el mismo de temporales con el que esta logeado...");
-            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            String authtokenType = mAuthTokenType;
-            if(authtoken==null){
-                Log.d(TAG,"authtoken==null...");
-                User u = Session.getUser();
-                if(u==null){
-                    Log.d(TAG,"user == null...");
-                }
-                else{
-                    Log.d(TAG,"u!=null...");
+        try {
+            final User user = Session.getUser();
+            user.setLogonName(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+            user.setPassword(intent.getStringExtra(PARAM_USER_PASS));
+            user.isLogged(true);
+            if(i==1){
+                Log.d(TAG,"es el mismo de temporales con el que esta logeado...");
+                String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                String authtokenType = mAuthTokenType;
+                if(authtoken==null){
+                    Log.d(TAG,"authtoken==null...");
+                    User u = Session.getUser();
+                    if(u==null){
+                        Log.d(TAG,"user == null...");
+                    }
+                    else{
+                        Log.d(TAG,"u!=null...");
+                        Session.getUser().setAuthToken(authtokenType, authtoken);
+                    }
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }else{
+                    Log.d(TAG,"authtoken!=null...");
+                    PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
                     Session.getUser().setAuthToken(authtokenType, authtoken);
-                }
-
-                setResult(RESULT_OK, intent);
-                finish();
-            }else{
-                Log.d(TAG,"authtoken!=null...");
-                PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
-                Session.getUser().setAuthToken(authtokenType, authtoken);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        }else{
-            Log.d(TAG,"es otro usuario...");
-            User.updateAccount(new UserUpdateCallback() {
-
-                @Override
-                public void onUserFinishUpdate(Bundle bundle) {
-                    String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-                    String authtokenType = mAuthTokenType;
-
-                    Session.getUser().setAuthToken(authtokenType, authtoken);
-                    Log.d(TAG,"finishLogin...:"+user.toString());
-                    setAccountAuthenticatorResult(intent.getExtras());
                     setResult(RESULT_OK, intent);
                     finish();
                 }
-            });
+            }else{
+                Log.d(TAG,"es otro usuario...");
+                User.updateAccount(new UserUpdateCallback() {
+
+                    @Override
+                    public void onUserFinishUpdate(Bundle bundle) {
+                        String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                        String authtokenType = mAuthTokenType;
+
+                        Session.getUser().setAuthToken(authtokenType, authtoken);
+                        Log.d(TAG,"finishLogin...:"+user.toString());
+                        setAccountAuthenticatorResult(intent.getExtras());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-
-
     }
 
     private ServerAuthenticate getServerAuthenticate(){

@@ -189,30 +189,35 @@ public class User {
 
 	public static User getCurrentUser(Context c) {
 		Log.d(TAG,"getCurrentUser...");
-		User user = new User(c);
-		
-		Account account = getDefaultAccount(c);
+		User user = null;
+		try{
+			user = new User(c);
 
-		if (account != null) {			
-			user.setAccount(account);
-			user.setLogonName(account.name);
-			
-			AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
-			user.setPassword(mAccountManager.getPassword(account));
-			
-			String userId = user.getUserData(account,USER_DATA_USERID);
-			if(!TextUtils.isEmpty(userId))			
-				user.setUserId(Integer.parseInt(userId));
-			else
-				user.setUserId(0);
-			
-			user.setFullName(user.getUserData(account, USER_DATA_FULLNAME));
-			
-			String isLogged = user.getUserData(account,USER_DATA_ISLOGGED);
-			if(!TextUtils.isEmpty(isLogged))
-				user.isLogged(Boolean.parseBoolean(isLogged));
-			else
-				user.isLogged(false);
+			Account account = getDefaultAccount(c);
+
+			if (account != null) {
+				user.setAccount(account);
+				user.setLogonName(account.name);
+
+				AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+				user.setPassword(mAccountManager.getPassword(account));
+
+				String userId = user.getUserData(account,USER_DATA_USERID);
+				if(!TextUtils.isEmpty(userId))
+					user.setUserId(Integer.parseInt(userId));
+				else
+					user.setUserId(0);
+
+				user.setFullName(user.getUserData(account, USER_DATA_FULLNAME));
+
+				String isLogged = user.getUserData(account,USER_DATA_ISLOGGED);
+				if(!TextUtils.isEmpty(isLogged))
+					user.isLogged(Boolean.parseBoolean(isLogged));
+				else
+					user.isLogged(false);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 
 		// Cursor c = db.query(Contract.User.TABLE_NAME, new String[]{
@@ -235,78 +240,98 @@ public class User {
 	}
 	
 	public static void updateAccount(final UserUpdateCallback userUpdateCallback){
-		final User user = Session.getUser();
-						
-		String accountName = user.getLogonName();
+		Log.d(TAG,"updateAccount...");
+		try{
+			final User user = Session.getUser();
 
-        Account account = user.getAccount();
-        final AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
-       
-        final boolean addingAccount = account == null;
-        final boolean deleteAccount = account != null && !account.name.equals(accountName);
-        final boolean updateAccount = !deleteAccount;                
-        	
-        AccountManagerCallback<Boolean> callback = new AccountManagerCallback<Boolean>(){
-            @Override
-            public void run(AccountManagerFuture<Boolean> arg0){
-            	
-            	if(deleteAccount){
-            		finishUserUpdate(user, mAccountManager, true);
-            	}
-            	if(userUpdateCallback!=null)
-            		userUpdateCallback.onUserFinishUpdate(null);
-            }
-        };
-        
-       
-        if(deleteAccount){
-        	Log.d(TAG,"Eliminar account...");
-        	mAccountManager.removeAccount(account, callback, null);
-        }else if(addingAccount){
-        	Log.d(TAG,"Agregar account...");
-        	finishUserUpdate(user, mAccountManager, true);
-        	if(userUpdateCallback!=null){
-        		Log.d(TAG,"userUpdateCallback!=null...");
-				userUpdateCallback.onUserFinishUpdate(null);
+			String accountName = user.getLogonName();
+
+			Account account = user.getAccount();
+			final AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+
+			final boolean addingAccount = account == null;
+			final boolean deleteAccount = account != null && !account.name.equals(accountName);
+			final boolean updateAccount = !deleteAccount;
+
+			AccountManagerCallback<Boolean> callback = new AccountManagerCallback<Boolean>(){
+				@Override
+				public void run(AccountManagerFuture<Boolean> arg0){
+
+					if(deleteAccount){
+						finishUserUpdate(user, mAccountManager, true);
+					}
+					if(userUpdateCallback!=null)
+						userUpdateCallback.onUserFinishUpdate(null);
+				}
+			};
+
+
+			if(deleteAccount){
+				Log.d(TAG,"Eliminar account...");
+				mAccountManager.removeAccount(account, callback, null);
+			}else if(addingAccount){
+				Log.d(TAG,"Agregar account...");
+				finishUserUpdate(user, mAccountManager, true);
+				if(userUpdateCallback!=null){
+					Log.d(TAG,"userUpdateCallback!=null...");
+					userUpdateCallback.onUserFinishUpdate(null);
+				}else{
+					Log.d(TAG,"userUpdateCallback==null...");
+				}
+
+			}else if(updateAccount){
+				Log.d(TAG,"Update account...");
+				finishUserUpdate(user, mAccountManager, false);
+				if(userUpdateCallback!=null)
+					userUpdateCallback.onUserFinishUpdate(null);
 			}else{
-				Log.d(TAG,"userUpdateCallback==null...");
+
 			}
-
-        }else if(updateAccount){
-        	Log.d(TAG,"Update account...");
-        	finishUserUpdate(user, mAccountManager, false); 
-        	if(userUpdateCallback!=null)
-        		userUpdateCallback.onUserFinishUpdate(null);
-        }else{
-
+		}catch (Exception e){
+			e.printStackTrace();
 		}
+
     }
 
-	private static void finishUserUpdate(User user, AccountManager mAccountManager, boolean addAccount){		
-		if(addAccount){
-			user.setAccount(new Account(user.getLogonName(), User.getAccountType()));
-            mAccountManager.addAccountExplicitly(user.getAccount(), user.getPassword(), null);
-		}else{
-			mAccountManager.setPassword(user.getAccount(), user.getPassword());			
+	private static void finishUserUpdate(User user, AccountManager mAccountManager, boolean addAccount){
+		Log.d(TAG,"finishUserUpdate...");
+		try {
+			if(addAccount){
+				user.setAccount(new Account(user.getLogonName(), User.getAccountType()));
+				mAccountManager.addAccountExplicitly(user.getAccount(), user.getPassword(), null);
+			}else{
+				mAccountManager.setPassword(user.getAccount(), user.getPassword());
+			}
+			Account account = user.getAccount();
+
+			mAccountManager.setUserData(account, USER_DATA_FULLNAME, user.getFullName());
+			mAccountManager.setUserData(account, USER_DATA_USERID, String.valueOf(user.getUserId()) );
+			mAccountManager.setUserData(account, USER_DATA_ISLOGGED, String.valueOf(user.isLogged()) );
+		}catch (Exception e){
+			e.printStackTrace();
 		}
-		Account account = user.getAccount();
-				
-		mAccountManager.setUserData(account, USER_DATA_FULLNAME, user.getFullName());
-        mAccountManager.setUserData(account, USER_DATA_USERID, String.valueOf(user.getUserId()) );
-        mAccountManager.setUserData(account, USER_DATA_ISLOGGED, String.valueOf(user.isLogged()) );        
+
 	}
 	
 	public static Account getDefaultAccount(Context c) {
-		final Account availableAccounts[] = AccountManager.get(c)
-				.getAccountsByType(getAccountType());
-		if (availableAccounts.length > 0)
-		{
-			Log.d(TAG,"availableAccounts.length:"+availableAccounts.length);
-			return availableAccounts[0];
-		}else{
-			Log.d(TAG,"availableAccounts.length==0");
-			return null;
+		Log.d(TAG,"getDefaultAccount...");
+		Account account = null;
+		try{
+			final Account availableAccounts[] = AccountManager.get(c)
+					.getAccountsByType(getAccountType());
+			if (availableAccounts.length > 0)
+			{
+				Log.d(TAG,"availableAccounts.length:"+availableAccounts.length);
+				account = availableAccounts[0];
+				return account;
+			}else{
+				Log.d(TAG,"availableAccounts.length==0");
+				return null;
+			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
+		return account;
 	}
 
 	//Nunca validar
@@ -322,8 +347,13 @@ public class User {
 
 	public void invalidateAuthToken() {
 		Log.d(TAG,"invalidateAuthToken...");
-		AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
-		mAccountManager.invalidateAuthToken(Session.getUser().getAuthTokenType(), Session.getUser().getAuthToken());
+		try {
+			AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+			mAccountManager.invalidateAuthToken(Session.getUser().getAuthTokenType(), Session.getUser().getAuthToken());
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 	
 	public String getAuthToken() {
@@ -339,31 +369,41 @@ public class User {
 	}
 	
 	public String getAuthToken(Activity activity, String authTokenType) {
-		final AccountManagerFuture<Bundle> future = 
-				accountManager.getAuthToken(account, authTokenType, null, activity, null, null);
-		
-		Bundle bnd = null;
+		Log.d(TAG,"getAuthToken...");
 		try {
-			bnd = future.getResult();
-		} catch (OperationCanceledException e) {
-			Log.e("User Token:","OperationCanceledException:"+ e.getMessage());
-		} catch (AuthenticatorException e) {
-			Log.e("User Token: ","AuthenticatorException:" + e.getMessage());
-		} catch (IOException e) {
-			Log.e("User Token:","IOException:"+ e.getMessage());
-		}
+			final AccountManagerFuture<Bundle> future =
+					accountManager.getAuthToken(account, authTokenType, null, activity, null, null);
 
-		final String authtoken = bnd
-				.getString(AccountManager.KEY_AUTHTOKEN);				
-		Log.d("User Token:","AuthToken:"+authtoken);
-		return authtoken;
+			Bundle bnd = null;
+			try {
+				bnd = future.getResult();
+			} catch (OperationCanceledException e) {
+				Log.e("User Token:","OperationCanceledException:"+ e.getMessage());
+			} catch (AuthenticatorException e) {
+				Log.e("User Token: ","AuthenticatorException:" + e.getMessage());
+			} catch (IOException e) {
+				Log.e("User Token:","IOException:"+ e.getMessage());
+			}
+			final String authtoken = bnd
+					.getString(AccountManager.KEY_AUTHTOKEN);
+			Log.d("User Token:","AuthToken:"+authtoken);
+			return authtoken;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "temp";
 	}
 	
 	public void setAuthToken(String authtokenType, String authtoken){
-		AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
-		Account account = Session.getUser().getAccount();
-				
-	    mAccountManager.setAuthToken(account, authtokenType, authtoken);
+		try {
+			AccountManager mAccountManager = AccountManager.get( Session.getContext()  );
+			Account account = Session.getUser().getAccount();
+
+			mAccountManager.setAuthToken(account, authtokenType, authtoken);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 	
 	public interface UserUpdateCallback

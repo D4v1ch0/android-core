@@ -243,7 +243,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit(final String logonName, final String password) {
 
-        try {
+        //try {
             final ProgressDialog progressDialog = ProgressDialog.show(this, getText(R.string.label_connecting),
                     getText(R.string.message_please_wait), false);
 
@@ -276,9 +276,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
 
             }
-        }catch (Exception e){
+        /*}catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
 
     }
 

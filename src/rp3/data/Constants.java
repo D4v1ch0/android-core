@@ -16,4 +16,5 @@ public class Constants {
     public final static String KEY_LAST_PASS = "lastPass1";
     public final static String KEY_LAST_TOKEN = "lastToken1";
     public final static String KEY_LOGIN_SESSION = "keyLoginSessionAunaMkf";
+    public final static String KEY_TOKEN_RP3_MARKETFORCE = "AUTHTOKENRP3MARKETFORCE";
 }

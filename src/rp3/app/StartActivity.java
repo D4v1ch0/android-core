@@ -72,6 +72,7 @@ public class StartActivity extends BaseActivity {
 		}else if(firstTime){
 			firstTime = false;
 			Log.d(TAG,"firsTime...");
+
 			if(Session.getUser().getAccount() == null){
 				Log.d(TAG,"getAccount == null...");
 				callLoginActivity();
@@ -79,6 +80,12 @@ public class StartActivity extends BaseActivity {
 				Log.d(TAG,"getAccount != null...");
 				Log.d(TAG,"Session:"+Session.getUser().toString());
 				System.out.print(Session.getUser());
+				String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+				if(token==null){
+					Log.d(TAG,"Token is null...");
+				}else{
+					Log.d(TAG,"Tokeno no is null:"+token);
+				}
 				//if(Session.getUser().isLogged()){
 				String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
 				Log.d(TAG,"Esta logeado:"+session);
@@ -89,6 +96,10 @@ public class StartActivity extends BaseActivity {
 					String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
 					Log.d(TAG,"LogonName:"+logonName);
 					Log.d(TAG,"Password:"+passowrd);
+					//Log.d(TAG,"AuthToken:"+Session.getUser().getAuthToken());
+					Log.d(TAG,"Loged:"+Session.getUser().isLogged());
+					Log.d(TAG,"LogonNameSession:"+Session.getUser().getLogonName());
+					Log.d(TAG,"PasswordSession:"+Session.getUser().getPassword());
 					if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
 							PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
 						Log.d(TAG,"Usuario y clave temporales son iguales al logeado...");
@@ -148,7 +159,7 @@ public class StartActivity extends BaseActivity {
 					User.getAccountType(),
 					null);
 			Log.d(TAG,"REQUEST_LOGIN_ACTIVITY...");
-			startActivityForResult(intent, REQUEST_LOGIN_ACTIVITY);
+			this.startActivityForResult(intent, REQUEST_LOGIN_ACTIVITY);
 		}
 	}
 
@@ -160,15 +171,22 @@ public class StartActivity extends BaseActivity {
 			case REQUEST_LOGIN_ACTIVITY:
 				Log.d(TAG,"REQUEST_LOGIN_ACTIIVTY...");
 				if(resultCode == RESULT_OK){
-					onContinue();
 					Log.d(TAG,"resultCode == RESULT_OK...");
+					String cargo = PreferenceManager.getString("Cargo",null);
+					if(cargo==null){
+						Log.d(TAG,"el cargo es null...");
+					}else{
+						Log.d(TAG,"el cargo es:"+cargo);
+					}
+					onContinue();
 					//PreferenceManager.setValue("LOGIN_RP3_RETAIL",true);
 				}
 				else if(resultCode == RESULT_CANCELED){
 					finish();Log.d(TAG,"resultCode == RESULT_CANCELED...");
 				}
 				else{
-					callLoginActivity();Log.d(TAG,"resultCode == OTHER CODE...");
+					Log.d(TAG,"resultCode == OTHER CODE...");
+					callLoginActivity();
 				}
 				break;
 		}

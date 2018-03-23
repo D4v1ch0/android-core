@@ -13,13 +13,17 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.session.MediaSessionManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -282,7 +286,55 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     }
 
+
     private void loginStart(final String logonName, final String password, final ProgressDialog progressDialog){
+       /* Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                String authtoken = null;
+                Bundle data = new Bundle();
+                try {
+                    Log.d(TAG,"doInBackground:LogonName:"+ logonName+" Password:"+password);
+                    PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
+                    Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
+
+                    if (r.getBoolean(ServerAuthenticate.KEY_SUCCESS)) {
+                        Log.d(TAG,"ServerAuthenticate.KEY_SUCCESS)...");
+                        authtoken = r.getString(ServerAuthenticate.KEY_AUTH_TOKEN);
+
+                        data.putString(AccountManager.KEY_ACCOUNT_NAME, logonName);
+                        data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                        data.putString(PARAM_USER_PASS, password);
+
+                        //if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
+                        PreferenceManager.close();
+                        PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
+                        PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
+                        PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);
+                        PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
+                        //}
+                    } else {
+                        Log.d(TAG,"serverAuthetincate Key Success is false...");
+                        data.putString(KEY_ERROR_MESSAGE, r.getString(ServerAuthenticate.KEY_ERROR_MESSAGE));
+                    }
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Exception authenticating:" + e.getMessage());
+                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                }
+
+                final Intent res = new Intent();
+                res.putExtras(data);
+                if (res.hasExtra(KEY_ERROR_MESSAGE)) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getBaseContext(), res.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                } else {
+                    finishLogin(res,2);
+                }
+            }
+        });
+*/
         new AsyncTask<String, Void, Intent>() {
 
             @Override
@@ -306,6 +358,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         data.putString(PARAM_USER_PASS, password);
 
                         //if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
+                        PreferenceManager.close();
                         PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
                         PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
                         PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);

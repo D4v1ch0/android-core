@@ -2,7 +2,9 @@ package rp3.accounts;
 
 import org.json.JSONObject;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.WebService;
+import rp3.data.Constants;
 import rp3.runtime.Session;
 import rp3.sync.TestConnection;
 
@@ -43,12 +45,21 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 String fullName = null;
 
                 if (!response.getJSONObject("Data").isNull("AuthToken")) {
+                    //PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,response.getJSONObject("Data").getString("AuthToken"));
+                    PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,"");
+                    String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+                    Log.d(TAG,"ManagerPreference Token antes:"+token);
                     Log.d(TAG,"Autenicacion server:"+response.getJSONObject("Data").toString());
                     Log.d(TAG,"!response.getJSONObject(\"Data\").NoisNull...");
+                    Log.d(TAG,"Object AuthetincationServer:"+response.toString());
                     authToken = response.getJSONObject("Data").getString("AuthToken");
+                    PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,response.getJSONObject("Data").getString("AuthToken"));
+                    String token1 = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+                    Log.d(TAG,"ManagerPreference Token despues:"+token1);
                     fullName = response.getJSONObject("Data").getString("Name");
                     Session.getUser().setFullName(fullName);
-                    //Session.getUser().setAuthToken(AccountManager.KEY_AUTHTOKENauthToken);
+                    //Session.getUser().setAuthToken("AuthTypeToken",authToken);
+                    //Session.getUser().setAuthToken(AccountManager.KEY_AUTHTOKEN,authToken);
                 }else{
                     Log.d(TAG,"response.getJSONObject(\"Data\").isNull....");
                 }
@@ -74,7 +85,7 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
             if(Session.IsLogged())
             {
                 Log.d(TAG,"Session.IsLogged()...");
-                //bundle.putString(AccountManager.KEY_AUTHTOKEN, Session.getUser().getAuthToken(authType));
+                bundle.putString(AccountManager.KEY_AUTHTOKEN, Session.getUser().getAuthToken(authType));
                 bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, authType);
                 bundle.putString(KEY_FULL_NAME, Session.getUser().getFullName());
                 bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, true);
@@ -91,7 +102,8 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
     }
 
 	@Override
-	public boolean requestSignIn() {		
+	public boolean requestSignIn() {
+	    Log.d(TAG,"requestSignIn...");
 		Bundle data = signIn(Session.getUser().getLogonName(), Session.getUser().getPassword(), User.getAccountType());
 		if(data.getBoolean(ServerAuthenticate.KEY_SUCCESS))
 		{
@@ -104,6 +116,7 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 Log.d(TAG,"data.containsKey(AccountManager.KEY_AUTHTOKEN is false...");
             }
 
+            Log.d(TAG,"Token:"+token);
 			String authType = data.getString(AccountManager.KEY_ACCOUNT_TYPE);
 			Session.getUser().setAuthToken(authType, token);
 			String fullName = data.getString(KEY_FULL_NAME);

@@ -49,7 +49,7 @@ public abstract class PreferenceManager {
 		if(preferences == null){
 			/*preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(),
 					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);*/
-			preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName(),
+			preferences = Session.getContext().getSharedPreferences(Session.getContext().getApplicationContext().getPackageName()+"RP3AUNA",
 					Context.MODE_PRIVATE| Context.MODE_MULTI_PROCESS);
 		}
 
@@ -62,23 +62,27 @@ public abstract class PreferenceManager {
 		return Session.getContext();
 	}
 	
-	public static void setValue(String key, String value){		
+	public static void setValue(String key, String value){
 		getPreferences().edit().putString(key, value).commit();
 	}
 	
-	public static void setValue(String key, Date value){		
+	public static void setValue(String key, Date value){
+		//getPreferences().edit().clear();
 		getPreferences().edit().putLong(key, value.getTime()).commit();
 	}
 	
-	public static void setValue(String key, boolean value){		
+	public static void setValue(String key, boolean value){
+		//getPreferences().edit().clear();
 		getPreferences().edit().putBoolean(key, value).commit();
 	}
 	
 	public static void setValue(String key, int value){
+		//getPreferences().edit().clear();
 		getPreferences().edit().putInt(key, value).commit();		
 	}
 	
 	public static void setValue(String key, float value){
+		//getPreferences().edit().clear();
 		getPreferences().edit().putFloat(key, value).commit();
 	}
 	

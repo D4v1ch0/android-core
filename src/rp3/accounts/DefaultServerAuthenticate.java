@@ -2,7 +2,9 @@ package rp3.accounts;
 
 import org.json.JSONObject;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.WebService;
+import rp3.data.Constants;
 import rp3.runtime.Session;
 import rp3.sync.TestConnection;
 
@@ -43,9 +45,17 @@ public class DefaultServerAuthenticate implements ServerAuthenticate {
                 String fullName = null;
 
                 if (!response.getJSONObject("Data").isNull("AuthToken")) {
+                    //PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,response.getJSONObject("Data").getString("AuthToken"));
+                    PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,"");
+                    String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+                    Log.d(TAG,"ManagerPreference Token antes:"+token);
                     Log.d(TAG,"Autenicacion server:"+response.getJSONObject("Data").toString());
                     Log.d(TAG,"!response.getJSONObject(\"Data\").NoisNull...");
+                    Log.d(TAG,"Object AuthetincationServer:"+response.toString());
                     authToken = response.getJSONObject("Data").getString("AuthToken");
+                    PreferenceManager.setValue(Constants.KEY_TOKEN_RP3_MARKETFORCE,response.getJSONObject("Data").getString("AuthToken"));
+                    String token1 = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+                    Log.d(TAG,"ManagerPreference Token despues:"+token1);
                     fullName = response.getJSONObject("Data").getString("Name");
                     Session.getUser().setFullName(fullName);
                     //Session.getUser().setAuthToken(AccountManager.KEY_AUTHTOKENauthToken);

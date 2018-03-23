@@ -306,6 +306,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         data.putString(PARAM_USER_PASS, password);
 
                         //if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN, "").equalsIgnoreCase("")) {
+                        PreferenceManager.close();
                         PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, logonName);
                         PreferenceManager.setValue(Constants.KEY_LAST_PASS, password);
                         PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, authtoken);

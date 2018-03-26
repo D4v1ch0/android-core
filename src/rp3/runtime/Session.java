@@ -23,7 +23,7 @@ public final class Session {
 	
 	public static User getUser(){
 		if(user == null) user = User.getCurrentUser(getContext());
-		Log.d(TAG,"getUser:"+user.toString());
+		//Log.d(TAG,"getUser:"+user.toString());
 		return user;
 	}
 	

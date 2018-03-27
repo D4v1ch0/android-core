@@ -170,7 +170,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			case SYNC_EVENT_SUCCESS:
 				break;
 			default:
-				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_general_error_auna).toString());
+				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_general_error_auna).toString()+resource);
 				break;
 		}
 	}

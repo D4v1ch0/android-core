@@ -265,6 +265,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 progressDialog.dismiss();
                 final Intent res = new Intent();
                 res.putExtras(data);
+                PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
                 finishLogin(res,1);
             }
             else {

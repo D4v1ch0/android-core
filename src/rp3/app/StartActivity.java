@@ -68,7 +68,47 @@ public class StartActivity extends BaseActivity {
 		if(!ConnectionUtils.isNetAvailable(this) && Session.IsLogged())
 		{
 			Log.d(TAG,"!ConnectionUtils.isNetAvailable(this) && Session.IsLogged()");
-			onContinue();
+			if(Session.getUser().getAccount() == null){
+				Log.d(TAG,"getAccount == null...");
+				callLoginActivity();
+			}else{
+				Log.d(TAG,"getAccount != null...");
+				Log.d(TAG,"Session:"+Session.getUser().toString());
+				System.out.print(Session.getUser());
+				String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+				if(token==null){
+					Log.d(TAG,"Token is null...");
+				}else{
+					Log.d(TAG,"Tokeno no is null:"+token);
+				}
+				//if(Session.getUser().isLogged()){
+				String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
+				Log.d(TAG,"Esta logeado:"+session);
+				if(session.equalsIgnoreCase("true")){
+					Log.d(TAG,"Session is Logged...");
+					Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+					String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+					String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+					Log.d(TAG,"LogonName:"+logonName);
+					Log.d(TAG,"Password:"+passowrd);
+					//Log.d(TAG,"AuthToken:"+Session.getUser().getAuthToken());
+					Log.d(TAG,"Loged:"+Session.getUser().isLogged());
+					Log.d(TAG,"LogonNameSession:"+Session.getUser().getLogonName());
+					Log.d(TAG,"PasswordSession:"+Session.getUser().getPassword());
+					if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
+							PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
+						Log.d(TAG,"Usuario y clave temporales son iguales al logeado...");
+						onContinue();
+					}else{
+						Log.d(TAG,"Usuari o y clave temporalres no son iguales al logeado...");
+						callLoginActivity();
+					}
+				}else{
+					Log.d(TAG,"Session No is Logged...");
+					callLoginActivity();
+				}
+			}
+			//onContinue();
 		}else if(firstTime){
 			firstTime = false;
 			Log.d(TAG,"firsTime...");
@@ -112,7 +152,48 @@ public class StartActivity extends BaseActivity {
 					Log.d(TAG,"Session No is Logged...");
 					callLoginActivity();
 				}
-
+			}
+		}else{
+			Log.d(TAG,"Not firstTime...");
+			if(Session.getUser().getAccount() == null){
+				Log.d(TAG,"getAccount == null...");
+				callLoginActivity();
+			}else{
+				Log.d(TAG,"getAccount != null...");
+				Log.d(TAG,"Session:"+Session.getUser().toString());
+				System.out.print(Session.getUser());
+				String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+				if(token==null){
+					Log.d(TAG,"Token is null...");
+				}else{
+					Log.d(TAG,"Tokeno no is null:"+token);
+				}
+				//if(Session.getUser().isLogged()){
+				String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
+				Log.d(TAG,"Esta logeado:"+session);
+				if(session.equalsIgnoreCase("true")){
+					Log.d(TAG,"Session is Logged...");
+					Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+					String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+					String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+					Log.d(TAG,"LogonName:"+logonName);
+					Log.d(TAG,"Password:"+passowrd);
+					//Log.d(TAG,"AuthToken:"+Session.getUser().getAuthToken());
+					Log.d(TAG,"Loged:"+Session.getUser().isLogged());
+					Log.d(TAG,"LogonNameSession:"+Session.getUser().getLogonName());
+					Log.d(TAG,"PasswordSession:"+Session.getUser().getPassword());
+					if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
+							PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
+						Log.d(TAG,"Usuario y clave temporales son iguales al logeado...");
+						onContinue();
+					}else{
+						Log.d(TAG,"Usuari o y clave temporalres no son iguales al logeado...");
+						callLoginActivity();
+					}
+				}else{
+					Log.d(TAG,"Session No is Logged...");
+					callLoginActivity();
+				}
 			}
 		}
 		/*else if(firstTime){

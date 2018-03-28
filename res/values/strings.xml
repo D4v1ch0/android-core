@@ -48,7 +48,7 @@
     <string name="message_error_sync_connection_server_fail">No se pudo conectar con el servidor. Intenta más tarde</string>
     <string name="message_error_sync_general_error">Se detecto un problema al intentar actualizar/sincronizar los datos</string>
     <!--<string name="message_error_sync_general_error_auna">Asegurese de tener una correcta señal de conexión, se detecto un problema al intentar sincronizar</string>-->
-    <string name="message_error_sync_general_error_auna">Se detecta baja disponibilidad de conexión para completar la operación. Por favor, asegurese de estar un un área con cobertura y reintente la sincronización nuevamente.</string>
+    <string name="message_error_sync_general_error_auna">Se detecta baja disponibilidad de conexión para completar la operación. Por favor, asegurese de estar en un área con cobertura y reintente la sincronización nuevamente.</string>
     <string name="message_error_general">Ocurrió un problema, intenta más tarde</string>	
 	
     <string name="message_error_sync_no_net_available">No hay conexión</string>

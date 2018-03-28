@@ -16,9 +16,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class DataBase {
 
+	private static final String TAG = DataBase.class.getSimpleName();
 	public static final String TEXT_TYPE = " TEXT";
 	public static final String NUMERIC_TYPE = " NUM";
 	public static final String INTEGER_TYPE = " INTEGER";
@@ -53,7 +55,9 @@ public class DataBase {
 	}	
 	
 	private SQLiteDatabase getDb(){
+		//Log.d(TAG,"getDb...");
 		if(db==null){
+			Log.d(TAG,"db==null...");
 			db = dbOpenHelper.getWritableDatabase();
             db.enableWriteAheadLogging();
 		}
@@ -610,6 +614,7 @@ public class DataBase {
         while(cursor.moveToNext()){
             sqliteVersion += cursor.getString(0);
         }
+        Log.d(TAG,"SQLITE VERSION:"+sqliteVersion);
         return  sqliteVersion;
     }
 }

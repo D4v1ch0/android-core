@@ -414,7 +414,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         Log.d(TAG,"u!=null...");
                         Session.getUser().setAuthToken(authtokenType, authtoken);
                     }
-
+                    PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
                     setResult(RESULT_OK, intent);
                     finish();
                 }else{

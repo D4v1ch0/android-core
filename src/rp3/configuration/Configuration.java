@@ -10,9 +10,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public final class Configuration {	
-	
+	private static final String TAG = Configuration.class.getSimpleName().toUpperCase();
 	private static DataBaseConfiguration dataBaseConfiguration;
 	private static AppConfiguration appConfiguration;
 	private static WebServiceConfiguration webServiceConfiguration;			
@@ -24,6 +25,7 @@ public final class Configuration {
 	}
 	
 	public static void TryInitializeConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass){
+		Log.d(TAG,"TryInitializeConfiguration con dbclass...");
 		if(!isLoaded())
 		{
 			initConfiguration(c, dbClass);
@@ -31,6 +33,7 @@ public final class Configuration {
 	}	
 	
 	public static void TryInitializeConfiguration(Context c){
+		Log.d(TAG,"TryInitializeConfiguration sin dbclass...");
 		if(!isLoaded()){
 			initConfiguration(c, null);
 		}
@@ -39,7 +42,8 @@ public final class Configuration {
 	public static void reinitializeConfiguration(Context c){		
 		initConfiguration(c, null);		
 	}	
-	public static void reinitializeConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass){		
+	public static void reinitializeConfiguration(Context c, Class<? extends SQLiteOpenHelper> dbClass){
+		Log.d(TAG,"reinitializeConfiguration...");
 		initConfiguration(c, dbClass);		
 	}
 
@@ -82,6 +86,7 @@ public final class Configuration {
 		
 
 		try {
+			//System.out.println(parser);
 			boolean exitWebServiceC = false;
 			
 			parser.next();
@@ -93,16 +98,28 @@ public final class Configuration {
 				case XmlPullParser.START_TAG:
 					
 					String name = parser.getName();																				
-					
+					System.out.println(name);
 					if(name.equalsIgnoreCase(DataBaseConfiguration.class.getSimpleName())){
+						Log.d(TAG,"name.equalsIgnoreCase(DataBaseConfiguration.class.getSimpleName())...");
 						ContentValues values = XmlPull.getContentValues(parser,name);
 						
-						if(values.containsKey(DataBaseConfiguration.KEY_NAME))
+						if(values.containsKey(DataBaseConfiguration.KEY_NAME)){
+							Log.d(TAG,"values.containsKey(DataBaseConfiguration.KEY_NAME)...");
 							dataBaseConfiguration.setName(values.getAsString(DataBaseConfiguration.KEY_NAME));
-						if(values.containsKey(DataBaseConfiguration.KEY_VERSION))
+						}else{
+							Log.d(TAG,"values.containsKey(DataBaseConfiguration.KEY_NAME) != != !=...");
+						}
+
+						if(values.containsKey(DataBaseConfiguration.KEY_VERSION)){
+							Log.d(TAG,"values.containsKey(DataBaseConfiguration.KEY_VERSION)...");
 							dataBaseConfiguration.setVersion(values.getAsInteger(DataBaseConfiguration.KEY_VERSION));
+						}else{
+							Log.d(TAG,"values.containsKey(DataBaseConfiguration.KEY_VERSION)!==!=!=!=...");
+						}
+
 					}
-					else if(name.equalsIgnoreCase(WebServiceConfiguration.class.getSimpleName())){						
+					else if(name.equalsIgnoreCase(WebServiceConfiguration.class.getSimpleName())){
+						Log.d(TAG,"name.equalsIgnoreCase(WebServiceConfiguration.class.getSimpleName())...");
 						parser.nextTag();//childs	
 						
 						String webServideDataName = WebServiceData.class.getSimpleName();
@@ -118,25 +135,32 @@ public final class Configuration {
 										wsData = new WebServiceData();
 									else if(parser.getName().equalsIgnoreCase("methods"))
 									{
+										Log.d(TAG,"METHODS");
+										System.out.println(parser);
 										parser.nextTag();//method
+
 										while(parser.getName().equals("method")){
 											ContentValues methodValues = XmlPull.getContentValues(parser,"method");
 											WebServiceDataMethod method = new WebServiceDataMethod();
 											method.setName(methodValues.getAsString("name"));
 											method.setAction(methodValues.getAsString("action"));
-                                            if(methodValues.containsKey("contentEncoding"))
-                                                method.setContentEncoding(methodValues.getAsString("contentEncoding"));
-                                            else
-                                                method.setContentEncoding("");
-											if(methodValues.containsKey("webMethod"))
+											Log.d(TAG,"parser method Name:"+methodValues.getAsString("name")+ " method Action:"+methodValues.getAsString("action"));
+                                            if(methodValues.containsKey("contentEncoding")){
+												method.setContentEncoding(methodValues.getAsString("contentEncoding"));
+											}
+                                            else{
+												method.setContentEncoding("");
+											}
+											if(methodValues.containsKey("webMethod")){
 												method.setWebMethod(methodValues.getAsString("webMethod"));
-											else
+											}
+											else{
 												method.setWebMethod("GET");
-											if(methodValues.containsKey("methodId"))
+											}
+											if(methodValues.containsKey("methodId")){
 												method.setMethodId(methodValues.getAsString("methodId"));
-											
+											}
 											wsData.getMethods().add(method);
-											
 											parser.next();
 										}
 									}
@@ -197,7 +221,9 @@ public final class Configuration {
 						
 					}
 					else if(name.equalsIgnoreCase(AppConfiguration.class.getSimpleName())){
+						Log.d(TAG,"name.equalsIgnoreCase(AppConfiguration.class.getSimpleName())...");
 						ContentValues values = XmlPull.getContentValues(parser,name);
+						System.out.println(values.toString());
 						appConfiguration.setValues(values);						
 					}
 					break;

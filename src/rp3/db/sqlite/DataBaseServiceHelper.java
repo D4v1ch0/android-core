@@ -14,7 +14,7 @@ public final class DataBaseServiceHelper {
 			DataBase db = new DataBase(c,openHelper);
 			return db;
 		} catch (Exception e) {
-            Log.e("Error",e.getMessage());
+            Log.d("DataBaseServiceHelper",e.getMessage());
             return null;
 		}
 	}

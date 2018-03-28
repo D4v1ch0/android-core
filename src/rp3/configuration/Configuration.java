@@ -144,7 +144,7 @@ public final class Configuration {
 											WebServiceDataMethod method = new WebServiceDataMethod();
 											method.setName(methodValues.getAsString("name"));
 											method.setAction(methodValues.getAsString("action"));
-											Log.d(TAG,"parser method Name:"+methodValues.getAsString("name")+ " method Action:"+methodValues.getAsString("action"));
+											//Log.d(TAG,"parser method Name:"+methodValues.getAsString("name")+ " method Action:"+methodValues.getAsString("action"));
                                             if(methodValues.containsKey("contentEncoding")){
 												method.setContentEncoding(methodValues.getAsString("contentEncoding"));
 											}

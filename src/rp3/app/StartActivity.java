@@ -64,8 +64,8 @@ public class StartActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		if(!ConnectionUtils.isNetAvailable(this) && Session.IsLogged())
+		String sessionX = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
+		if(!ConnectionUtils.isNetAvailable(this) && Session.IsLogged() && sessionX.equalsIgnoreCase("true"))
 		{
 			Log.d(TAG,"!ConnectionUtils.isNetAvailable(this) && Session.IsLogged()");
 			if(Session.getUser().getAccount() == null){

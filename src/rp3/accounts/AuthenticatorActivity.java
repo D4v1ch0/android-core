@@ -7,6 +7,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.core.R;
 import rp3.data.Constants;
 import rp3.runtime.Session;
+import rp3.util.ConnectionUtils;
 import rp3.util.ViewUtils;
 
 import android.accounts.AccountAuthenticatorActivity;
@@ -255,7 +256,50 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
             String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
             String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-            if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+            /*if(Session.getUser().getAccount()!=null){
+                if(Session.getUser().getLogonName().equalsIgnoreCase(logonName) &&
+                        Session.getUser().getPassword().equalsIgnoreCase(password) &&
+                        PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+                        PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password) ){
+                    Bundle data = new Bundle();
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, PreferenceManager.getString(Constants.KEY_LAST_LOGIN));
+                    data.putString(AccountManager.KEY_AUTHTOKEN, PreferenceManager.getString(Constants.KEY_LAST_TOKEN));
+                    data.putString(PARAM_USER_PASS, PreferenceManager.getString(Constants.KEY_LAST_PASS));
+                    progressDialog.dismiss();
+                    final Intent res = new Intent();
+                    res.putExtras(data);
+                    PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
+                    finishLogin(res,1);
+                }
+                else if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
+                        PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
+                {
+                    Bundle data = new Bundle();
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, PreferenceManager.getString(Constants.KEY_LAST_LOGIN));
+                    data.putString(AccountManager.KEY_AUTHTOKEN, PreferenceManager.getString(Constants.KEY_LAST_TOKEN));
+                    data.putString(PARAM_USER_PASS, PreferenceManager.getString(Constants.KEY_LAST_PASS));
+                    progressDialog.dismiss();
+                    final Intent res = new Intent();
+                    res.putExtras(data);
+                    PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
+                    finishLogin(res,1);
+                }
+                else {
+                    loginStart(logonName,password,progressDialog);
+                    //endregion
+                    try{
+                        Log.d(TAG,"Iniciar AsyncTask...");
+
+                    }catch (Exception e){
+                        Log.d(TAG,"Exception...");
+                        System.out.print(e);
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+            else*/
+            /*if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(logonName) &&
                     PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(password))
             {
                 Bundle data = new Bundle();
@@ -268,11 +312,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"true");
                 finishLogin(res,1);
             }
-            else {
-                loginStart(logonName,password,progressDialog);
+            else {*/
+
                 //endregion
                 try{
                     Log.d(TAG,"Iniciar AsyncTask...");
+                    if(ConnectionUtils.isNetAvailable(this)){
+                        loginStart(logonName,password,progressDialog);
+                    }else{
+                        progressDialog.dismiss();
+                        Toast.makeText(this, "Sin Conexión. Active el acceso a internet para iniciar sesión.", Toast.LENGTH_SHORT).show();
+                    }
 
                 }catch (Exception e){
                     Log.d(TAG,"Exception...");
@@ -280,7 +330,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     e.printStackTrace();
                 }
 
-            }
+            //}
         /*}catch (Exception e){
             e.printStackTrace();
         }*/
@@ -347,7 +397,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Bundle data = new Bundle();
                 try {
                     Log.d(TAG,"doInBackground:LogonName:"+ logonName+" Password:"+password);
-                    PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
+                    //PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
                     Bundle r = getServerAuthenticate().signIn(logonName, password, mAuthTokenType);
 
                     if (r.getBoolean(ServerAuthenticate.KEY_SUCCESS)) {

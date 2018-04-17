@@ -174,6 +174,4 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 				break;
 		}
 	}
-	//Holaaa
-    
 }

@@ -569,8 +569,8 @@ public class WebService {
 		}
 	}
 	
-	public void invokeWebService() throws HttpResponseException, IOException,
-			XmlPullParserException, JSONException {		
+	public void invokeWebService() throws HttpResponseException, IOException, XmlPullParserException, JSONException
+	{
 		if (wsData.getType().equalsIgnoreCase(TYPE_SOAP)) {
 			Log.d(TAG,"TYPE_SOAP...");
 			executeSoap();

@@ -44,10 +44,4 @@ android {
     aaptOptions {
         ignoreAssetsPattern "!values-b+sr+Latn"
     }
-    buildTypes {
-        release {
-            debuggable true
-
-        }
-    }
 }

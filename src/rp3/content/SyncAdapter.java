@@ -58,8 +58,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
     
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
+	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 		try{
 			try{
 				Log.i(TAG, "try onPerformSync");
@@ -170,6 +169,7 @@ public abstract class SyncAdapter extends AbstractThreadedSyncAdapter {
 			case SYNC_EVENT_SUCCESS:
 				break;
 			default:
+				//Log.d(TAG, "error de sincronizacion");
 				messages.addErrorMessage(getContext().getText(R.string.message_error_sync_general_error_auna).toString()+resource);
 				break;
 		}
